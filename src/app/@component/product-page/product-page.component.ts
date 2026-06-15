@@ -181,7 +181,7 @@ export class ProductPageComponent {
 
   //任務四：觸發非同步排版，檢查文字是否超出顯示範圍
   private triggerDescriptionOverflowCheck(): void {
-    setTimeout(() => this.checkTextOverflow());
+    setTimeout(() => this.checkTextOverflow(), 300);
   }
 
 
