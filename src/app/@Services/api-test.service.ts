@@ -29,6 +29,8 @@ export class ApiTestService {
   private productApiUrl = 'http://localhost:8080/product';
   private reportApiUrl = 'http://localhost:8080/report';
   private orderApiUrl = 'http://localhost:8080/order';
+  private collectApiUrl = 'http://localhost:8080/collect';
+  private chatApiUrl = 'http://localhost:8080/chat';
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -79,6 +81,15 @@ export class ApiTestService {
     return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, { withCredentials: true });
   }
 
+  // === collect ===
+  addCollect(productId: number) {
+    return this.http.post(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
+  }
+
+  // === chat ===
+  getOrCreateRoom(ChatRoomReq: any) {
+    return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
+  }
   //商品頁:單一商品詳情
   searchByProductId(productId: number): Observable<GetProductDataRes> {
     return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);

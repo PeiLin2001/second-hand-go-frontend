@@ -8,7 +8,7 @@
       [class.active]="activeTab === 'pending'"
       (click)="switchTab('pending')"
     >
-      待處理
+      未處理
     </button>
     <button
       class="tab"
@@ -24,7 +24,7 @@
     <input
       class="search-input"
       type="text"
-      placeholder="請輸入案件ID、相關商品、買方、賣方..."
+      placeholder="請輸入案件ID、相關商品、檢舉人、被檢舉人..."
       [(ngModel)]="searchQuery"
       (keyup.enter)="search()"
     />
@@ -35,71 +35,60 @@
   <div class="table-card">
     <h2 class="section-title">
       <lucide-icon [name]="panelsIcon" class="section-icon"></lucide-icon>
-      {{ activeTab === "pending" ? "待處理爭議案件" : "已處理爭議案件" }}
+      {{ activeTab === "pending" ? "未處理爭議案件" : "已處理爭議案件" }}
     </h2>
 
-<div class="table-header" [class]="activeTab === 'pending' ? 'table-header' : 'table-header no-action'">      <span class="col-label">案件ID</span>
-      <span class="col-label">相關商品</span>
+    <div class="table-header" [class.no-action]="activeTab === 'done'">
+      <span class="col-label">案件ID</span>
+      <span class="col-label">類型</span>
+      <span class="col-label">檢舉對象</span>
       <span class="col-label">檢舉人</span>
-      <span class="col-label">被檢舉人</span>
       <span class="col-label">檢舉日期</span>
       <span class="col-label">狀態</span>
-      <!-- 已處理不需要操作欄 -->
       @if (activeTab === "pending") {
         <span class="col-label">操作</span>
       }
     </div>
 
     <div id="dispute-list">
-      @for (dispute of disputes; track dispute.caseId) {
+      @for (dispute of disputes; track dispute.reportId) {
         <div class="dispute-row" [class.no-action]="activeTab === 'done'">
-          <div class="case-id">{{ dispute.caseId }}</div>
-          <div class="product-info">
-            <span class="product-name">{{ dispute.productName }}</span>
-            <span class="product-id">(ID: {{ dispute.productId }})</span>
+          <div class="case-id">#{{ dispute.reportId }}</div>
+          <div>
+            <span
+              class="type-badge"
+              [class.type-product]="dispute.type === '商品'"
+              [class.type-user]="dispute.type === '使用者'"
+            >
+              {{ dispute.type }}
+            </span>
           </div>
-          <div class="party-text">{{ dispute.complainantName }}</div>
-          <div class="party-text">{{ dispute.accusedName }}</div>
+          <div class="product-info">
+            @if (dispute.type === "商品") {
+              <span class="product-id">商品ID: {{ dispute.productId }}</span>
+            } @else {
+              <span class="product-id">使用者ID: {{ dispute.accusedId }}</span>
+            }
+          </div>
+          <div class="party-text">{{ dispute.compName }}</div>
           <div class="time-text">{{ dispute.reportDate }}</div>
           <div class="status-text">{{ dispute.status }}</div>
 
-          <!-- 待處理才顯示操作按鈕 -->
-          @if (activeTab === "pending") {
+          <!-- 待處理操作按鈕 -->
             <div class="action-cell">
               <button class="btn btn-reason" (click)="viewReason(dispute)">
                 查看事由
               </button>
-              @if (dispute.type === "商品") {
-                <button class="btn btn-reject" (click)="reject(dispute)">
-                  強制下架
-                </button>
-              }
-              @if (dispute.type === "交易") {
-                <button class="btn btn-reject" (click)="reject(dispute)">
-                  帳號停權
-                </button>
-              }
-              <button class="btn btn-approve" (click)="approve(dispute)">
-                駁回檢舉
-              </button>
             </div>
-          }
 
-          <!-- 已處理只顯示查看事由 -->
-          @if (activeTab === "done") {
-            <div class="action-cell">
-              <button class="btn btn-reason" (click)="viewReason(dispute)">
-                查看事由
-              </button>
-            </div>
-          }
+
         </div>
       } @empty {
         <div class="empty-row">
           <span class="empty-text">
             {{
               activeTab === "pending"
-                ? "目前沒有待處理案件"
+                ? "目前沒有未處理案件"
                 : "目前沒有已處理案件"
             }}
           </span>

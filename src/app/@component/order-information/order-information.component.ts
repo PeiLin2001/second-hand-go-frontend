@@ -1,15 +1,10 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
-import { Component } from '@angular/core';
+import { Component, effect } from '@angular/core';
 import {
-  CircleCheckBig,
-  LucideAngularModule,
-  MessageCircleMore,
-  CircleX,
-  CircleEllipsis,
-  CircleDollarSign,
-  ChevronRight,
-  ChevronLeft,
+  LucideAngularModule, LUCIDE_ICONS, LucideIconProvider,
+  CircleCheckBig, MessageCircleMore, CircleX, CircleEllipsis,
+  CircleDollarSign, ChevronRight, ChevronLeft,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { PaginationService } from '../../@Services/pageination.service';
@@ -21,6 +16,15 @@ import { ReportService } from '../../@Services/report.service';
   imports: [LucideAngularModule],
   templateUrl: './order-information.component.html',
   styleUrl: './order-information.component.scss',
+  providers: [
+    {
+      provide: LUCIDE_ICONS,
+      useValue: new LucideIconProvider({
+        CircleCheckBig, MessageCircleMore, CircleX, CircleEllipsis,
+        CircleDollarSign, ChevronRight, ChevronLeft,
+      })
+    }
+  ]
 })
 export class OrderInformationComponent {
   constructor(
@@ -29,17 +33,15 @@ export class OrderInformationComponent {
     private reportService: ReportService,
     private userService: UserService,
     private apiTestService: ApiTestService,
-  ) { }
-
-  // Declare icon
-  readonly CircleCheckBig = CircleCheckBig;
-  readonly MessageCircleMore = MessageCircleMore;
-  readonly CircleX = CircleX;
-  readonly CircleEllipsis = CircleEllipsis;
-  readonly CircleDollarSign = CircleDollarSign;
-  readonly ChevronRight = ChevronRight;
-  readonly ChevronLeft = ChevronLeft;
-
+  ) {
+    effect(() => {
+      const user = this.userService.currentUser();
+      if (user) {
+        this.currentUserName = user.userName;
+        this.fetchOrder();
+      }
+    });
+  }
   //tabs
   currentTab = '全部訂單'; // 預設選中
   // 列表欄位
@@ -62,19 +64,12 @@ export class OrderInformationComponent {
 
   pageSize = 5; // 分頁變數
   allOrders: any[] = [];
-  hasReview: boolean = false;
-
-  ngOnInit() {
-    this.currentUserName = this.userService.currentUser()?.userName;
-    this.fetchOrder(); // 獲得訂單資料
-  }
 
   // 獲得訂單資料
   fetchOrder() {
     this.apiTestService.getAllOrder().subscribe({
       next: (res) => {
         let rawOrders = res.orderList;
-        console.log('訂單：', res);
         this.allOrders = rawOrders.map((order: any) => { // 強行對齊(╬▔皿▔)
           let myRole = order.buyerName === this.currentUserName ? '買家' : '賣家';
           return {
@@ -83,6 +78,9 @@ export class OrderInformationComponent {
             myRole,
             partnerRole: myRole === '買家' ? '賣家' : '買家',
             partnerName: myRole === '買家' ? order.sellerName : order.buyerName,
+            partnerId: myRole === '買家' ? order.sellerId : order.buyerId,
+            givenRank: myRole === '買家' ? order.salesmanRank : order.buyerRank, // 給予交易對象的評分
+            myRank: myRole === '買家' ? order.buyerRank : order.salesmanRank, // 交易對象給使用者的評分
           }
         });
         this.updatePaginationTotal(); // 初始化分頁器
@@ -128,7 +126,10 @@ export class OrderInformationComponent {
     this.pagination.goToPage(1); // 回第一頁
   }
 
-  chat() { this.router.navigate(['/chat']); }
+  chat(order: any) {
+    if (!order) return;
+    this.router.navigate(['/chat', order.partnerId]);
+  }
 
   // 分頁
   prevPage() { this.pagination.prevPage(); }
@@ -227,7 +228,6 @@ export class OrderInformationComponent {
               showConfirmButton: false,
             });
             this.fetchOrder();
-            this.hasReview = true;
           },
           error: (err) => {
             console.error('送出評價失敗', err);
@@ -240,10 +240,10 @@ export class OrderInformationComponent {
 
   // 查看評價
   viewReview(order: any) {
-    const score = 5; // 暫用
-    const stars = score > 0 ? '⭐'.repeat(score) : '尚未評價'; // 暫用
+    const score = order.givenRank;
+    const stars = score > 0 ? '⭐'.repeat(score) : '尚未評價';
     Swal.fire({
-      title: '我的評價',
+      title: '我給對方的評價',
       html: `
       <p>${order.partnerRole}：${order.partnerName}</p>
       <p>評分：<span style="color: #ffcc00;">${stars}</span> ${score > 0 ? '(' + score + ' 分)' : ''} </p>`,
@@ -254,12 +254,12 @@ export class OrderInformationComponent {
   // 檢舉
   goRepot(order: any) {
     // 檢舉用戶
-    this.reportService.openReportDialog('user', order.partnerName, '3'); // demo用
+    this.reportService.openReportDialog('user', order.partnerName, order.partnerId);
   }
 
   // 交易對象賣場頁
-  goStore() {
-    this.router.navigate(['/store', 3]); // demo用
+  goStore(order: any) {
+    this.router.navigate(['/store', order.partnerId]);
   }
 
   // 賣家同意請求

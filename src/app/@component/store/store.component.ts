@@ -3,23 +3,10 @@ import { UserService } from './../../@Services/user.service';
 import { Component, HostListener, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  LucideAngularModule,
-  User,
-  BookText,
-  MapPin,
-  School,
-  MessageCircleMore,
-  HeartPlus,
-  Pencil,
-  ArrowRight,
-  Plus,
-  ThumbsUp,
-  Trash2,
-  Flag,
-  Phone,
-  Mail,
-  ChevronLeft,
-  ChevronRight
+  LucideAngularModule, LUCIDE_ICONS, LucideIconProvider,
+  User, BookText, MapPin, School, MessageCircleMore, HeartPlus,
+  Pencil, ArrowRight, Plus, ThumbsUp, Trash2, Flag, Phone, Mail,
+  ChevronLeft, ChevronRight
 } from 'lucide-angular';
 import { ReportService } from '../../@Services/report.service';
 import Swal from 'sweetalert2';
@@ -30,6 +17,15 @@ import { PaginationService } from '../../@Services/pageination.service';
   imports: [LucideAngularModule],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss',
+  providers: [
+    {
+      provide: LUCIDE_ICONS,
+      useValue: new LucideIconProvider({
+        User, BookText, MapPin, School, MessageCircleMore, HeartPlus, Pencil,
+        ArrowRight, Plus, ThumbsUp, Trash2, Flag, Phone, Mail, ChevronLeft, ChevronRight,
+      })
+    }
+  ]
 })
 export class StoreComponent {
   constructor(private router: Router,
@@ -39,34 +35,8 @@ export class StoreComponent {
     private apiTestService: ApiTestService,
     public pagination: PaginationService,) { }
 
-  // Declare icon
-  readonly User = User;
-  readonly BookText = BookText;
-  readonly MapPin = MapPin;
-  readonly School = School;
-  readonly MessageCircleMore = MessageCircleMore;
-  readonly HeartPlus = HeartPlus;
-  readonly Pencil = Pencil;
-  readonly ArrowRight = ArrowRight;
-  readonly Plus = Plus;
-  readonly ThumbsUp = ThumbsUp;
-  readonly Trash2 = Trash2;
-  readonly Flag = Flag;
-  readonly Phone = Phone;
-  readonly Mail = Mail;
-  readonly ChevronLeft = ChevronLeft;
-  readonly ChevronRight = ChevronRight;
-
   isGood: boolean = true;
   isOwner: boolean = false;
-  // 監聽全域鍵盤事件
-  @HostListener('window:keydown', ['$event'])
-  toggleTestMode(event: KeyboardEvent) {
-    if (event.ctrlKey && event.key === '`') {
-      this.isOwner = !this.isOwner;
-    }
-  }
-
   shopOwnerData = signal<any>(null); // 賣場主人資料
   products: any[] = []; // 商品列表的變數
   allProducts: any[] = []; //全部商品
@@ -156,12 +126,26 @@ export class StoreComponent {
   }
 
   // 收藏商品
-  goCollectProduct() {
-    Swal.fire({
-      title: '商品已收藏！',
-      icon: 'success',
-      timer: 1500,
-      showConfirmButton: false,
+  goCollectProduct(productId: number) {
+    this.apiTestService.addCollect(productId).subscribe({
+      next: (res) => {
+        Swal.fire({
+          title: '商品已收藏！',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      },
+      error: (err) => {
+        console.error('收藏商品失敗：', err);
+        Swal.fire({
+          title: '商品收藏失敗！',
+          text: '請稍後再試！',
+          icon: 'error',
+          timer: 1500,
+          showConfirmButton: false,
+        })
+      }
     })
   }
 

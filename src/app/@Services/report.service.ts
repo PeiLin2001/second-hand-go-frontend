@@ -29,7 +29,7 @@ export class ReportService {
     productId?: string,
   ) {
     this.dialog.open(FrontReportComponent, {
-      width: '600px',
+      width: '700px',
       disableClose: true, // 點外部不關閉，防止誤觸
       panelClass: 'report-dialog',
       data: {

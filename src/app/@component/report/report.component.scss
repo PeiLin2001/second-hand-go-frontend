@@ -156,7 +156,7 @@
 .table-header,
 .dispute-row {
   display: grid;
-  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 2.5fr;
+  grid-template-columns: 0.7fr 0.7fr 1.4fr 1fr 0.9fr 0.7fr 2fr;
   padding: 10px 24px;
   gap: 8px;
   align-items: center;
@@ -166,7 +166,7 @@
 // 已處理（最後欄縮小，只放查看事由）
 .table-header.no-action,
 .dispute-row.no-action {
-  grid-template-columns: 1.1fr 1.6fr 1fr 1fr 0.9fr 0.7fr 1.2fr;
+  grid-template-columns: 0.7fr 0.7fr 1.4fr 1fr 0.9fr 0.7fr 1fr;
 }
 
 .table-header {
@@ -180,6 +180,10 @@
   color: $text-gray;
   letter-spacing: 0.03em;
 }
+
+.type-badge { padding: 3px 10px; border-radius: 20px; font-size: $font-size-base; font-weight: 600; }
+.type-product { background: #f5ecd7; color: #5c4a1e; }
+.type-user    { background: #e8f0fe; color: #2d5be3; }
 
 // ===== 資料列 =====
 .dispute-row {
@@ -212,7 +216,7 @@
   color: $text-black;
 }
 .product-id {
-  font-size: 12px;
+  font-size: $font-size-base;
   color: $text-gray;
 }
 .party-text {

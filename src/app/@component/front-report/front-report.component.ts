@@ -1,25 +1,13 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
 import { Component, Inject, Optional } from '@angular/core';
-import {
-  ReactiveFormsModule,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators, } from '@angular/forms';
 import {
   LucideAngularModule,
-  SendHorizontal,
-  X,
-  UploadIcon,
-  Trash2,
+  SendHorizontal, X, UploadIcon, Trash2,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule, } from '@angular/material/dialog';
 import { ReportDialogData } from '../../@Services/report.service';
 
 @Component({

@@ -2,13 +2,8 @@
 
 <mat-dialog-content>
   <div class="form-body">
-
     <div class="user-avatar-wrap">
-      <img
-        class="dialog-avatar"
-        [src]="data.avatarUrl"
-        [alt]="data.name"
-      />
+      <img class="dialog-avatar" [src]="data.avatarUrl" [alt]="data.name" />
     </div>
 
     <div class="form-row">
@@ -38,6 +33,11 @@
 
     <div class="form-row">
       <span class="form-label">學校：</span>
+      <span>{{ data.school }}</span>
+    </div>
+
+    <div class="form-row">
+      <span class="form-label">科系：</span>
       <span>{{ data.department }}</span>
     </div>
 
@@ -52,6 +52,16 @@
     </div>
 
     <div class="form-row">
+      <span class="form-label">驗證狀態：</span>
+      <span
+        [class.badge-verified]="verifyStatus === '已驗證'"
+        [class.badge-expired]="verifyStatus === '已過期'"
+      >
+        {{ verifyStatus }}
+      </span>
+    </div>
+
+    <div class="form-row">
       <span class="form-label">信用等級：</span>
       <span>{{ data.goodLevel }}</span>
     </div>
@@ -61,11 +71,15 @@
       <span>{{ data.msg }}</span>
     </div>
 
+    @if (data.status === "停權" && data.banReason) {
+      <div class="form-row">
+        <span class="form-label">停權原因：</span>
+        <span class="ban-reason">{{ data.banReason }}</span>
+      </div>
+    }
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button class="btn btn-cancel" mat-dialog-close>
-    關閉
-  </button>
+  <button class="btn btn-cancel" mat-dialog-close>關閉</button>
 </mat-dialog-actions>

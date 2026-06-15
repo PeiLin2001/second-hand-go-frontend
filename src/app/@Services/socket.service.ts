@@ -20,9 +20,18 @@ export class SocketService {
     }
   }
 
+  // 加入房間
+  joinRoom(roomId: number, userName: string) {
+    if (this.socket) {
+      this.socket.emit('join_room', { roomId: roomId, userName: userName });
+    }
+  }
+
   // 發送訊息給後端
-  sendMessage(user: string, msg: string) {
-    this.socket.emit('chatevent', { userName: user, message: msg });
+  sendMessage(messageData: { roomId: number | null, senderId: number | undefined, messageContent: string }) {
+    if (this.socket) {
+      this.socket.emit('chatevent', messageData);
+    }
   }
 
   // 監聽後端廣播回來的訊息

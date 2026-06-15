@@ -11,11 +11,11 @@
   </div>
 
   <!-- tabs -->
-  <nav>
-    <ul class="nav nav-tabs custom-tabs">
+  <nav class="type-nav">
+    <ul class="sub-list">
       @for (tab of tabsColumns; track tab){
-      <li class="nav-item">
-        <button class="nav-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
+      <li>
+        <button class="sub-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
       </li>
       }
     </ul>

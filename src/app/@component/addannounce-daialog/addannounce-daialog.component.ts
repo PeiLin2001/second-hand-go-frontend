@@ -10,6 +10,7 @@ import {
 import { LucideAngularModule, CloudUpload, ChevronDown } from 'lucide-angular';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
 import { from } from 'rxjs';
+import { HttpService } from '../../@Services/http.service';
 @Component({
   selector: 'app-addannounce-daialog',
   imports: [CommonModule, FormsModule, MatDialogModule, LucideAngularModule],
@@ -20,6 +21,7 @@ export class AddannounceDaialogComponent {
   constructor(
     private diao: MatDialog,
     private dialogRef: MatDialogRef<AddannounceDaialogComponent>,
+    public http: HttpService,
   ) {}
 
   readonly uploadIcon = CloudUpload;
@@ -29,7 +31,8 @@ export class AddannounceDaialogComponent {
   // 接收傳進來的資料，沒有傳就是 null（新增模式）
   public data = inject(MAT_DIALOG_DATA);
 
-  today: string = new Date().toISOString().split('T')[0];
+  today: string = new Date().toLocaleDateString('en-CA');
+
   selectedFile: File | null = null;
 
   // 編輯模式時，存放現有的圖片網址
@@ -62,109 +65,131 @@ export class AddannounceDaialogComponent {
       this.form.title = this.data.title;
       this.form.shelfDate = this.data.startDate;
       this.form.removalDate = this.data.endDate;
-      this.form.content = this.data.content;
+      this.form.content = this.data.content ?? '';
       this.form.isPublished = this.data.isPublished; // 直接帶入 boolean
       this.existingImgUrl = this.data.imgPath;
     }
   }
 
   onFileSelected(event: Event) {
-  const input = event.target as HTMLInputElement;
-  if (!input.files?.[0]) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.[0]) return;
 
-  this.compressImage(input.files[0], 800, 0.7).then(base64 => {
-    this.previewUrl = base64;
-    this.existingImgUrl = base64;
-    this.form.imgFile = input.files![0];
-  });
-}
+    this.compressImage(input.files[0], 800, 0.7).then((base64) => {
+      this.previewUrl = base64;
+      this.existingImgUrl = base64;
+      this.form.imgFile = input.files![0];
+    });
+  }
 
-onDrop(event: DragEvent) {
-  event.preventDefault();
-  const file = event.dataTransfer?.files?.[0];
-  if (!file) return;
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const file = event.dataTransfer?.files?.[0];
+    if (!file) return;
 
-  this.compressImage(file, 800, 0.7).then(base64 => {
-    this.previewUrl = base64;
-    this.existingImgUrl = base64;
-    this.form.imgFile = file;
-  });
-}
+    this.compressImage(file, 800, 0.7).then((base64) => {
+      this.previewUrl = base64;
+      this.existingImgUrl = base64;
+      this.form.imgFile = file;
+    });
+  }
 
-private compressImage(file: File, maxWidth: number, quality: number): Promise<string> {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
-        canvas.width  = img.width  * scale;
-        canvas.height = img.height * scale;
+  private compressImage(
+    file: File,
+    maxWidth: number,
+    quality: number,
+  ): Promise<string> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
 
-        const ctx = canvas.getContext('2d')!;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', quality));
+          const ctx = canvas.getContext('2d')!;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.src = e.target?.result as string;
       };
-      img.src = e.target?.result as string;
-    };
-    reader.readAsDataURL(file);
-  });
-}
+      reader.readAsDataURL(file);
+    });
+  }
 
   removeImage(event: Event) {
-  event.stopPropagation();
-  this.form.imgFile = null;
-  this.previewUrl = null;
-  this.existingImgUrl = null;
-}
+    event.stopPropagation();
+    this.form.imgFile = null;
+    this.previewUrl = null;
+    this.existingImgUrl = null;
+  }
 
   submit() {
     this.submitted = true;
 
-  // 依序檢查，找到第一個錯誤就跳過去
-  const firstError = this.getFirstError();
-  if (firstError) {
-    document.getElementById(firstError)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    return;
-  }
-    //isPublished 布林值，取值依據是比對表單中的publishMode是否為publish
+    const firstError = this.getFirstError();
+    if (firstError) {
+      document
+        .getElementById(firstError)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     const isPublished = this.form.isPublished === true;
-    //isPublished為true開啟確認用dialog
+
+    const payload: any = {
+      title: this.form.title,
+      shelfDate: this.form.shelfDate,
+      removalDate: this.form.removalDate,
+      content: this.form.content || null,
+      publish: isPublished,
+      imgPath: this.existingImgUrl?.includes('base64,')
+        ? this.existingImgUrl.split('base64,')[1]
+        : this.existingImgUrl,
+    };
+
+    // 編輯模式帶 id
+    if (this.isEditMode) {
+      payload.id = this.data.id;
+    }
+
+    const apiUrl = this.isEditMode
+      ? 'http://localhost:8080/announce/updataAnnounce'
+      : 'http://localhost:8080/announce/addAnnounce';
+
+    const callApi = () => {
+      this.http.postApi(apiUrl, payload).subscribe((res: any) => {
+        if (res.statusCode === 200) this.dialogRef.close(true);
+      });
+    };
+
+    // 發布才需要確認 dialog
     if (isPublished) {
       const confirmRef = this.diao.open(AnnounDialogComponent);
       confirmRef.afterClosed().subscribe((confirmed) => {
-        if (confirmed === true) {
-          const payload = {
-            ...this.form,
-            isPublished,
-            existingImgUrl: this.existingImgUrl, // 傳給後端，沒換圖就保留舊的
-          };
-          this.dialogRef.close(payload);
-        }
+        if (confirmed === true) callApi();
       });
-    } //
-    //isPublished為false儲存資料並直接關閉dialog
-    else {
-      this.dialogRef.close({
-        ...this.form,
-        isPublished,
-        existingImgUrl: this.existingImgUrl,
-      });
+    } else {
+      callApi();
     }
   }
+
   getFirstError() {
-  if (!this.form.title)                                          return 'field-title';
-  if (!this.form.shelfDate)                                      return 'field-shelfDate';
-  if (!this.form.removalDate || this.form.removalDate < this.today) return 'field-removalDate';
-  if (!this.displayImgUrl)                                       return 'field-img';
-  return null;  }
+    if (!this.form.title) return 'field-title';
+    if (!this.form.shelfDate) return 'field-shelfDate';
+    if (!this.form.removalDate || this.form.removalDate < this.today)
+      return 'field-removalDate';
+    if (!this.displayImgUrl) return 'field-img';
+    return null;
+  }
 
   cancel() {
     this.dialogRef.close(null);
   }
 
   get isExpired(): boolean {
-  return !!this.data && this.data.endDate < this.today;
-}
+    return !!this.data && this.data.endDate < this.today;
+  }
 }

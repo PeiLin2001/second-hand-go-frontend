@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
+import { HttpService } from '../../@Services/http.service';
+import { config } from 'rxjs';
 
 @Component({
   selector: 'app-report-dialog',
@@ -13,19 +15,29 @@ import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialo
 export class ReportDialogComponent {
     constructor(
     private dialog: MatDialog,
-    private dialogRef: MatDialogRef<ReportDialogComponent>
+    private dialogRef: MatDialogRef<ReportDialogComponent>,
+    public http:HttpService
   ) {}
   data = inject(MAT_DIALOG_DATA);
 
   adminNote='';
 
-  confirm(action: 'approve' | 'reject'){
+  confirm(action: '通過' | '駁回'){
     const confirmRef=this.dialog.open(AnnounDialogComponent);
     confirmRef.afterClosed().subscribe((confirmed)=>{
-      if(confirmed==true)
-      {
-        this.dialogRef.close({ action, note: this.adminNote });
+      if(confirmed!=true){
+        return;
       }
+
+      this.http.postApi('http://localhost:8080/report/check',{reportId:this.data.reportId,
+        active:action
+      }).subscribe((res:any)=>{
+        if(res.statusCode==200){
+          console.log(res);
+          this.dialogRef.close({ action });
+        }
+      });
+
     })
   }
 }

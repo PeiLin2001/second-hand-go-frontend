@@ -1,36 +1,19 @@
 <div class="side-wrapper">
   <ul class="nav-list">
-    <li class="nav-item">
-      <!-- <img
-        src="img/logo改版.png"
-        alt="logo"
-        class="logo"
-        title="首頁"
-        (click)="goToHome()"
-      /> -->
-    </li>
 
-    <!-- 用戶管理 -->
+    <!-- 爭議處理 -->
     <li class="nav-item">
       <button
         class="nav-link"
-        (click)="goToUser()"
-        routerLink="/back_user"
+        (click)="goToReport()"
         routerLinkActive="active"
+        routerLink="/report"
       >
-        <lucide-icon [name]="UserIcon"></lucide-icon>
-        <span>用戶管理</span>
-        <span class="nav-tooltip">用戶管理</span>
+        <lucide-icon [name]="LibraIcon"></lucide-icon>
+        <span>爭議處理</span>
+        <span class="nav-tooltip">爭議處理</span>
       </button>
     </li>
-
-    <!-- 商品管理 -->
-    <!-- <li class="nav-item">
-      <button class="nav-link" (click)="goToProduct()">
-        <lucide-icon [name]="HandbagIcon"></lucide-icon>
-        <span>商品管理</span>
-      </button>
-    </li> -->
 
     <!-- 公告通知 -->
     <li class="nav-item">
@@ -46,17 +29,17 @@
       </button>
     </li>
 
-    <!-- 爭議處理 -->
+    <!-- 用戶管理 -->
     <li class="nav-item">
       <button
         class="nav-link"
-        (click)="goToReport()"
+        (click)="goToUser()"
+        routerLink="/back_user"
         routerLinkActive="active"
-        routerLink="/report"
       >
-        <lucide-icon [name]="LibraIcon"></lucide-icon>
-        <span>爭議處理</span>
-        <span class="nav-tooltip">爭議處理</span>
+        <lucide-icon [name]="UserIcon"></lucide-icon>
+        <span>用戶管理</span>
+        <span class="nav-tooltip">用戶管理</span>
       </button>
     </li>
 

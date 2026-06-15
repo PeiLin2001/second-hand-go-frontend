@@ -62,6 +62,7 @@ export const routes: Routes = [
   },
   { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
   { path: 'chat', component: ChatComponent }, //聊天室
+  { path: 'chat/:id', component: ChatComponent }, //聊天室(從商品||交易...)點選(需要帶參數時用)
 
   //後台
   {

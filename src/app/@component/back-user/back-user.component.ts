@@ -1,3 +1,4 @@
+import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import {
@@ -11,7 +12,7 @@ import {
 import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PaginationService } from '../../@Services/pageination.service';
-import { ActivatedRoute } from '@angular/router';
+import { HttpService } from '../../@Services/http.service';
 
 @Component({
   selector: 'app-back-user',
@@ -23,7 +24,7 @@ export class BackUserComponent {
   constructor(
     public pagination: PaginationService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
+    public http: HttpService,
   ) {}
   readonly SearchIcon = Search;
   readonly mapIcon = MapPin;
@@ -40,78 +41,30 @@ export class BackUserComponent {
   selectedAccountStatus = '';
   selectedVerifyStatus = '';
 
-  private allUsers: User[] = [
-    {
-      id: '123456789',
-      name: '快樂羊駝',
-      avatarUrl: 'https://i.pravatar.cc/40?img=1',
-      status: '正常',
-      studentVerifiedAt: '2024-03-01',
-      location: '高雄',
-    },
-    {
-      id: '987654321',
-      name: '朱韻潔',
-      avatarUrl: 'https://i.pravatar.cc/40?img=2',
-      status: '停權',
-      studentVerifiedAt: '2020-06-12',
-      location: '台北',
-    },
-    {
-      id: '112233445',
-      name: 'bad_seller',
-      avatarUrl: 'https://i.pravatar.cc/40?img=3',
-      status: '停權',
-      studentVerifiedAt: '2011-09-04',
-      location: '台中',
-    },
-    {
-      id: '556677889',
-      name: 'Jason Wang',
-      avatarUrl: 'https://i.pravatar.cc/40?img=4',
-      status: '正常',
-      studentVerifiedAt: '2025-11-15',
-      location: '台南',
-    },
-    {
-      id: '223344556',
-      name: '林小美',
-      avatarUrl: 'https://i.pravatar.cc/40?img=5',
-      status: '正常',
-      studentVerifiedAt: '2026-01-20',
-      location: '高雄',
-    },
-    {
-      id: '445566778',
-      name: '王大明',
-      avatarUrl: 'https://i.pravatar.cc/40?img=6',
-      status: '停權',
-      studentVerifiedAt: '2026-01-20',
-      location: '台中',
-    },
-    {
-      id: '667788990',
-      name: 'Amy Lee',
-      avatarUrl: 'https://i.pravatar.cc/40?img=7',
-      status: '正常',
-      studentVerifiedAt: '2024-06-10',
-      location: '台北',
-    },
-  ];
+  private allUsers: User[] = [];
 
   users: User[] = [];
 
   ngOnInit() {
-    // this.loadUsers();
-    this.route.queryParams.subscribe((params) => {
-      console.log(params);
-      console.log(params['verifyStatus']);
-      if (params['verifyStatus']) {
-        this.selectedVerifyStatus = params['verifyStatus'];
-      }
-      this.pagination.init(this.allUsers.length, this.pageSize);
-      this.applyFilter();
-    });
+    this.http
+      .getApi('http://localhost:8080/user/getUsers')
+      .subscribe((res: any) => {
+        if (res.statusCode == 200) {
+          console.log(res);
+          this.allUsers = res.user.map((u: any) => ({
+            id: u.userId,
+            name: u.userName,
+            avatarUrl: u.imgPath, //頭像
+            status: u.status, //狀態
+            studentVerifiedAt: u.studentVerifiedAt, // 驗證日期，null 表示未驗證
+            location: u.location,
+            banReason: u.note,
+          }));
+          this.pagination.init(this.allUsers.length, this.pageSize);
+          this.applyFilter();
+        }
+      });
+
   }
 
   loadUsers() {
@@ -135,8 +88,8 @@ export class BackUserComponent {
     return map[status] ?? '';
   }
 
-  getVerifyBadge(verifiedAt: string, accountstatuses:string): string {
-    const status = this.getVerifyStatus(verifiedAt,accountstatuses);
+  getVerifyBadge(verifiedAt: string, accountstatuses: string): string {
+    const status = this.getVerifyStatus(verifiedAt, accountstatuses);
     const map: Record<string, string> = {
       已驗證: 'badge-verified',
       已過期: 'badge-expired',
@@ -156,53 +109,76 @@ export class BackUserComponent {
       this.selectedVerifyStatus === status ? '' : status;
     this.applyFilter();
   }
-applyFilter(keepPage = false) {
-  let filtered = this.allUsers;
+  applyFilter(keepPage = false) {
+    let filtered = this.allUsers;
 
-  if (this.selectedAccountStatus) {
-    filtered = filtered.filter(
-      u => u.status === this.selectedAccountStatus
-    );
+    if (this.selectedAccountStatus) {
+      filtered = filtered.filter(
+        (u) => u.status === this.selectedAccountStatus,
+      );
+    }
+
+    if (this.selectedVerifyStatus) {
+      filtered = filtered.filter(
+        (u) =>
+          this.getVerifyStatus(u.studentVerifiedAt, u.status) ===
+          this.selectedVerifyStatus,
+      );
+    }
+
+    const currentPage = this.pagination.currentPage;
+
+    this.pagination.init(filtered.length, this.pageSize);
+
+    if (keepPage) {
+      this.pagination.currentPage = Math.min(
+        currentPage,
+        this.pagination.totalPages,
+      );
+    }
+
+    const start = (this.pagination.currentPage - 1) * this.pageSize;
+
+    this.users = filtered.slice(start, start + this.pageSize);
   }
-
-  if (this.selectedVerifyStatus) {
-    filtered = filtered.filter(
-      u =>
-        this.getVerifyStatus(
-          u.studentVerifiedAt,
-          u.status
-        ) === this.selectedVerifyStatus
-    );
-  }
-
-  const currentPage = this.pagination.currentPage;
-
-  this.pagination.init(filtered.length, this.pageSize);
-
-  if (keepPage) {
-    this.pagination.currentPage = Math.min(
-      currentPage,
-      this.pagination.totalPages
-    );
-  }
-
-  const start =
-    (this.pagination.currentPage - 1) * this.pageSize;
-
-  this.users = filtered.slice(
-    start,
-    start + this.pageSize
-  );
-}
 
   viewUser(user: User) {
-    this.dialog.open(UserDialogComponent, { data: user });
+    this.http.getApi(`http://localhost:8080/user/getByUserId?userId=${user.id}`).
+    subscribe((res:any)=>{
+      if(res.statusCode==200){
+        console.log(res);
+        const user={
+          name:res.user.userName,
+          id:res.user.userId,
+          email:res.user.userEmail,
+          phone:res.user.phone,
+          location:res.user.location,
+          school:res.user.school,
+          department:res.user.department,
+          status:res.user.status,
+          studentVerifiedAt:res.user.verified,
+          goodLevel:res.user.goodLevel,
+          msg:res.user.msg,
+          banReason:res.user.note,
+          avatarUrl:res.user.imgPath,
+        }
+        this.dialog.open(UserDialogComponent, { data: user });
+      }
+    })
   }
 
   unbanned(user: User) {
-    user.status = '正常';
+    this.http.postApi(`http://localhost:8080/user/changeStatus`,user.id).subscribe((res:any)=>{
+      if(res.statusCode==200){
+        // 找到那筆資料並更新狀態
+        const idx = this.allUsers.findIndex(u => u.id === user.id);
+        if (idx !== -1) {
+          this.allUsers[idx].status = '正常';
+        }
+        this.applyFilter(true);
+      }
+    })
 
-    this.applyFilter(true);
   }
 
   prevPage() {
@@ -217,10 +193,11 @@ applyFilter(keepPage = false) {
 }
 
 export interface User {
-  id: string;
+  id: number;
   name: string;
   avatarUrl: string; //頭像
   status: string; //狀態
   studentVerifiedAt: string; // 驗證日期，null 表示未驗證
   location: string;
+  banReason?: string | null; // 停權原因，選填
 }

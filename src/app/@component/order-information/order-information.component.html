@@ -2,11 +2,11 @@
   <h3 class="page-title">訂單資料 / 交易清單</h3>
 
   <!-- tabs -->
-  <nav class="tabs-container">
-    <ul class="nav nav-tabs custom-tabs">
+  <nav class="type-nav">
+    <ul class="sub-list">
       @for (tab of tabsColumns; track tab){
       <li class="nav-item">
-        <button class="nav-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
+        <button class="sub-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
       </li>
       }
     </ul>
@@ -45,9 +45,9 @@
         <div class="col-md-3">
           <div class="product-content">
             <h5 class="name">{{ order.productName }}</h5>
-            <span class="seller" (click)="goStore()" [title]="'點擊查看更多資訊'">
+            <span class="seller" (click)="goStore(order)" [title]="'點擊查看更多資訊'">
               {{ order.partnerRole }}：{{ order.partnerName }}</span>
-            <lucide-icon class="msg" [name]="MessageCircleMore" (click)="chat(); $event.stopPropagation()"
+            <lucide-icon class="msg" name="MessageCircleMore" (click)="chat(order); $event.stopPropagation()"
               [title]="'聊聊'"></lucide-icon>
             <div class="details">
               <p class="unit-price">${{ order.price }}</p>
@@ -61,19 +61,19 @@
             <!-- 狀態標籤 -->
             @if (order.status === '完成交易') {
             <div class="status-tag completed">
-              <lucide-icon [name]="CircleCheckBig"></lucide-icon>交易已完成
+              <lucide-icon name="CircleCheckBig"></lucide-icon>交易已完成
             </div>
             <p>交易已完成，感謝您的使用！</p>
             }
             @if (order.status === '交易中') {
             <div class="status-tag in-progress">
-              <lucide-icon [name]="CircleDollarSign"></lucide-icon>交易進行中
+              <lucide-icon name="CircleDollarSign"></lucide-icon>交易進行中
             </div>
             <p>交易進行中，請耐心等候。</p>
             }
             @if (order.status === '請求回應中' && order.myRole === '買家') {
             <div class="status-tag pending">
-              <lucide-icon [name]="CircleEllipsis"></lucide-icon>等待回應中
+              <lucide-icon name="CircleEllipsis"></lucide-icon>等待回應中
             </div>
             <p>等待對方回應，請稍候。</p>
             <div class="button-group">
@@ -82,7 +82,7 @@
             }
             @if (order.status === '請求回應中' && order.myRole === '賣家') {
             <div class="status-tag pending">
-              <lucide-icon [name]="CircleEllipsis"></lucide-icon>對方正等待回應中
+              <lucide-icon name="CircleEllipsis"></lucide-icon>對方正等待回應中
             </div>
             <p>對方正焦急等待中...</p>
             <div class="button-group">
@@ -91,7 +91,7 @@
             }
             @if (order.status === '已取消') {
             <div class="status-tag cancelled">
-              <lucide-icon [name]="CircleX"></lucide-icon>已取消
+              <lucide-icon name="CircleX"></lucide-icon>已取消
             </div>
             <p>交易已取消。</p>
 
@@ -99,7 +99,7 @@
 
             @if (order.status === '完成交易') {
             <div class="button-group">
-              @if (hasReview) {
+              @if (order.givenRank) {
               <button class="btn-action outline" (click)="viewReview(order)">查看評價</button>
               } @else {
               <button class="btn-action outline" (click)="submitReview(order)">進行評分</button>
@@ -126,7 +126,7 @@
             }
 
             @if (order.status !== '已取消') {
-            <button class="btn-action outline" (click)="chat()">
+            <button class="btn-action outline" (click)="chat(order)" [title]="'聊聊'">
               聯絡{{ order.partnerRole }}
             </button>
             }
@@ -146,7 +146,7 @@
   <nav class="pagination">
     <span>共{{ allOrders.length }}筆資料</span>
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
-      <lucide-icon [name]="ChevronLeft"></lucide-icon>
+      <lucide-icon name="ChevronLeft"></lucide-icon>
     </button>
     @for (page of pagination.pageNumbers; track page) {
     <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
@@ -154,7 +154,7 @@
     </button>
     }
     <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
-      <lucide-icon [name]="ChevronRight"></lucide-icon>
+      <lucide-icon name="ChevronRight"></lucide-icon>
     </button>
   </nav>
   }

@@ -14,36 +14,36 @@
     <!-- 基本資料 -->
     <div class="col-md-4 profile-list">
       <div class="userName">
-        <p><lucide-icon [name]="User"></lucide-icon>賣家名稱：{{shopOwnerData()?.userName}}</p>
+        <p><lucide-icon name="User"></lucide-icon>賣家名稱：{{shopOwnerData()?.userName}}</p>
         @if (isGood) {
         <div class="ThumbsUp" [title]="'沒想好寫什麼，之後可能改hover，現在這樣有點醜。'">
-          <lucide-icon [name]="ThumbsUp"></lucide-icon>
+          <lucide-icon name="ThumbsUp"></lucide-icon>
           信譽良好
         </div>
         }
       </div>
-      <p> <lucide-icon [name]="MapPin"></lucide-icon>常出沒地區： {{formattedLocation}}</p>
-      <p> <lucide-icon [name]="School"></lucide-icon>就讀學校： {{shopOwnerData()?.school}}</p>
-      <p> <lucide-icon [name]="School"></lucide-icon>就讀學群/科系： {{shopOwnerData()?.department || '未填寫'}}</p>
-      <p> <lucide-icon [name]="Mail"></lucide-icon>賣家 email： {{shopOwnerData()?.userEmail}}</p>
-      <p> <lucide-icon [name]="Phone"></lucide-icon>手機： {{shopOwnerData()?.phone || '未填寫'}}</p>
+      <p> <lucide-icon name="MapPin"></lucide-icon>常出沒地區： {{formattedLocation}}</p>
+      <p> <lucide-icon name="School"></lucide-icon>就讀學校： {{shopOwnerData()?.school}}</p>
+      <p> <lucide-icon name="School"></lucide-icon>就讀學群/科系： {{shopOwnerData()?.department || '未填寫'}}</p>
+      <p> <lucide-icon name="Mail"></lucide-icon>賣家 email： {{shopOwnerData()?.userEmail}}</p>
+      <p> <lucide-icon name="Phone"></lucide-icon>手機： {{shopOwnerData()?.phone || '未填寫'}}</p>
     </div>
 
     <!-- 簡介 + 聊聊按鈕 -->
     <div class="col-md-6 intro-block">
       <label class="introduction">簡介：</label>
-      <p>{{shopOwnerData()?.msg}}</p>
+      <p class="msg">{{shopOwnerData()?.msg}}</p>
       <div class="introBtn">
         @if (!isOwner) {
         <button class="btn-action primary" (click)="chat()">
-          <lucide-icon [name]="MessageCircleMore"></lucide-icon>聊聊
+          <lucide-icon name="MessageCircleMore"></lucide-icon>聊聊
         </button>
         <button class="btn-action report" (click)="goRepot()">
-          <lucide-icon [name]="Flag"></lucide-icon>檢舉
+          <lucide-icon name="Flag"></lucide-icon>檢舉
         </button>
         } @else {
         <button class="btn-action primary" (click)="goSettings()">
-          <lucide-icon [name]="Pencil"></lucide-icon>編輯個人資料
+          <lucide-icon name="Pencil"></lucide-icon>編輯個人資料
         </button>
         }
       </div>
@@ -58,11 +58,11 @@
       <span class="section-title">我上架的商品</span>
       <div class="edit">
         <button class="btn-action primary" (click)="manageProduct()">
-          <lucide-icon [name]="Pencil"></lucide-icon>
+          <lucide-icon name="Pencil"></lucide-icon>
           商品管理
         </button>
         <button class="btn-action primary" (click)="goLaunchProduct()">
-          <lucide-icon [name]="Plus"></lucide-icon>
+          <lucide-icon name="Plus"></lucide-icon>
           新增商品
         </button>
       </div>
@@ -87,8 +87,8 @@
               <span class="price">${{item.price}}</span>
 
               @if (!isOwner) {
-              <button class="btn-icon-action" (click)="goCollectProduct(); $event.stopPropagation()">
-                <lucide-icon [name]="HeartPlus" [title]="'收藏該商品'"></lucide-icon>
+              <button class="btn-icon-action" (click)="goCollectProduct(item.productId); $event.stopPropagation()">
+                <lucide-icon name="HeartPlus" [title]="'收藏該商品'"></lucide-icon>
               </button>
               }
             </div>
@@ -103,7 +103,7 @@
   <nav class="pagination">
     <span>共{{ allProducts.length }}筆資料</span>
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
-      <lucide-icon [name]="ChevronLeft"></lucide-icon>
+      <lucide-icon name="ChevronLeft"></lucide-icon>
     </button>
     @for (page of pagination.pageNumbers; track page) {
     <button class="page-btn" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
@@ -111,7 +111,7 @@
     </button>
     }
     <button class="page-btn" [disabled]="pagination.currentPage === pagination.totalPages" (click)="nextPage()">
-      <lucide-icon [name]="ChevronRight"></lucide-icon>
+      <lucide-icon name="ChevronRight"></lucide-icon>
     </button>
   </nav>
 

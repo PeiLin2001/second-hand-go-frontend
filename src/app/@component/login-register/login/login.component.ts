@@ -42,18 +42,22 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
         next: (res) => {
-          this.userService.isLoggedIn.set(true);
-          sessionStorage.setItem('isLoggedIn', 'true');
-          // 登入成功後立刻撈自己的資料
-          this.userService.getMyInfo().subscribe({
-            next: (info) => {
-              if (info && info.user) {
-                this.userService.currentUser.set(info.user);
-                this.userService.updateAvatar(info.user.imgPath);
-              }
-            }
-          });
-          this.router.navigate(['/home']);
+          if (res.role === 'user') {
+            this.userService.isLoggedIn.set(true);
+            sessionStorage.setItem('isLoggedIn', 'true');
+            // 登入成功後立刻撈自己的資料
+            this.userService.getMyInfo().subscribe({
+              next: (info) => {
+                if (info && info.user) {
+                  this.userService.currentUser.set(info.user);
+                  this.userService.updateAvatar(info.user.imgPath);
+                }
+              },
+            });
+            this.router.navigate(['/home']);
+          } else if (res.role === 'manager') {
+            this.router.navigate(['/report']);
+          }
         },
         error: (err) => {
           this.loginForm.markAllAsTouched();

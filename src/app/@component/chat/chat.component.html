@@ -8,7 +8,7 @@
       <div class="message-list">
         @for (msg of message; track msg) {
         <div class="msg-item">
-          <strong class="user-name">{{ msg.userName }}</strong>: {{ msg.message }}
+          <strong class="user-name">{{ msg.senderId }}</strong>: {{ msg.messageContent }}
         </div>
         } @empty {
         <div class="no-message">目前沒有任何聊天訊息喔。</div>

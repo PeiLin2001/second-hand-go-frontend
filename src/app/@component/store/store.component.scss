@@ -123,6 +123,10 @@
   margin-bottom: 8px;
 }
 
+.msg {
+  overflow-y: auto;
+}
+
 .introBtn {
   display: flex;
   justify-content: space-between;
@@ -263,16 +267,17 @@
   border: 1px solid $neutral-300;
   transition: all 0.3s;
   user-select: none;
+  outline: none;
+
 
   &.primary {
     background-color: $background-yellow;
     color: $primary-yellow-darker;
-    border-color: $primary-yellow;
+    border-color: $background-yellow-hover;
 
     &:hover {
-      background: $primary-yellow-dark;
-      color: $background-white;
-      transform: translateY(-2px);
+      background: $background-yellow-hover;
+      color: $primary-yellow-darker;
     }
   }
 
@@ -288,17 +293,16 @@
 
   &.report {
     background-color: #ffebee;
-    color: #c62828;
-    border: 1px solid rgba(#c62828, 0.1);
+    color: #cc5e5e;
+    border: 1px solid rgba(#cc5e5e, 0.1);
 
     lucide-icon {
-      color: #c62828;
+      color: #cc5e5e;
     }
 
     &:hover {
-      background-color: #c62828;
+      background-color: #cc5e5e;
       color: $background-white;
-      transform: translateY(-2px);
 
       lucide-icon {
         color: $background-white;
@@ -319,6 +323,8 @@
   justify-content: center;
   transition: all 0.2s;
   flex-shrink: 0;
+  outline: none;
+
 
   lucide-icon {
     color: $primary-yellow-dark;
@@ -385,8 +391,6 @@
 lucide-icon {
   width: 22px;
   height: 22px;
-  // min-width: 22px;
-  // min-height: 22px;
   color: $primary-yellow-darker;
   margin-right: 6px;
   display: inline-flex;

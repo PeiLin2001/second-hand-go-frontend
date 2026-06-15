@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
 // 定義表單資料的介面結構
 export interface ProductState {
@@ -19,13 +21,11 @@ export interface DraftItem {
   state: ProductState;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class LaunchProductFormService {
 
   //草稿
-  private readonly DRAFT_KEY = 'product_drafts';
+  private productApiUrl = 'http://localhost:8080/product';
 
   state: ProductState = this.emptyState();
 
@@ -39,71 +39,112 @@ export class LaunchProductFormService {
     tags: [],
     name: '',
     desc: '',
-
     locationRegions: [],
     grades: [],
     imageSlotUrls: new Array(7).fill('') as string[],
   };
 }
 
-  constructor() { }
+  constructor() {}
 
-  getDrafts(): DraftItem[] {
-    try {
-      const raw = localStorage.getItem(this.DRAFT_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  }
-
-  // saveDraft 改為：有 id 就覆蓋，沒有就新增
-  saveDraft(): DraftItem {
-    const drafts = this.getDrafts();
+  // ── 草稿：存（新增 or 覆蓋）──
+  async saveDraft(userId: number): Promise<DraftItem> {
+    const body = this.buildRequestBody('DRAFT');
 
     if (this.currentDraftId) {
-      // 覆蓋原有草稿
-      const index = drafts.findIndex(d => d.id === this.currentDraftId);
-      if (index !== -1) {
-        drafts[index] = {
-          ...drafts[index],
-          savedAt: new Date().toISOString(),
-          state: JSON.parse(JSON.stringify(this.state)),
-        };
-        localStorage.setItem(this.DRAFT_KEY, JSON.stringify(drafts));
-        return drafts[index];
-      }
+      const res = await fetch(`${this.productApiUrl}/draft/${this.currentDraftId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      return res.json();
+    } else {
+      const res = await fetch(`${this.productApiUrl}/draft`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...body, userId }),
+      });
+      const data = await res.json();
+      this.currentDraftId = String(data.id);
+      return data;
     }
-    // 全新草稿
-    const newDraft: DraftItem = {
-      id: Date.now().toString(),
-      savedAt: new Date().toISOString(),
-      state: JSON.parse(JSON.stringify(this.state)),
-    };
-    this.currentDraftId = newDraft.id; // ← 新增後也記住
-    drafts.unshift(newDraft);
-    localStorage.setItem(this.DRAFT_KEY, JSON.stringify(drafts));
-    return newDraft;
   }
 
-  // loadDraft 時記住 id
-  loadDraft(id: string): boolean {
-    const draft = this.getDrafts().find(d => d.id === id);
-    if (!draft) return false;
+  // ── 草稿：取得清單 ──
+  async getDrafts(userId: number): Promise<DraftItem[]> {
+    const res = await fetch(`${this.productApiUrl}/user/${userId}/drafts`);
+    const data = await res.json();
+    // 後端回傳格式轉成前端 DraftItem 格式
+    return data.map((item: any) => ({
+      id: String(item.id),
+      savedAt: item.savedAt,
+      state: {
+        name: item.name,
+        desc: item.description,
+        price: item.price,
+        condition: item.condition,
+        catMain: item.categories ?? [],
+        locationRegions: item.locationRegions ?? [],
+        grades: item.grades ?? [],
+        imageSlotUrls: item.imageSlotUrls ?? new Array(7).fill(''),
+        tags: [],
+      },
+    }));
+  }
+
+  // ── 草稿：載入到 state（繼續編輯用）──
+  loadDraft(draft: DraftItem): void {
     this.state = JSON.parse(JSON.stringify(draft.state));
-    this.currentDraftId = id; // 記住
-    return true;
+    this.currentDraftId = draft.id;
   }
 
-  deleteDraft(id: string): void {
-    const drafts = this.getDrafts().filter(d => d.id !== id);
-    localStorage.setItem(this.DRAFT_KEY, JSON.stringify(drafts));
+  // ── 草稿：刪除 ──
+  async deleteDraft(id: string): Promise<void> {
+    await fetch(`${this.productApiUrl}/${id}`, { method: 'DELETE' });
   }
 
-  // 發布或重置時清除 id
+  // ── 上架 ──
+  async publishProduct(userId: number): Promise<any> {
+    // 如果還沒有草稿 id，先建一筆草稿再上架
+    if (!this.currentDraftId) {
+      await this.saveDraft(userId);
+    }
+    const res = await fetch(`${this.productApiUrl}/${this.currentDraftId}/publish`, {
+      method: 'PUT',
+    });
+    return res.json();
+  }
+
+  // ── 下架 ──
+  async unpublishProduct(id: string): Promise<void> {
+    await fetch(`${this.productApiUrl}/${id}/unpublish`, { method: 'PUT' });
+  }
+
+  // ── 已上架商品清單 ──
+  async getPublished(userId: number): Promise<any[]> {
+    const res = await fetch(`${this.productApiUrl}/user/${userId}/published`);
+    return res.json();
+  }
+
+  // ── 重置 ──
   resetState(): void {
     this.state = this.emptyState();
-    this.currentDraftId = null; // 清除，下次會再新增
+    this.currentDraftId = null;
+  }
+
+  // ── 共用：組 request body ──
+  private buildRequestBody(status: 'DRAFT' | 'PUBLISHED') {
+    return {
+      name: this.state.name,
+      description: this.state.desc,
+      price: this.state.price,
+      condition: this.state.condition,
+      status,
+      categories: this.state.catMain,
+      locationRegions: this.state.locationRegions,
+      grades: this.state.grades,
+      imageSlotUrls: this.state.imageSlotUrls,
+    };
   }
 
 }

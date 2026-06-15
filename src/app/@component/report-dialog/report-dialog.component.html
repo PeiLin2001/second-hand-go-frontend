@@ -1,49 +1,66 @@
 <div mat-dialog-title>
-  <span>{{ data.caseId }}</span>
-  <span>違規類型:{{ data.violationType }}</span>
-
+  <span>案件 #{{ data.reportId }}</span>
+  <span>違規類型：{{ data.violationType }}</span>
 </div>
 
 <mat-dialog-content>
+
   <!-- 當事人 -->
-  <div class="info-row"><span class="label">檢舉人:</span><span>{{ data.complainantName }}</span></div>
-  <div class="info-row"><span class="label">被檢舉人:</span><span>{{ data.accusedName }}</span></div>
+  <div class="info-row"><span class="label">檢舉人:</span><span>{{ data.compName }}</span></div>
 
   <!-- 相關資料 -->
-  <div class="info-row"><span class="label">相關商品:</span>
-    <span >{{ data.productName }}（{{ data.productId }}）</span>
+
+@if (data.type === '商品') {
+  <div class="info-row">
+    <span class="label">相關商品:</span>
+    <span>{{ data.productName }}（ID: {{ data.productId }}）</span>
     <a [href]="'/product_page/' + data.productId" target="_blank">前往商品頁面</a>
   </div>
-  <div class="info-row"><span class="label">相關訂單:</span><span>{{ data.orderId }}</span></div>
+} @else {
+  <div class="info-row">
+    <span class="label">被檢舉人:</span>
+    <span>{{ data.accusedName }}（ID: {{ data.accusedId }}）</span>
+  </div>
+}
 
   <!-- 檢舉內容 -->
   <div class="info-row"><span class="label">檢舉日期:</span><span>{{ data.reportDate }}</span></div>
   <div class="info-row"><span class="label">檢舉類型:</span><span>{{ data.type }}</span></div>
+  <div class="info-row"><span class="label">違規類型:</span><span>{{ data.violationType }}</span></div>
   <div class="info-row"><span class="label">處理狀況:</span><span>{{ data.status }}</span></div>
   <div class="info-row"><span class="label">檢舉內容:</span><span>{{ data.description }}</span></div>
 
   <!-- 附件 -->
-  @if (data.filePath) {
-    <div class="info-row">
+  @if (data.filePath && data.filePath.length > 0) {
+    <div class="info-row attach-row">
       <span class="label">附件:</span>
-      <img [src]="data.filePath" alt="data.description">
+      <div class="attach-imgs">
+        @for (img of data.filePath; track img) {
+          <img [src]="img" alt="附件圖片">
+        }
+      </div>
     </div>
   }
 
+  <!-- 處理備註：已處理才顯示 -->
+  @if (data.note) {
+    <div class="info-row">
+      <span class="label">處理備註:</span>
+      <span class="note-text">{{ data.note }}</span>
+    </div>
+  }
+
+</mat-dialog-content>
+
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>取消</button>
-  <button mat-button (click)="confirm('reject')">駁回檢舉</button>
-      <!-- type = 商品 → 顯示強制下架 -->
+  @if (data.status === '未處理') {
+    <button mat-button (click)="confirm('駁回')">駁回檢舉</button>
     @if (data.type === '商品') {
-        <button mat-button (click)="confirm('approve')">
-            強制下架
-        </button>
+      <button mat-button (click)="confirm('通過')">強制下架</button>
     }
-
-    <!-- type = 交易 → 顯示封鎖使用者 -->
-    @else if (data.type === '交易') {
-        <button mat-button (click)="confirm('approve')">
-            停權被檢舉人
-        </button>
+    @if (data.type === '使用者') {
+      <button mat-button (click)="confirm('通過')">停權被檢舉人</button>
     }
+  }
 </mat-dialog-actions>
