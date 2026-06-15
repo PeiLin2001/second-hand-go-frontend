@@ -150,7 +150,7 @@ export class StoreComponent {
   }
 
   // 前往商品詳情頁
-  goProductPage() { this.router.navigate(['/product_page']); }
+  goProductPage(item: any) { this.router.navigate(['/product_page', item.productId]); }
 
   // 編輯個人資料
   goSettings() { this.router.navigate(['/profile_settings']); }

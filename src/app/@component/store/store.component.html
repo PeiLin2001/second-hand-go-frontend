@@ -72,7 +72,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
       @for (item of products ; track $index) {
       <div class="col">
-        <div class="card" (click)="goProductPage()">
+        <div class="card" (click)="goProductPage(item)">
           <!-- 左側圖片 -->
           <figure class="img-wrapper">
             <img [src]=item.imgPath[0] class="" alt="商品圖片">

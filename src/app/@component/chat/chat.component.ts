@@ -60,6 +60,10 @@ export class ChatComponent {
     });
   }
 
+  getSenderName() {
+
+  }
+
   private checkAndFetchRoom() {
     if (!this.userId || !this.partnerId) return;
 

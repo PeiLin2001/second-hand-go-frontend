@@ -64,6 +64,7 @@ export class OrderInformationComponent {
 
   pageSize = 5; // 分頁變數
   allOrders: any[] = [];
+  filteredTotalCount = 0; // 資料 總||篩選 後總筆數
 
   // 獲得訂單資料
   fetchOrder() {
@@ -152,6 +153,8 @@ export class OrderInformationComponent {
 
       return roleMatch && statusMatch;
     });
+
+    this.filteredTotalCount = filtered.length;
 
     let start = (this.pagination.currentPage - 1) * this.pageSize;
     return filtered.slice(start, start + this.pageSize);
