@@ -1,8 +1,8 @@
-import { UserService } from './../../@Services/user.service';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
+import { UserService } from '../../@Services/user.service';
 
 
 
@@ -53,7 +53,7 @@ export class LaunchProductPriceComponent implements OnInit {
   private aiPendingPrice = 0;
   private readonly API_MODEL = 'claude-sonnet-4-20250514';
 
-  dialogVisible = false;
+
 
   // Toast 提示框
   toastText = '';
@@ -64,6 +64,7 @@ export class LaunchProductPriceComponent implements OnInit {
     private router: Router,
     private formService: LaunchProductFormService,
     private userService: UserService
+
   ) { }
 
   ngOnInit(): void {
@@ -315,10 +316,6 @@ export class LaunchProductPriceComponent implements OnInit {
     this.aiLabel = '一鍵評估推薦價格';
   }
 
-  //dialog 填入的圖片清單
-  get filledImages(): string[] {
-    return this.imageSlotUrls.filter(url => url !== '');
-  }
 
   // ── Toast 訊息提示 ──
   showToast(msg: string): void {
@@ -327,58 +324,20 @@ export class LaunchProductPriceComponent implements OnInit {
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => {
       this.toastVisible = false;
-    }, 1500);
+    }, 1500
+    );
   }
-
-  // ── 路由切換（上一步 / 下一步：上架） ──
-  onPrevClick(): void {
-    // 回到第一步，Service 內的資料會留著
+  // 下一步
+  onNextClick(): void {
+    if (this.isNextDisabled) return;
     this.router.navigate(['/launch_product_info']);
   }
 
-  onNextClick(): void {
-    if (this.isNextDisabled) {
-      const missing: string[] = [];
-      if (!this.imageSlotUrls[0]) missing.push('商品主圖');
-      if (!this.state.name) missing.push('商品名稱');
-      if ((this.state.desc?.length || 0) < 1) missing.push('描述滿 1 字');
-      if (!(this.state.price > 0)) missing.push('售價');
-      this.showToast(`請檢查：${missing.join('、')}`);
-      return;
-    }
-    // 所有欄位都填好了，打開預覽 dialog
-    this.dialogVisible = true;
-  }
-
-  // 返回：關閉 dialog，留在原頁
-  onDialogCancel(): void {
-    this.dialogVisible = false;
-  }
-
-  // 點擊背景也能關閉
-  onBackdropClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('dialog-backdrop')) {
-      this.dialogVisible = false;
-    }
-  }
-
   // 儲存草稿
-  onSaveDraft(): void {
-    this.formService.saveDraft();
+  async onSaveDraft(): Promise<void> {
+    const userId = Number(this.userService.currentUser().userId);
+    await this.formService.saveDraft(userId);
     this.showToast('✓ 草稿已儲存');
   }
 
-  // 確認上架
-  onDialogConfirm(): void {
-    this.dialogVisible = false;
-    // this.showToast('✓ 商品上架成功！');
-    this.formService.resetState();
-    setTimeout(() => {
-      let id = this.userService.currentUser().userId;
-      if (id) {
-        this.router.navigate(['/store', Number(id)]);
-      }
-    });
-
-  }
 }

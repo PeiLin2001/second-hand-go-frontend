@@ -56,13 +56,10 @@ export class UserActionsComponent {
     this.router.navigate(['/profile_settings']);
   }
   goToSell() {
-    this.router.navigate(['/launch_product_info']);
+    this.router.navigate(['/draft_list']);
   }
   goToOrder() {
     this.router.navigate(['/order_information']);
-  }
-  goToDraft() {
-    this.router.navigate(['/draft_list']);
   }
 
 
