@@ -1,0 +1,262 @@
+// @use '../../styles/variables' as *;
+// @use '../../styles/mixins' as *;
+
+// .wish-section {
+//   padding: 24px;
+//   background: $background-white;
+// }
+
+// .wish-header {
+//   margin-bottom: 20px;
+
+//   h4 {
+//     margin: 0;
+//     color: $text-black;
+//     font-size: 24px;
+//     font-weight: 700;
+//   }
+
+//   p {
+//     margin: 6px 0 0;
+//     color: $text-gray;
+//     font-size: $font-size-base;
+//   }
+// }
+
+// .wish-list {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 24px;
+//   padding: 0;
+//   margin: 0;
+//   list-style: none;
+// }
+
+// .wish-card {
+//   display: grid;
+//   grid-template-columns: minmax(0, 1fr) 320px;
+//   gap: 40px;
+//   padding: 40px;
+//   background: $background-white;
+//   border: 1px solid $neutral-300;
+//   border-radius: $border-radius-lg;
+//   box-shadow: 0 8px 24px rgba(30, 30, 30, 0.06);
+// }
+
+// .wish-content {
+//   min-width: 0;
+//   padding-right: 40px;
+//   border-right: 1px solid $neutral-300;
+// }
+
+// .wish-badge {
+//   display: inline-flex;
+//   align-items: center;
+//   padding: 8px 14px;
+//   margin-bottom: 28px;
+//   color: $accent-brown;
+//   background: $background-yellow;
+//   border-radius: $border-radius-sm;
+//   font-size: 16px;
+//   font-weight: 600;
+// }
+
+// .wish-title {
+//   margin: 0 0 32px;
+//   color: $text-black;
+//   font-size: 40px;
+//   line-height: 1.25;
+//   font-weight: 800;
+//   letter-spacing: -0.02em;
+// }
+
+// .wish-info-block {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 10px;
+// }
+
+// .wish-label {
+//   margin: 0;
+//   color: $neutral-700;
+//   font-size: 18px;
+//   font-weight: 600;
+// }
+
+// .wish-price {
+//   margin: 0;
+//   color: $text-price;
+//   font-size: 36px;
+//   line-height: 1.2;
+//   font-weight: 800;
+// }
+
+// .wish-divider {
+//   height: 1px;
+//   margin: 28px 0;
+//   background: $neutral-300;
+// }
+
+// .wish-tags {
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 10px;
+// }
+
+// .wish-tag {
+//   display: inline-flex;
+//   align-items: center;
+//   padding: 8px 16px;
+//   color: $accent-brown;
+//   background: $background-yellow;
+//   border-radius: $border-radius-sm;
+//   font-size: 16px;
+//   font-weight: 500;
+// }
+
+// .wish-description {
+//   margin: 0;
+//   color: $neutral-700;
+//   font-size: 18px;
+//   line-height: 1.8;
+// }
+
+// .wisher-panel {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   text-align: center;
+// }
+
+// .wisher-profile {
+//   width: 120px;
+//   height: 120px;
+//   margin-bottom: 24px;
+//   border-radius: 50%;
+//   object-fit: cover;
+//   background: $neutral-100;
+// }
+
+// .wisher-meta {
+//   margin-bottom: 28px;
+// }
+
+// .wisher-name {
+//   margin: 0;
+//   color: $text-black;
+//   font-size: 28px;
+//   font-weight: 800;
+// }
+
+// .wisher-school {
+//   margin: 8px 0 0;
+//   color: $neutral-700;
+//   font-size: 18px;
+// }
+
+// .reputation-card {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 14px;
+//   width: 100%;
+//   padding: 16px 18px;
+//   color: $accent-brown;
+//   background: $background-white;
+//   border: 1px solid $accent-brown-light;
+//   border-radius: $border-radius-lg;
+
+//   lucide-icon {
+//     width: 24px;
+//     height: 24px;
+//     color: $accent-brown;
+//   }
+// }
+
+// .reputation-text {
+//   display: flex;
+//   align-items: baseline;
+//   gap: 12px;
+
+//   span {
+//     color: $accent-brown;
+//     font-size: 15px;
+//     font-weight: 600;
+//   }
+
+//   strong {
+//     color: $text-price;
+//     font-size: 30px;
+//     line-height: 1;
+//     font-weight: 800;
+//   }
+// }
+
+// .reputation-max {
+//   color: $neutral-500;
+//   font-size: 16px;
+// }
+
+// .trade-count {
+//   margin: 12px 0 28px;
+//   color: $neutral-700;
+//   font-size: 16px;
+// }
+
+// .btn-chat {
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 10px;
+//   width: 100%;
+//   padding: 16px 24px;
+//   color: $accent-brown;
+//   background: $primary-yellow;
+//   border: 1px solid $primary-yellow-dark;
+//   border-radius: $border-radius-lg;
+//   font-size: 20px;
+//   font-weight: 700;
+//   cursor: pointer;
+//   transition: background 0.2s ease, transform 0.2s ease;
+
+//   lucide-icon {
+//     width: 22px;
+//     height: 22px;
+//   }
+
+//   &:hover {
+//     background: $background-yellow-hover;
+//     transform: translateY(-1px);
+//   }
+
+//   &:active {
+//     background: $background-yellow-active;
+//     transform: translateY(0);
+//   }
+// }
+
+// @media (max-width: 900px) {
+//   .wish-card {
+//     grid-template-columns: 1fr;
+//     padding: 28px;
+//   }
+
+//   .wish-content {
+//     padding-right: 0;
+//     border-right: 0;
+//     border-bottom: 1px solid $neutral-300;
+//     padding-bottom: 32px;
+//   }
+
+//   .wish-title {
+//     font-size: 32px;
+//   }
+
+//   .wish-price {
+//     font-size: 30px;
+//   }
+
+//   .wisher-panel {
+//     align-items: stretch;
+//   }
+// }
