@@ -1,6 +1,6 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
-import { Component, effect } from '@angular/core';
+import { Component, effect, NgZone, ElementRef, ViewChild } from '@angular/core';
 import { SocketService } from '../../@Services/socket.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -30,6 +30,8 @@ export class ChatComponent {
     });
   }
   private destroyRef = inject(DestroyRef);
+  private zone = inject(NgZone);
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   enter: string = '';
   userId?: number;
@@ -40,8 +42,6 @@ export class ChatComponent {
   chatHistoryList: any[] = []; // 側邊欄的歷史紀錄清單
 
   ngOnInit(): void {
-    // 1.去撈目前使用者的所有歷史對話清單
-
     // 帶參數
     let idFromUrl = this.route.snapshot.paramMap.get('id');
     if (idFromUrl) {
@@ -53,16 +53,19 @@ export class ChatComponent {
       takeUntilDestroyed(this.destroyRef) // 元件死掉時自動退訂。
     ).subscribe({
       next: (data: any) => {
-        this.message.push(data);
         console.log('data:', data);
+        this.zone.run(() => {
+          this.message = [...this.message, data];
+          console.log('即時收到新訊息並更新畫面！data:', data);
+          this.scrollToBottom();
+        })
+
+
       },
       error: (err) => console.error('Socket 接收失敗:', err)
     });
   }
 
-  getSenderName() {
-
-  }
 
   private checkAndFetchRoom() {
     if (!this.userId || !this.partnerId) return;
@@ -73,16 +76,31 @@ export class ChatComponent {
     };
     this.apiTestService.getOrCreateRoom(ChatRoomReq).subscribe({
       next: (room: any) => {
+        console.log(room);
+
         this.roomId = room.roomId;
         console.log(' 成功取得/建立房間！房號為：', this.roomId);
         if (this.roomId !== null) {
           this.socketService.joinRoom(this.roomId, this.userName);
+          this.fetchHistory(this.roomId);
         } else {
           console.error('得到的房號是 null，無法加入 Socket 房間！');
         }
       },
       error: (err) => console.error('取得房間失敗:', err)
     });
+  }
+
+  private fetchHistory(roomId: number) {
+    this.apiTestService.history(roomId).subscribe({
+      next: (res) => {
+        console.log('歷史訊息', res);
+        this.message = res.chatMessageVo || [];
+
+        this.scrollToBottom();// 滾輪捲到最底下
+      },
+      error: (err) => console.error('history 接收失敗:', err)
+    })
   }
 
   sendMsg() {
@@ -101,6 +119,16 @@ export class ChatComponent {
   goToHome() {
     this.router.navigate(['/home']);
     window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  scrollToBottom(): void {
+    try {
+      setTimeout(() => {
+        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+      }, 50);
+    } catch (err) {
+      console.error('滾動失敗：', err);
+    }
   }
 
 }

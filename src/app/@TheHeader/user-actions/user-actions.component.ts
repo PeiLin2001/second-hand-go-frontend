@@ -61,6 +61,9 @@ export class UserActionsComponent {
   goToOrder() {
     this.router.navigate(['/order_information']);
   }
+  goToChat() {
+    this.router.navigate(['/chat']);
+  }
 
 
   logout() {

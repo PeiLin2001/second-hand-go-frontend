@@ -90,6 +90,11 @@ export class ApiTestService {
   getOrCreateRoom(ChatRoomReq: any) {
     return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
   }
+
+  history(roomId: number): Observable<any> {
+    return this.http.get(`${this.chatApiUrl}/history?roomId=${roomId}`);
+  }
+
   //商品頁:單一商品詳情
   searchByProductId(productId: number): Observable<GetProductDataRes> {
     return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);
