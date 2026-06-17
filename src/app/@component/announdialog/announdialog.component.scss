@@ -1,0 +1,137 @@
+@use "../../styles/variables" as *;
+
+.dialog-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 480px;
+  max-width: 600px;
+}
+
+// 檢舉Dialog
+::ng-deep.cdk-overlay-container {
+  z-index: 10000 !important;
+}
+
+// ===== 標題區 =====
+.dialog-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e2ded5;
+}
+
+.dialog-title {
+  font-size: $font-size-h1;
+  font-weight: 700;
+  color: #1a1814;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.dialog-period {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.period-icon {
+  color: #c49a3a;
+  display: flex;
+  flex-shrink: 0;
+}
+
+.period-label {
+  font-weight: 600;
+  color: #c49a3a;
+}
+
+.period-value {
+  color: #6b6760;
+}
+
+// ===== 內容區 =====
+mat-dialog-content {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.section {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0ede8;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1814;
+  margin: 0 0 12px;
+}
+
+// ===== 圖片 =====
+.img-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #e2ded5;
+}
+
+.announce-img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  max-height: 280px;
+}
+
+// ===== 內容文字 =====
+.content-box {
+  background: #faf9f5;
+  border: 1px solid #e2ded5;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.content-text {
+  font-size: 14px;
+  color: #4a4744;
+  line-height: 1.8;
+  margin: 0;
+  white-space: pre-wrap; // 保留換行
+}
+
+// ===== 按鈕區 =====
+mat-dialog-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px !important;
+  margin: 0 !important;
+  border-top: 1px solid #e2ded5;
+  justify-content: flex-end;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: opacity 0.15s;
+  line-height: 1;
+
+  &:hover { opacity: 0.85; }
+}
+
+.btn-cancel {
+  background: #ffffff;
+  color: #1a1814;
+  border-color: #e2ded5;
+}
+
