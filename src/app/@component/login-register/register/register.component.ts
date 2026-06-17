@@ -35,6 +35,7 @@ export const SCHOOL_DOMAIN_MAP: Record<string, string> = {
   'fcu.edu.tw': '逢甲大學',
   // 台南
   'ncku.edu.tw': '國立成功大學',
+  'tut.edu.tw' : '台南應用科技大學',
   // 高雄
   'nsysu.edu.tw': '國立中山大學',
   'nuk.edu.tw': '國立高雄大學',

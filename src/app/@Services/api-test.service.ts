@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { GetProductDataRes } from '../@Interface/product-vo';
 import { BasicResponse } from '../@Interface/user';
 import { OrderRes } from '../@Interface/order';
+import { CollectRes } from '../@Interface/collect-res';
 
 
 // interface LoginReq {
@@ -82,9 +83,27 @@ export class ApiTestService {
   }
 
   // === collect ===
+  //新增收藏
   addCollect(productId: number) {
-    return this.http.post(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
+    return this.http.post<BasicResponse>(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
   }
+
+  // 刪除收藏
+  deleteCollect(collectIds: number[]) {
+    let params = new HttpParams();
+    collectIds.forEach(id => {
+      params = params.append('collectId', id.toString());
+    });
+    return this.http.post<BasicResponse>(`${this.collectApiUrl}/delete`, {}, { params, withCredentials: true });
+  }
+
+  // 取得目前登入者的所有收藏清單
+  getUserCollect() {
+    // 🌟 在 .get 後面加上 <CollectRes>，告訴 Angular 這一條水管流出來的資料一定是這種規格！
+    return this.http.get<CollectRes>(`${this.collectApiUrl}/getUserCollect`, { withCredentials: true });
+  }
+
+
 
   // === chat ===
   getOrCreateRoom(ChatRoomReq: any) {

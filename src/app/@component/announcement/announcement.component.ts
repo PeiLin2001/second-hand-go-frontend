@@ -59,9 +59,9 @@ export class AnnouncementComponent {
     );
   }
   private get neverList(): Announcement[] {
-    return this.allAnnouncements.filter((a) => {
-        !a.isPublished || (a.isPublished && a.startDate > this.today);
-    });
+    return this.allAnnouncements.filter(
+      (a) => !a.isPublished || (a.isPublished && a.startDate > this.today),
+    );
   }
 
   loadFromAPI() {
@@ -71,7 +71,6 @@ export class AnnouncementComponent {
         if (res.statusCode == 200) {
           console.log(res.data);
           this.allAnnouncements = res.data.map((a: any) => {
-            console.log('isPublished:', a.publish);
             return {
               id: a.id,
               title: a.title,
@@ -79,7 +78,7 @@ export class AnnouncementComponent {
               endDate: a.removalDate,
               isPublished: a.publish,
               content: a.content,
-              imgPath: a.imgPath ?? null,
+              imgPath: a.imgPath,
             };
           });
           this.reloadAll();
@@ -151,6 +150,7 @@ export class AnnouncementComponent {
   addAnnounce() {
     const dialogRef = this.dialog.open(AddannounceDaialogComponent, {
       width: '520px',
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -162,6 +162,7 @@ export class AnnouncementComponent {
   editAnnouncement(item: Announcement) {
     const dialogRef = this.dialog.open(AddannounceDaialogComponent, {
       width: '520px',
+      disableClose: true,
       data: item,
     });
 

@@ -1,0 +1,122 @@
+<ul>
+  @for (item of wishList; track $index) {
+    <li class="wishList-item">
+      <div class="wish-info">
+        <!-- <h5 class="subtitle">商品許願</h5> -->
+
+        <h4 class="wish-title">{{item.title}}</h4>
+
+        <div class="description-wrapper">
+          <h5 class="subtitle">需求描述</h5>
+          <p class="wish-description">{{item.description}}</p>
+        </div>
+
+        <div class="budget">
+          <h5 class="subtitle">預算</h5>
+          <p class="contex">NT${{item.budgetMin}} - {{item.budgetMax}}</p>
+        </div>
+
+        <div class="budget">
+          <h5 class="subtitle">可面交地點</h5>
+          <p class="contex">{{item.location}}</p>
+        </div>
+
+      </div>
+
+
+      <div class="wisher-wrapper">
+        <div class="img-wrapper">
+          <img [src]="item.wisher.userImgPath" alt="♥" class="wisher-profile">
+        </div>
+
+        <div class="wisher-info">
+          <h5 class="wisher-name">{{item.wisher.userName}}</h5>
+          <p class="school"> {{item.wisher.school}} </p>
+        </div>
+
+        <div class="credit-info">
+          <p class="credit-score">
+            {{item.wisher.goodLevel}} ★
+          </p>
+        </div>
+
+        <button class="btn-action primary" (click)="chat()">
+          <lucide-icon name="MessageCircleMore"></lucide-icon>聊聊
+        </button>
+      </div>
+
+    </li>
+  }
+</ul>
+
+<!--
+<section class="wish-section">
+  <div class="wish-header">
+    <h4>許願池</h4>
+    <p>歡迎向同學們提出你的需求</p>
+  </div>
+
+  <ul class="wish-list">
+    @for (item of wishList; track $index) {
+      <li class="wish-card">
+        <div class="wish-content">
+          <span class="wish-badge">商品許願</span>
+
+          <h3 class="wish-title">{{ item.title }}</h3>
+
+          <div class="wish-info-block">
+            <p class="wish-label">預算</p>
+            <p class="wish-price">NT${{ item.budgetMin }} – {{ item.budgetMax }}</p>
+          </div>
+
+          <div class="wish-divider"></div>
+
+          <div class="wish-info-block">
+            <p class="wish-label">分類</p>
+            <div class="wish-tags">
+              <span class="wish-tag">3C 電子</span>
+            </div>
+          </div>
+
+          <div class="wish-divider"></div>
+
+          <div class="wish-info-block">
+            <p class="wish-label">需求描述</p>
+            <p class="wish-description">{{ item.description }}</p>
+          </div>
+        </div>
+
+        <aside class="wisher-panel">
+          <img
+            [src]="item.wisher.userImgPath"
+            alt="許願者頭像"
+            class="wisher-profile"
+          />
+
+          <div class="wisher-meta">
+            <p class="wisher-name">{{ item.wisher.userName }}</p>
+            <p class="wisher-school">{{ item.wisher.school }}</p>
+          </div>
+
+          <div class="reputation-card">
+            <lucide-icon name="ShieldCheck"></lucide-icon>
+
+            <div class="reputation-text">
+              <span>信譽評分</span>
+              <strong>{{ 4.8 }}</strong>
+            </div>
+
+            <span class="reputation-max">/ 5.0</span>
+          </div>
+
+          <p class="trade-count">{{ 32 }} 筆交易</p>
+
+          <button class="btn-chat" (click)="chat()">
+            <lucide-icon name="MessageCircleMore"></lucide-icon>
+            聊聊
+          </button>
+        </aside>
+      </li>
+    }
+  </ul>
+</section> -->

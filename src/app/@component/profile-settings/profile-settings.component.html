@@ -81,36 +81,6 @@
 
 <div class="region_group_grid">
 
-  <!-- <div class="grid-field-item school">
-    <p class="field-title"><lucide-icon [name]="icons.School"></lucide-icon>就讀學校</p>
-
-    <div class="field-content-block">
-      @if (!isEditingBasic) {
-        <p class="pure-text-display">{{ school }}</p>
-      } @else {
-        <div class="input-box-wrapper">
-          <form class="example-form">
-            <mat-form-field class="autocomplete-field" subscriptSizing="dynamic" appearance="outline">
-              <input type="text" placeholder="請輸入並選擇你的學校" matInput [formControl]="schoolControl" [matAutocomplete]="autoSchool" class="custom-input" required maxlength="30">
-              <mat-autocomplete #autoSchool="matAutocomplete">
-                @for (option of filteredSchools | async; track option) {
-                  <mat-option [value]="option">{{option}}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-        </div>
-
-        @if (schoolControl.touched) {
-          @if (schoolControl.hasError('required')) {
-            <p class="field-hint error-text">✘ 學校是必填喔!</p>
-          } @else if (schoolControl.hasError('notInList')) {
-            <p class="field-hint error-text">⚠ 找不到這間學校，請務必從選單中點選喔！</p>
-          }
-        }
-      }
-    </div>
-  </div> -->
 
   <div class="grid-field-item school">
     <p class="field-title"><lucide-icon [name]="icons.School"></lucide-icon>就讀學校</p>

@@ -84,6 +84,7 @@ lucide-icon { display: flex; align-items: center; }
 
 .filter-row {
   margin-bottom: 1rem;
+  gap: 0.5rem;
   @include filter-btn-style ;
 }
 

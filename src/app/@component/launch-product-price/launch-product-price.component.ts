@@ -46,12 +46,12 @@ export class LaunchProductPriceComponent implements OnInit {
   isNextDisabled = true;
 
   // === 從 step1 移入：價格 & AI ===
-  aiBoxText = 'AI 推薦：點擊下方按鈕將為您評估合適的二手轉售價';
-  aiHasContent = false;
-  aiLoading = false;
-  aiLabel = '一鍵評估推薦價格';
-  private aiPendingPrice = 0;
-  private readonly API_MODEL = 'claude-sonnet-4-20250514';
+  // aiBoxText = 'AI 推薦：點擊下方按鈕將為您評估合適的二手轉售價';
+  // aiHasContent = false;
+  // aiLoading = false;
+  // aiLabel = '一鍵評估推薦價格';
+  // private aiPendingPrice = 0;
+  // private readonly API_MODEL = 'claude-sonnet-4-20250514';
 
 
 
@@ -258,63 +258,63 @@ export class LaunchProductPriceComponent implements OnInit {
     this.updateNextButtonStatus();
   }
 
-  private buildProductContext(): string {
-    return `分類：${this.state.catMain || '未定'}\n狀況：${this.state.condition || '未定'}`;
-  }
+  // private buildProductContext(): string {
+  //   return `分類：${this.state.catMain || '未定'}\n狀況：${this.state.condition || '未定'}`;
+  // }
   // private buildProductContext(): string {
   //   return `分類：${this.state.catMain || '未定'}\n子分類：${this.state.catSub || '未定'}\n狀況：${this.state.condition || '未定'}`;
   // }
 
-  async handleAIGenerate(): Promise<void> {
-    if (this.aiPendingPrice > 0) {
-      this.applyPrice(this.aiPendingPrice);
-      return;
-    }
-    this.aiLoading = true;
-    this.aiLabel = '價格評估中…';
-    this.aiHasContent = false;
-    this.aiBoxText = '';
+  // async handleAIGenerate(): Promise<void> {
+  //   if (this.aiPendingPrice > 0) {
+  //     this.applyPrice(this.aiPendingPrice);
+  //     return;
+  //   }
+  //   this.aiLoading = true;
+  //   this.aiLabel = '價格評估中…';
+  //   this.aiHasContent = false;
+  //   this.aiBoxText = '';
 
-    try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: this.API_MODEL,
-          max_tokens: 500,
-          messages: [{
-            role: 'user',
-            content: `你是一位二手校園交易專家。根據以下商品分類與狀況，請給出一個合理的建議轉售價格數字（新台幣）。\n\n${this.buildProductContext()}\n\n請以如下格式輸出，不要有任何額外廢話：\n建議價格：NT$ [數字]\n原因簡述：[一句話說明]`,
-          }],
-        }),
-      });
-      const data = await response.json();
-      const text: string = data?.content?.[0]?.text ?? '無法取得建議';
-      this.aiBoxText = text;
-      this.aiHasContent = true;
+    // try {
+    //   const response = await fetch('https://api.anthropic.com/v1/messages', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //       model: this.API_MODEL,
+    //       max_tokens: 500,
+    //       messages: [{
+    //         role: 'user',
+    //         content: `你是一位二手校園交易專家。根據以下商品分類與狀況，請給出一個合理的建議轉售價格數字（新台幣）。\n\n${this.buildProductContext()}\n\n請以如下格式輸出，不要有任何額外廢話：\n建議價格：NT$ [數字]\n原因簡述：[一句話說明]`,
+    //       }],
+    //     }),
+    //   });
+  //     const data = await response.json();
+  //     const text: string = data?.content?.[0]?.text ?? '無法取得建議';
+  //     this.aiBoxText = text;
+  //     this.aiHasContent = true;
 
-      const priceMatch = text.match(/建議價格：\s*NT\$\s*(\d+)/i) || text.match(/(\d+)/);
-      if (priceMatch?.[1]) {
-        this.aiPendingPrice = Number(priceMatch[1]);
-        this.aiLabel = `一鍵套用價格 NT$ ${this.aiPendingPrice}`;
-      } else {
-        this.aiLabel = '一鍵評估推薦價格';
-      }
-    } catch {
-      this.aiBoxText = '系統繁忙，請稍後再試';
-      this.aiLabel = '一鍵評估推薦價格';
-    } finally {
-      this.aiLoading = false;
-    }
-  }
+  //     const priceMatch = text.match(/建議價格：\s*NT\$\s*(\d+)/i) || text.match(/(\d+)/);
+  //     if (priceMatch?.[1]) {
+  //       this.aiPendingPrice = Number(priceMatch[1]);
+  //       this.aiLabel = `一鍵套用價格 NT$ ${this.aiPendingPrice}`;
+  //     } else {
+  //       this.aiLabel = '一鍵評估推薦價格';
+  //     }
+  //   } catch {
+  //     this.aiBoxText = '系統繁忙，請稍後再試';
+  //     this.aiLabel = '一鍵評估推薦價格';
+  //   } finally {
+  //     this.aiLoading = false;
+  //   }
+  // }
 
-  private applyPrice(price: number): void {
-    this.state.price = price;
-    this.updateNextButtonStatus();
-    this.showToast(`✓ 已成功套用推薦價格：${price} 元`);
-    this.aiPendingPrice = 0;
-    this.aiLabel = '一鍵評估推薦價格';
-  }
+  // private applyPrice(price: number): void {
+  //   this.state.price = price;
+  //   this.updateNextButtonStatus();
+  //   this.showToast(`✓ 已成功套用推薦價格：${price} 元`);
+  //   this.aiPendingPrice = 0;
+  //   this.aiLabel = '一鍵評估推薦價格';
+  // }
 
 
   // ── Toast 訊息提示 ──
@@ -336,7 +336,7 @@ export class LaunchProductPriceComponent implements OnInit {
   // 儲存草稿
   async onSaveDraft(): Promise<void> {
     const userId = Number(this.userService.currentUser().userId);
-    await this.formService.saveDraft(userId);
+    await this.formService.saveDraft();
     this.showToast('✓ 草稿已儲存');
   }
 
