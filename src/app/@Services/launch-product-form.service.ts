@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserService } from './user.service';
-import { Router } from '@angular/router';
 
 // 定義表單資料的介面結構
 export interface ProductState {
@@ -47,25 +45,43 @@ export class LaunchProductFormService {
 
   constructor() {}
 
-  // ── 草稿：存（新增 or 覆蓋）──
-  async saveDraft(userId: number): Promise<DraftItem> {
-    const body = this.buildRequestBody('DRAFT');
+  // ── 共用：組 request body，欄位名稱對齊後端 ProductReq ── (新增)
+  private buildRequestBody() {
+    return {
+      productName: this.state.name,
+      description: this.state.desc,
+      price: this.state.price,
+      productCondition: this.state.condition,
+      type: this.state.catMain,
+      location: this.state.locationRegions,
+      grade: this.state.grades,
+      imgList: this.state.imageSlotUrls.filter(u => u !== ''),
+    };
+  }
+
+  //async：非同步
+  // ── 草稿：存（新增 or 覆蓋）── (改)
+  async saveDraft(): Promise<any> {
+    const body = this.buildRequestBody();
 
     if (this.currentDraftId) {
       const res = await fetch(`${this.productApiUrl}/draft/${this.currentDraftId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(body),
       });
       return res.json();
     } else {
+      // 新增草稿（userId 從後端 session 取，不用前端傳）
       const res = await fetch(`${this.productApiUrl}/draft`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...body, userId }),
+        credentials: 'include',
+        body: JSON.stringify(body),
       });
       const data = await res.json();
-      this.currentDraftId = String(data.id);
+      this.currentDraftId = String(data.productId);
       return data;
     }
   }
@@ -100,51 +116,51 @@ export class LaunchProductFormService {
 
   // ── 草稿：刪除 ──
   async deleteDraft(id: string): Promise<void> {
-    await fetch(`${this.productApiUrl}/${id}`, { method: 'DELETE' });
+    await fetch(`${this.productApiUrl}/${id}`, {
+      method: 'DELETE' ,
+      credentials: 'include'});
   }
 
   // ── 上架 ──
-  async publishProduct(userId: number): Promise<any> {
-    // 如果還沒有草稿 id，先建一筆草稿再上架
+  async publishProduct(): Promise<any> {
+    // 如果沒有草稿 id ，就先存一筆草稿
     if (!this.currentDraftId) {
-      await this.saveDraft(userId);
+      await this.saveDraft();
     }
     const res = await fetch(`${this.productApiUrl}/${this.currentDraftId}/publish`, {
       method: 'PUT',
+      credentials: 'include',
     });
     return res.json();
   }
 
   // ── 下架 ──
   async unpublishProduct(id: string): Promise<void> {
-    await fetch(`${this.productApiUrl}/${id}/unpublish`, { method: 'PUT' });
+    await fetch(`${this.productApiUrl}/${id}/unpublish`, {
+      method: 'PUT',
+      credentials: 'include',});
   }
 
   // ── 已上架商品清單 ──
   async getPublished(userId: number): Promise<any[]> {
-    const res = await fetch(`${this.productApiUrl}/user/${userId}/published`);
-    return res.json();
+    const res = await fetch(`${this.productApiUrl}/user/${userId}/published`, {
+      credentials: 'include',
+    });
+    const data = await res.json();
+
+    return (data.productList ?? []).map((item: any) => ({
+      id: String(item.productId),
+      name: item.productName ?? '',
+      price: item.price ?? 0,
+      image: item.imgPath?.[0] ?? '',
+      category: item.type?.[0] ?? '',
+    }));
   }
 
   // ── 重置 ──
   resetState(): void {
     this.state = this.emptyState();
     this.currentDraftId = null;
-  }
-
-  // ── 共用：組 request body ──
-  private buildRequestBody(status: 'DRAFT' | 'PUBLISHED') {
-    return {
-      name: this.state.name,
-      description: this.state.desc,
-      price: this.state.price,
-      condition: this.state.condition,
-      status,
-      categories: this.state.catMain,
-      locationRegions: this.state.locationRegions,
-      grades: this.state.grades,
-      imageSlotUrls: this.state.imageSlotUrls,
-    };
   }
 
 }

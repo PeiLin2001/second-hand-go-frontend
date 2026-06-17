@@ -117,7 +117,7 @@ export class StoreComponent {
 
   // 新增商品
   goLaunchProduct() {
-    this.router.navigate(['/launch_product_info']);
+    this.router.navigate(['/launch_product_price']);
   }
 
   // 商品管理

@@ -169,7 +169,7 @@ export class LaunchProductInfoComponent implements OnInit {
   // 儲存草稿
   async onSaveDraft(): Promise<void> {
     const userId = Number(this.userService.currentUser().userId);
-    await this.formService.saveDraft(userId);
+    await this.formService.saveDraft();
     this.showToast('✓ 草稿已儲存');
   }
 
@@ -209,7 +209,7 @@ export class LaunchProductInfoComponent implements OnInit {
   async onDialogConfirm(): Promise<void> {
     this.dialogVisible = false;
     const userId = Number(this.userService.currentUser().userId);
-    await this.formService.publishProduct(userId);  //  上架 API
+    await this.formService.publishProduct();  //  上架 API
     this.formService.resetState();
     this.router.navigate(['/store', userId]);
   }

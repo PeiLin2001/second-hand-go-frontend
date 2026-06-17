@@ -14,7 +14,7 @@ interface PublishedProduct {
 
 @Component({
   selector: 'app-draft-list',
-  imports: [NgFor, NgIf, DatePipe],
+  imports: [NgFor, NgIf],
   templateUrl: './draft-list.component.html',
   styleUrl: './draft-list.component.scss'
 })

@@ -248,7 +248,8 @@ textarea {
   margin: 12px 0 20px;
 }
 
-.optional { font-size: 16px; color: #6b7280; font-weight: 400; }
+// 以下註解為AI價格功能
+// .optional { font-size: 16px; color: #6b7280; font-weight: 400; }
 
 input[type="number"] {
   width: 100%;
@@ -271,53 +272,54 @@ input[type="number"] {
   }
 }
 
-.ai-box {
-  border: 1px solid #e2e5ea;
-  border-radius: 6px;
-  padding: 10px 12px;
-  min-height: 80px;
-  font-size: 16px;
-  color: #b0b7c3;
-  line-height: 1.6;
-  background: #fafbfc;
-  white-space: pre-wrap;
-  &.has-content { color: #4b5563; background: #f5f7ff; }
-}
+// 以下註解為AI價格功能
+// .ai-box {
+//   border: 1px solid #e2e5ea;
+//   border-radius: 6px;
+//   padding: 10px 12px;
+//   min-height: 80px;
+//   font-size: 16px;
+//   color: #b0b7c3;
+//   line-height: 1.6;
+//   background: #fafbfc;
+//   white-space: pre-wrap;
+//   &.has-content { color: #4b5563; background: #f5f7ff; }
+// }
 
-.btn-ai {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: #fffcdb;
-  color: #92740a;
-  border: 1px solid $primary-yellow;
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
-  margin-top: 8px;
-  box-sizing: border-box;
+// .btn-ai {
+//   width: 100%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 8px;
+//   background: #fffcdb;
+//   color: #92740a;
+//   border: 1px solid $primary-yellow;
+//   border-radius: 6px;
+//   padding: 10px 14px;
+//   font-size: 16px;
+//   font-weight: 600;
+//   font-family: inherit;
+//   cursor: pointer;
+//   transition: background 180ms ease, transform 180ms ease;
+//   margin-top: 8px;
+//   box-sizing: border-box;
 
-  &:hover { background: #fff5a0; transform: translateY(-1px); }
-  &:active { transform: translateY(0); }
-  &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-}
+//   &:hover { background: #fff5a0; transform: translateY(-1px); }
+//   &:active { transform: translateY(0); }
+//   &:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+// }
 
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid #ffe87a;
-  border-top-color: $primary-yellow;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
+// .spinner {
+//   width: 14px;
+//   height: 14px;
+//   border: 2px solid #ffe87a;
+//   border-top-color: $primary-yellow;
+//   border-radius: 50%;
+//   animation: spin 0.7s linear infinite;
+// }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+// @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ── Footer：兩端對齊 ── */
 .form-footer {
