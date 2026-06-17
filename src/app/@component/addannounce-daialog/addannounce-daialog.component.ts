@@ -129,6 +129,8 @@ export class AddannounceDaialogComponent {
   submit() {
     this.submitted = true;
 
+    console.log('submit 被呼叫');
+
     const firstError = this.getFirstError();
     if (firstError) {
       document

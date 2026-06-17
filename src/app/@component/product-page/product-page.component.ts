@@ -8,6 +8,8 @@ import { ReportService } from '../../@Services/report.service';
 import { ApiTestService, OrderVo } from '../../@Services/api-test.service';
 import { ProductVo, GetProductDataRes } from '../../@Interface/product-vo';
 import { OrderRes } from '../../@Interface/order';
+import { BasicResponse } from '../../@Interface/user';
+import { CollectRes } from '../../@Interface/collect-res';
 
 
   const CATEGORY_MAP: Record<string, string> = {
@@ -60,6 +62,7 @@ export class ProductPageComponent {
   // 等待後端回傳的 JSON 資料
   product: ProductVo | null = null;
   sellerProductCount: number | null = null; //用來裝從同學 API 借來的「總上架件數」
+  currentCollectId: number | null = null;// 用來存目前這筆「收藏紀錄」的流水號 ID
   breadcrumbLabel = ''; // 用來存麵包屑要顯示的文字（學校名或分類名）
   breadcrumbUrl = '';   // 用來存麵包屑點擊後要回跳的網址路徑
   selectedImageIndex = 0;
@@ -68,6 +71,14 @@ export class ProductPageComponent {
   isCollected = false; // 是否已收藏
   isRequested = false; // 是否已發送請求
   isMenuOpen = false; //檢舉分享選單
+
+  // 自動偵測目前瀏覽的商品是不是登入者自己的
+  get isOwnProduct(): boolean {
+    if (!this.product) return false;
+    const currentUserId = this.userService.currentUser()?.userId;
+    // 2. 精準對比目前登入者 ID 與商品賣家的 ID
+   return this.product.userId === currentUserId;
+  }
 
 
   ngOnInit(): void {
@@ -88,8 +99,9 @@ export class ProductPageComponent {
 
           this.initBreadcrumbNavigation();                // 1. 執行智慧網址探針
           this.checkIfUserAlreadyRequested();             // 2. 啟動重整重複購買防線
-          this.fetchSellerTotalCount(this.product.userId); // 3. 撈取賣家總上架數
+          this.fetchSellerProductsAndCount(this.product.userId); // 3. 撈取賣家總上架數
           this.triggerDescriptionOverflowCheck();         // 4. 檢查商品說明是否過長
+          this.checkIfProductIsCollected();               // 5. 檢查目前商品是否已被收藏
 
         } else {
           Swal.fire('查無商品', '該商品可能已經下架，或是不存在喔！', 'warning');
@@ -132,6 +144,10 @@ export class ProductPageComponent {
         this.breadcrumbLabel = this.product.type[0];
       }
       this.breadcrumbUrl = prevUrlPath;
+    }else if (prevUrlPath.includes('/store/')){
+      const sellerName = this.product.seller?.userName || '賣家';
+      this.breadcrumbLabel = `${sellerName} 的賣場`;
+      this.breadcrumbUrl = prevUrlPath;
     } else {
       this.breadcrumbLabel = this.product.type[0];
       this.breadcrumbUrl = this.getCategoryRoute(this.product.type[0]);
@@ -163,25 +179,27 @@ export class ProductPageComponent {
     });
   }
 
-  // 任務三:借用同學 API 來數數的專門方法
-  fetchSellerTotalCount(userId: number) {
+  allProducts: any[] = []; //全部商品
+
+// 任務三 : 一條水管，同時拿到「總件數」和「商品卡片清單」
+  fetchSellerProductsAndCount(userId: number): void {
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
         if (res && res.productList) {
-          // 🎯 核心精華：直接拿同學撈出來的商品陣列長度，當作總上架筆數！
-          this.sellerProductCount = res.productList.length;
+          this.allProducts = res.productList;             // 1. 拿去渲染「賣家其他商品」卡片清單
+          this.sellerProductCount = res.productList.length; // 2. 拿去渲染「總上架件數」的數字
         }
       },
       error: (err) => {
-        console.error('撈取賣家上架數失敗：', err);
-        this.sellerProductCount = 0; // 失敗就防呆給 0 筆
+        console.error('撈取賣家相關商品失敗：', err);
+        this.sellerProductCount = 0;
       }
     });
   }
 
   //任務四：觸發非同步排版，檢查文字是否超出顯示範圍
   private triggerDescriptionOverflowCheck(): void {
-    setTimeout(() => this.checkTextOverflow());
+    setTimeout(() => this.checkTextOverflow(), 300);
   }
 
 
@@ -257,20 +275,96 @@ if (index >= 0 && index < this.validImages.length) {
 
 
 /* 商品操作按鈕 */
-//加入收藏
-  addToCart(): void {
-    if (!this.product) return;
-    this.isCollected = !this.isCollected;
 
-   if (this.isCollected) {
+// 安全檢查目前商品是否已被收藏
+  checkIfProductIsCollected(): void {
+    this.apiTestService.getUserCollect().subscribe({
+      next: (res: CollectRes) => {
+        if (res.statusCode === 200 && res.collectListVo) {
+          const matched = res.collectListVo.find(item =>
+           (item as any).productId === this.product?.productId
+          );
+
+          if (matched) {
+            this.isCollected = true;
+            this.currentCollectId = matched.collectId; // 記下身分證字號
+          }
+        }
+      }
+    });
+  }
+
+//加入收藏
+  toggleCollect(): void {
+    if (!this.product) return;
+
+    if (this.isOwnProduct) {
       Swal.fire({
+        title: '無法收藏喔！',
+        text: '這是妳自己上架的商品，不需要再收藏自己啦 ✨',
+        icon: 'warning',
+        confirmButtonText: '知道了',
+        confirmButtonColor: '#EDA900'
+      });
+      return;
+    }
+
+   if (!this.isCollected) {
+    this.apiTestService.addCollect(this.product.productId).subscribe({
+      next:(res)=>{
+        if(res.statusCode === 200){
+        this.isCollected = true;
+
+        //關鍵補防：加入成功後立刻重撈，把資料庫新產生的 collectId 抓回來備用
+            this.apiTestService.getUserCollect().subscribe({
+              next: (collectRes) => {
+                const matched = collectRes.collectListVo?.find(item =>
+                  item.productName === this.product?.productName &&
+                  item.price === this.product?.price &&
+                  item.sellerName === this.product?.seller?.userName
+                );
+                if (matched) this.currentCollectId = matched.collectId;
+              }
+            });
+
+        Swal.fire({
         title: '已加入收藏！',
-        text: `商品「${this.product.productName}」已成功收藏。`,
+        text: `商品「${this.product!.productName}」已成功收藏。`,
         icon: 'success',
         confirmButtonText: '好的',
         confirmButtonColor: '#EDA900'
-      });
+        });
+      }else{
+        Swal.fire({ icon: 'error', title: '收藏失敗', text: res.message });
+      }
     }
+  });
+
+  }else{
+    const collectId = this.currentCollectId;
+    if (collectId === null) {
+        console.warn('找不到收藏 ID，無法刪除');
+        return;
+      }
+    this.apiTestService.deleteCollect([collectId]).subscribe({
+      next:(res)=>{
+        if(res.statusCode=== 200){
+          this.isCollected = false;
+          this.currentCollectId = null; // 清空小抽屜
+
+          Swal.fire({
+              title: '已取消收藏',
+              text: `已將「${this.product!.productName}」移出收藏清單。`,
+              icon: 'info',
+              confirmButtonText: '好的',
+              confirmButtonColor: '#EDA900'
+            });
+        } else {
+          Swal.fire({ icon: 'error', title: '取消收藏失敗', text: res.message });
+        }
+      }
+    });
+  }
   }
 
   // 發送請求按鈕
@@ -278,6 +372,16 @@ if (index >= 0 && index < this.validImages.length) {
     if (!this.product) return;
 // 防呆：如果已經發送過了，就不讓使用者再點擊
     if (this.isRequested) return;
+    if (this.isOwnProduct) {
+      Swal.fire({
+        title: '無法發送請求喔！',
+        text: '這是妳自己上架的商品，沒辦法對自己發送請求喔 ✨',
+        icon: 'warning',
+        confirmButtonText: '知道了',
+        confirmButtonColor: '#EDA900'
+      });
+      return; // 攔截！直接收工，不戳後端 API
+    }
     Swal.fire({
       title: '確定要發送購買請求嗎？',
       text: `系統將會發送「${this.product.productName}」的購買意願給賣家。`,
@@ -380,29 +484,26 @@ closeMenu(): void {
     );
   }
 
-  allProducts: any[] = []; //全部商品
 
-    // 取得販賣商品資訊
-  fetchProduct(userId: number) {
-    this.apiTestService.searchBySellerId(userId).subscribe({
-      next: (res) => {
-        this.allProducts = res.productList;
-      },
-      error: (err) => { console.error('撈取商品失敗：', err); }
-    });
-
-  }
 
    // --- 賣家操作 ---
   openChat(): void {
     if (!this.product) return;
-    console.log('開啟聊天室：', this.product.seller?.userName);
-    // 未來串接：this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
+    if (this.isOwnProduct) {
+      Swal.fire({
+        title: '不能跟自己聊天喔！',
+        text: '這是妳自己上架的商品，沒辦法跟自己開啟聊天室喔 ✨',
+        icon: 'warning',
+        confirmButtonText: '知道了',
+        confirmButtonColor: '#EDA900'
+      });
+      return;
+    }
+    this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
   }
 
   gotoStore(): void {
     if (!this.product) return;
-
     this.router.navigate(['/store', this.product.userId]);
   }
 

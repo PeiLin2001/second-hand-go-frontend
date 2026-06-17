@@ -23,12 +23,14 @@
         <input type="checkbox" class="item-checkbox" [(ngModel)]="item.selected">
       </div>
 
-      <div class="item-img">
-        <!-- <img src=""
-          alt="商品照片"> -->
+      <div class="item-img" >
+        <a class="card-link" [routerLink]="['/product_page', item.productId]"></a>
+        <img [src]="item.imgUrl"
+          alt="商品照片"
+          class="product-thumbnail">
       </div>
 
-      <div class="product-info">
+      <div class="product-info"  >
         <div class="product-header">
 
           <div class="title-wrapper">
@@ -100,16 +102,16 @@
 
       </div> <!-- the end of item description wrapper -->
 
-      <div class="item-content">
+      <div class="item-content"  >
 
         <div class="seller-info">
           <div class="seller-header">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s"
+            <img [src]="item.sellerImg"
              class="seller-avatar" alt="賣家頭像">
             <span class="seller-name">{{item.sellerName}}</span>
           </div>
 
-          <button class="btn-chat" title="和同學聊聊!">
+          <button class="btn-chat" title="和同學聊聊!" (click)="openChat(item.sellerId)">
             <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
           </button>
         </div>

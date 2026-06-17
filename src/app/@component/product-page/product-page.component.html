@@ -110,7 +110,7 @@
               聊聊
             </button>
 
-            <button class="btn-cart" [class.active]="isCollected" (click)="addToCart()">
+            <button class="btn-cart" [class.active]="isCollected" (click)="toggleCollect()">
               <lucide-icon [img]="HeartIcon" size="18" [class.fill-icon]="isCollected"></lucide-icon>
               {{ isCollected ? '已收藏' : '加入收藏' }}
             </button>
