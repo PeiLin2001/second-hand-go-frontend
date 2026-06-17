@@ -144,6 +144,10 @@ export class ProductPageComponent {
         this.breadcrumbLabel = this.product.type[0];
       }
       this.breadcrumbUrl = prevUrlPath;
+    }else if (prevUrlPath.includes('/store/')){
+      const sellerName = this.product.seller?.userName || '賣家';
+      this.breadcrumbLabel = `${sellerName} 的賣場`;
+      this.breadcrumbUrl = prevUrlPath;
     } else {
       this.breadcrumbLabel = this.product.type[0];
       this.breadcrumbUrl = this.getCategoryRoute(this.product.type[0]);
