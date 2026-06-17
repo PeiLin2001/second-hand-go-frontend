@@ -1,0 +1,195 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// Google 經典 Material 顏色規範
+$google-blue: #1a73e8;
+$google-blue-hover: #1557b0;
+$google-text-primary: #202124;
+$google-text-secondary: #5f6368;
+$google-border-color: #dadce0;
+$google-bg-chip: #f1f3f4;
+
+p, h4, h5 {
+  margin: 0;
+}
+
+ul {
+  display: flex;
+  flex-direction: column; // 預設單欄直式排列，乾淨俐落
+  gap: 16px;             // Google 偏好 8px 倍數的間距
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  list-style: none;
+}
+
+.wishList-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 24px;
+
+  background-color: #ffffff;
+  border: 1px solid $google-border-color;
+  border-radius: 12px; // Modern Material 3 採用的微大圓角
+  padding: 24px;
+  box-sizing: border-box;
+
+  // 處理卡片懸浮時的 Google 經典微陰影放大效果
+  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    border-color: transparent;
+    box-shadow: 0 4px 12px 0 rgba(60, 64, 67, 0.15),
+                0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  }
+
+  // 左側：需求內容區
+  .wish-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+
+    .wish-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      font-size: 1.5rem;
+      font-weight: 500;   // Google 偏好用 Medium 代替正粗體
+      color: $google-text-primary;
+      line-height: 1.5;
+    }
+
+    .description-wrapper, .budget {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    // 小標題轉為高辨識度的微縮型態
+    .subtitle {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $google-text-secondary;
+      letter-spacing: 0.5px;
+    }
+
+    .wish-description {
+      font-size: 1rem;
+      color: $text-gray;
+      line-height: 1.6;
+
+      // white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .contex {
+      font-size: 1rem;
+      color: $text-gray;
+    }
+  }
+
+  // 右側：許願者側面板
+  .wisher-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  min-width: 160px;
+  padding-left: 24px;
+  border-left: 1px solid #f1f3f4;
+  justify-content: center;
+
+  .img-wrapper {
+    .wisher-profile {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid $google-border-color;
+    }
+  }
+
+  .wisher-info,
+  .credit-info {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    text-align: center;
+  }
+
+  .wisher-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: $google-text-primary;
+    line-height: 1.4;
+  }
+
+  .school {
+    font-size: 0.875rem;
+    color: $google-text-secondary;
+    line-height: 1.4;
+  }
+
+
+
+  .btn-action.primary {
+    margin-top: .5rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    width: 100%;
+    background-color: $semantic-orange;
+    color: #ffffff;
+    border: none;
+    border-radius: $border-radius-tiny;
+    padding: 10px 20px;
+
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      background-color: $primary-yellow-darker;
+      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3),
+                  0 1px 3px 1px rgba(60,64,67,0.15);
+    }
+
+    lucide-icon {
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+    }
+  }
+}
+}
+
+
+.credit-info {
+  display: flex;
+  justify-content: center;
+}
+
+.credit-score {
+  margin: 0;
+
+  padding: 2px 8px;
+
+  font-size: 0.7rem;
+  font-weight: 400;
+
+  color: #137333;
+  background: #e6f4ea;
+
+  border-radius: 999px;
+
+  letter-spacing: .2px;
+}

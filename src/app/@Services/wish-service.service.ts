@@ -7,7 +7,8 @@ export interface Wish {
   userId: number;
   title: string;
   description: string;
-  type: string[];
+  // type: string[];
+  location: string[];
   budgetMin: number;
   budgetMax: number;
   status: string;

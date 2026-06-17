@@ -1,92 +1,105 @@
-<h4>許願池 ! 歡迎向同學們提出你的需求~~</h4>
-
-<ul>
-  @for (item of wishList; track $index) {
-    <li class="wishList-item">
-      <p class="wish-title">{{item.title}}</p>
-      <p class="wish-description">{{item.description}}</p>
-
-      <div class="wisher-wrapper">
-        <img [src]="item.wisher.userImgPath" alt="♥" class="wisher-profile">
-        <p class="wisher-name">{{item.wisher.userName}} · {{item.wisher.school}}</p>
-
-        <button class="btn-action primary" (click)="chat()">
-          <lucide-icon name="MessageCircleMore"></lucide-icon>聊聊
-        </button>
-      </div>
-
-    </li>
-  }
-</ul>
-
-<!--
-<section class="wish-section">
+<section class="wish-page">
   <div class="wish-header">
-    <h4>許願池</h4>
-    <p>歡迎向同學們提出你的需求</p>
+    <div class="wish-title-group">
+      <h4>許願池 ! </h4>
+      <p>歡迎向同學們提出你的需求，讓大家一起幫你找到想要的商品。</p>
+    </div>
+
+    <button (click)="switchPanel()">
+      <lucide-icon name="Plus"></lucide-icon>
+      我要許願
+    </button>
   </div>
 
-  <ul class="wish-list">
-    @for (item of wishList; track $index) {
-      <li class="wish-card">
-        <div class="wish-content">
-          <span class="wish-badge">商品許願</span>
+  <app-wish-card [wishList]="wishList"></app-wish-card>
+</section>
 
-          <h3 class="wish-title">{{ item.title }}</h3>
 
-          <div class="wish-info-block">
-            <p class="wish-label">預算</p>
-            <p class="wish-price">NT${{ item.budgetMin }} – {{ item.budgetMax }}</p>
-          </div>
 
-          <div class="wish-divider"></div>
+<!-- ── Overlay ── -->
+<div class="panel-overlay" [class.active]="showPanel" (click)="closePanel()">
 
-          <div class="wish-info-block">
-            <p class="wish-label">分類</p>
-            <div class="wish-tags">
-              <span class="wish-tag">3C 電子</span>
-            </div>
-          </div>
+  <!-- ── 許願面板 ── -->
+  <aside class="wish-panel" [class.open]="showPanel" (click)="stopPropagation($event)">
 
-          <div class="wish-divider"></div>
+    <div class="panel-header">
+      <h5>許個願吧 ✨</h5>
+      <button class="btn-close" (click)="closePanel()">
+        <lucide-icon name="X"></lucide-icon>
+      </button>
+    </div>
 
-          <div class="wish-info-block">
-            <p class="wish-label">需求描述</p>
-            <p class="wish-description">{{ item.description }}</p>
-          </div>
+    <div class="panel-body">
+
+      <!-- 標題 -->
+      <div class="form-group">
+        <label>許願標題 <span class="required">*</span></label>
+        <input
+          type="text"
+          [(ngModel)]="wishForm.title"
+          placeholder="例：找一本線性代數課本"
+          maxlength="50"
+        />
+      </div>
+
+      <!-- 描述 -->
+      <div class="form-group">
+        <label>詳細說明</label>
+        <textarea
+          [(ngModel)]="wishForm.description"
+          placeholder="補充版本、狀況需求或其他細節…"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <!-- 交易地點 -->
+      <div class="form-group">
+        <label>偏好交易地點</label>
+        <div class="chip-group">
+          @for (city of cities; track city.id) {
+            <button
+              class="chip"
+              [class.selected]="isSelected(wishForm.location, city.name)"
+              (click)="toggleSelection(wishForm.location, city.name)"
+              type="button"
+            >{{ city.name }}</button>
+          }
         </div>
+      </div>
 
-        <aside class="wisher-panel">
-          <img
-            [src]="item.wisher.userImgPath"
-            alt="許願者頭像"
-            class="wisher-profile"
+      <!-- 預算 -->
+      <div class="form-group">
+        <label>預算範圍（元）</label>
+        <div class="budget-row">
+          <input
+            type="number"
+            [(ngModel)]="wishForm.budgetMin"
+            placeholder="最低"
+            min="0"
           />
+          <span class="budget-sep">—</span>
+          <input
+            type="number"
+            [(ngModel)]="wishForm.budgetMax"
+            placeholder="最高"
+            min="0"
+          />
+        </div>
+      </div>
 
-          <div class="wisher-meta">
-            <p class="wisher-name">{{ item.wisher.userName }}</p>
-            <p class="wisher-school">{{ item.wisher.school }}</p>
-          </div>
+      <!-- 錯誤訊息 -->
+      @if (submitError) {
+        <p class="submit-error">⚠️ {{ submitError }}</p>
+      }
 
-          <div class="reputation-card">
-            <lucide-icon name="ShieldCheck"></lucide-icon>
+    </div>
 
-            <div class="reputation-text">
-              <span>信譽評分</span>
-              <strong>{{ 4.8 }}</strong>
-            </div>
+    <div class="panel-footer">
+      <button class="btn-cancel" (click)="closePanel()" [disabled]="isSubmitting">取消</button>
+      <button class="btn-submit" (click)="submitWish()" [disabled]="isSubmitting">
+        {{ isSubmitting ? '送出中…' : '送出許願' }}
+      </button>
+    </div>
 
-            <span class="reputation-max">/ 5.0</span>
-          </div>
-
-          <p class="trade-count">{{ 32 }} 筆交易</p>
-
-          <button class="btn-chat" (click)="chat()">
-            <lucide-icon name="MessageCircleMore"></lucide-icon>
-            聊聊
-          </button>
-        </aside>
-      </li>
-    }
-  </ul>
-</section> -->
+  </aside>
+</div>
