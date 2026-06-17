@@ -1,0 +1,33 @@
+<div class="dialog-wrapper">
+  <!-- 標題區 -->
+  <div class="dialog-header">
+    <h2 class="dialog-title">{{ data.title }}</h2>
+    <div class="dialog-period">
+      <span class="period-label">期間</span>
+      <span class="period-value"
+        >{{ data.shelfDate }} - {{ data.removalDate }}</span
+      >
+    </div>
+  </div>
+
+  <mat-dialog-content>
+    <div class="section img-wrap">
+      <img [src]="data.imgPath" alt="公告圖片" class="announce-img" />
+    </div>
+
+    <!-- 公告內容 -->
+    @if (data.content) {
+      <div class="section content-box">
+        <p class="content-text">{{ data.content }}</p>
+      </div>
+    }
+  </mat-dialog-content>
+
+  <!-- 操作按鈕 -->
+  <mat-dialog-actions>
+    <button class="btn btn-cancel" mat-dialog-close>
+      <lucide-icon [name]="closeIcon" [size]="14"></lucide-icon>
+      關閉
+    </button>
+  </mat-dialog-actions>
+</div>

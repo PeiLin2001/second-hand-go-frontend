@@ -1,36 +1,55 @@
 import { ManualComponent } from './../manual/manual.component';
-import { Component, ElementRef, ViewChild,
-  AfterViewInit, OnDestroy, NgZone } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+  NgZone,
+} from '@angular/core';
 
 // 素材庫
 import { LucideAngularModule } from 'lucide-angular';
 
-import { ProductCardComponent } from "../product-card/product-card.component";
+import { ProductCardComponent } from '../product-card/product-card.component';
 import { Router } from '@angular/router';
 import { ProductCard } from '../../@Interface/product-card';
 import { ProductServiceService } from '../../@Services/product-service.service';
 import { CategoriesService } from '../../@Services/categories.service';
+import { HttpService } from '../../@Services/http.service';
+import { AnnoundialogComponent } from '../announdialog/announdialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-homepage',
   imports: [LucideAngularModule, ProductCardComponent, ManualComponent],
   templateUrl: './homepage.component.html',
-  styleUrl: './homepage.component.scss'
+  styleUrl: './homepage.component.scss',
 })
-
-export class HomepageComponent{
+export class HomepageComponent {
   constructor(
     private route: Router,
-    private productService:ProductServiceService,
-    private category:CategoriesService,
-    private ngZone: NgZone
+    private productService: ProductServiceService,
+    private category: CategoriesService,
+    private ngZone: NgZone,
+    private http: HttpService,
+    private dialog: MatDialog,
   ) {}
 
-  get categories():any[]{
+  get categories(): any[] {
     return this.category.categories;
   }
 
+  announ: Announcement[] = [];
   ngOnInit(): void {
+    //接上API取得發布中的公告
+    this.http
+      .getApi('http://localhost:8080/announce/getActive')
+      .subscribe((res: any) => {
+        if (res.statusCode == 200) {
+          this.announ = res.data;
+        }
+      });
     this.loadProducts();
   }
 
@@ -38,17 +57,33 @@ export class HomepageComponent{
   @ViewChild('categoryScroll')
   categoryScroll!: ElementRef;
 
+  openAnnou(item: any) {
+    console.log(item);
+    this.http
+      .getApi(`http://localhost:8080/announce/getId?announceId=${item.id}`)
+      .subscribe((res: any) => {
+        if (res.statusCode == 200) {
+          console.log(res);
+          this.dialog.open(AnnoundialogComponent, {
+            disableClose: true,
+            data: res.data,
+            width: '600px',
+          });
+        }
+      });
+  }
+
   scrollLeft() {
     this.categoryScroll.nativeElement.scrollBy({
       left: -300,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 
   scrollRight() {
     this.categoryScroll.nativeElement.scrollBy({
       left: 300,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 
@@ -86,22 +121,22 @@ export class HomepageComponent{
   goToManual() {
     this.manualSection.nativeElement.scrollIntoView({
       behavior: 'smooth',
-      block: 'start'
+      block: 'start',
     });
   }
 
   // 路由設定
-  goToProductListById(type: string){
-    this.route.navigate(['/product-list',type]);
+  goToProductListById(type: string) {
+    this.route.navigate(['/product-list', type]);
   }
 
   get homeProducts(): ProductCard[] {
-    return this.allProducts.slice(0,5);
+    return this.allProducts.slice(0, 5);
   }
 
   allProducts: ProductCard[] = [];
 
-  loadProducts(){
+  loadProducts() {
     return this.productService.getAll().subscribe({
       next: (res) => {
         this.allProducts = res.productList;
@@ -109,8 +144,17 @@ export class HomepageComponent{
       error: (err) => {
         console.error(err);
         console.log(err.message);
-      }
+      },
     });
   }
+}
 
+export interface Announcement {
+  id: number;
+  title: string;
+  shelfDate: string;
+  removalDate: string;
+  publish: boolean;
+  content?: string;
+  imgPath: string;
 }

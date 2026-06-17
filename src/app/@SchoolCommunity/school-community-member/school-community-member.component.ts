@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
 
 import {
-  LucideAngularModule,
+  LucideAngularModule
 } from 'lucide-angular';
 
 import { ReportService } from '../../@Services/report.service';

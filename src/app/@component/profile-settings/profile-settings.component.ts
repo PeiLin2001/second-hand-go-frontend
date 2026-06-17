@@ -30,11 +30,12 @@ import {
   ChevronUp,
 } from 'lucide-angular';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
 import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
+import { ApiTestService } from '../../@Services/api-test.service';
 
 @Component({
   selector: 'app-profile-settings',
@@ -49,6 +50,7 @@ import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
     ReactiveFormsModule,
     AsyncPipe,
     LucideAngularModule,
+
   ],
   templateUrl: './profile-settings.component.html',
   styleUrl: './profile-settings.component.scss',
@@ -62,7 +64,8 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
     private router: Router,
     private schoolService: SchoolDataService,
     private userService: UserService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private apiTestService: ApiTestService
   ) {}
   // --- 狀態變數 ---
   isEditingBasic = false;
@@ -82,7 +85,8 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
   avatarUrl: string | ArrayBuffer | null = '';
 
   score: number = 0; //評分
-  onTheShelves: number = 7;  //目前上架
+  onTheShelves:  number = 0 ;  //目前上架
+  myProducts: any[] = [];   // 存放自己商品卡片的陣列
 
   // --- 暫存與記憶箱子 ---
   tempName = '';
@@ -143,7 +147,7 @@ onDocumentClick(event: MouseEvent) {
         this.department = user.department || '';
         this.phone = user.phone || '';
         this.profile = user.msg || '';
-        this.score = user.goodLevel || 5;
+        this.score = user.goodLevel ;
 
       if (user.imgPath && user.imgPath.trim() !== '') {
           if (user.imgPath.startsWith('http')) {
@@ -204,7 +208,29 @@ onDocumentClick(event: MouseEvent) {
   });
   }
 
+  loadMyProducts(userId: number): void {
+    // 🎯 借用同學那支透過賣家 ID 搜尋商品的 API
+    this.apiTestService.searchBySellerId(userId).subscribe({
+      next: (res) => {
+        if (res && res.productList) {
+          this.myProducts = res.productList; // 1. 塞給卡片陣列去渲染 UI
+
+          // 🌟 2. 精華：直接數有幾筆卡片，就是上架數量！
+          this.onTheShelves = res.productList.length;
+        }
+      },
+      error: (err) => {
+        console.error('撈取個人上架商品失敗：', err);
+        this.onTheShelves = 0;
+      }
+    });
+  }
+
   ngOnInit() {
+    const currentUserId = this.userService.currentUser()?.userId;
+    if (currentUserId) {
+      this.loadMyProducts(currentUserId);
+    }
     // 1. 初始化集體禁用
     this.setBasicControlsStatus(false);
 
