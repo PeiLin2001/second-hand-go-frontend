@@ -95,6 +95,7 @@ lucide-icon { display: flex; align-items: center; }
    Favorite Item
 ========================= */
 .favorite-item {
+  position: relative;//定位基準
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
@@ -109,6 +110,17 @@ lucide-icon { display: flex; align-items: center; }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 
   transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02); // 滑鼠懸停時微微放大 2%
+  }
+}
+
+.card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 16px;  // 跟 .favorite-item 的圓角一致
 }
 
 /* =========================
@@ -117,6 +129,14 @@ lucide-icon { display: flex; align-items: center; }
 .item-prefix {
   display: flex;
   align-items: center;
+}
+
+// 這些元素浮在連結上面
+.item-prefix,
+.btn-chat,
+.toggle-btn-container {
+  position: relative;
+  z-index: 2;
 }
 
 .item-checkbox {
@@ -154,16 +174,15 @@ lucide-icon { display: flex; align-items: center; }
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
   overflow: hidden;
-
   width: 10rem;
   height: 10rem;
-  padding: 0.75rem;
+  padding: 0;
 
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
+  cursor: pointer;
 
   background: linear-gradient(
     135deg,
@@ -171,11 +190,12 @@ lucide-icon { display: flex; align-items: center; }
     #e8e8e8 100%
   );
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+}
+
+.product-thumbnail{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* =========================
@@ -189,6 +209,7 @@ lucide-icon { display: flex; align-items: center; }
   flex-direction: column;
   gap: 0.5rem;
   justify-content: center;
+  cursor: pointer;
 
   .product-header {
     display: flex;
@@ -336,6 +357,8 @@ lucide-icon { display: flex; align-items: center; }
 
   padding-left: 1rem;
   border-left: 1px solid #f1f5f9;
+  cursor: pointer;
+
 
   .seller-info {
     display: flex;
