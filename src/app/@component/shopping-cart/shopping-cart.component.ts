@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms'; // 1. Import FormsModule
 import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin, GraduationCap } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { ApiTestService } from '../../@Services/api-test.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { ProductVo } from '../../@Interface/product-vo';
 
 
 @Component({
@@ -36,8 +37,7 @@ export class ShoppingCartComponent {
   alert ="";
   products: any[] = [];
   expandedDescriptions = new Set<number>();
-
-  constructor(private apiTestService: ApiTestService) {}
+  constructor(private router: Router,private apiTestService: ApiTestService) {}
 
   ngOnInit(): void {
     this.loadUserFavorites(); // 網頁一打開，立刻載入後端收藏清單
@@ -50,7 +50,8 @@ export class ShoppingCartComponent {
         if (res.statusCode === 200 && res.collectListVo) {
           this.products = res.collectListVo.map(item => ({
             collectId: item.collectId,
-            productId:(item as any).productId,
+            productId:item.productId,
+            sellerId: item.sellerId,
             title: item.productName,
             price: item.price,
             location: item.location && item.location.length > 0
@@ -140,4 +141,18 @@ export class ShoppingCartComponent {
       this.alert = "請選擇您要刪除的商品！";
     }
   }
+
+    openChat(sellerId: number): void {
+    if (!sellerId) {
+    Swal.fire({
+      title: '無法開啟聊天',
+      text: '暫時找不到該同學的資訊',
+      icon: 'warning',
+      confirmButtonColor: '#EDA900'
+    });
+    return;
+  }
+    this.router.navigate(['/chat'], { queryParams: {userId: sellerId } });
+  }
+
   }

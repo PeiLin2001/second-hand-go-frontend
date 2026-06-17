@@ -111,7 +111,7 @@
             <span class="seller-name">{{item.sellerName}}</span>
           </div>
 
-          <button class="btn-chat" title="和同學聊聊!">
+          <button class="btn-chat" title="和同學聊聊!" (click)="openChat(item.sellerId)">
             <lucide-icon [img]="MessageCircleIcon" size="16"></lucide-icon>
           </button>
         </div>

@@ -13,6 +13,7 @@ export interface CollectVoList {
   school: string;
   location: string[];
   productId: number;
+  sellerId: number;
 }
 
 // 定義整包大池子的回應格式

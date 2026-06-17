@@ -278,9 +278,7 @@ if (index >= 0 && index < this.validImages.length) {
       next: (res: CollectRes) => {
         if (res.statusCode === 200 && res.collectListVo) {
           const matched = res.collectListVo.find(item =>
-            item.productName === this.product?.productName &&
-            item.price === this.product?.price &&
-            item.sellerName === this.product?.seller?.userName
+           (item as any).productId === this.product?.productId
           );
 
           if (matched) {
@@ -291,6 +289,7 @@ if (index >= 0 && index < this.validImages.length) {
       }
     });
   }
+
 //加入收藏
   toggleCollect(): void {
     if (!this.product) return;
@@ -486,13 +485,21 @@ closeMenu(): void {
    // --- 賣家操作 ---
   openChat(): void {
     if (!this.product) return;
-    console.log('開啟聊天室：', this.product.seller?.userName);
-    // 未來串接：this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
+    if (this.isOwnProduct) {
+      Swal.fire({
+        title: '不能跟自己聊天喔！',
+        text: '這是妳自己上架的商品，沒辦法跟自己開啟聊天室喔 ✨',
+        icon: 'warning',
+        confirmButtonText: '知道了',
+        confirmButtonColor: '#EDA900'
+      });
+      return;
+    }
+    this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
   }
 
   gotoStore(): void {
     if (!this.product) return;
-
     this.router.navigate(['/store', this.product.userId]);
   }
 
