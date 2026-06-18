@@ -98,7 +98,35 @@ export class SchoolCommunitySeekingComponent {
   }
 
   switchPanel(): void {
+    // ── 1. 點擊時先取得 userId 驗證登入狀態 ──
+    const userId = this.userService.currentUser()?.userId;
+
+    if (!userId) {
+      Swal.fire({
+        title: "請先登入",
+        text: "登入後才能使用許願功能",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "前往登入",
+        cancelButtonText: "取消"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login_register'], { queryParams: { mode: 'login' } });
+        }
+      });
+      return;
+    }
+
+    // ── 2. 已登入才允許切換面板 ──
     this.showPanel = !this.showPanel;
+
+    // 如果是打開面板，順便把表單內容與錯誤訊息清空
+    if (this.showPanel) {
+      this.wishForm = this.emptyForm();
+      this.submitError = '';
+    }
   }
 
   stopPropagation(event: MouseEvent): void {
@@ -119,20 +147,10 @@ export class SchoolCommunitySeekingComponent {
     // ── 驗證 ──
     if (!this.wishForm.title.trim()) {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "標題不可以為空 !",
         icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then((result) => {
-        if (result.isConfirmed) Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success"
-        });
-      });
+        confirmButtonText: "確定"
+      })
       return;
     }
     if (this.wishForm.budgetMin !== null && this.wishForm.budgetMax !== null) {
