@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angu
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
 import { HttpService } from '../../@Services/http.service';
 import { config } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report-dialog',
@@ -16,11 +17,20 @@ export class ReportDialogComponent {
     constructor(
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<ReportDialogComponent>,
-    public http:HttpService
+    public http:HttpService,
+    public router:Router
   ) {}
   data = inject(MAT_DIALOG_DATA);
 
   adminNote='';
+
+  openChat(params:any){
+  const url = this.router.createUrlTree(['/chat'], {
+    queryParams: params
+  }).toString();
+
+  window.open(url, '_blank');
+  }
 
   confirm(action: '通過' | '駁回'){
     const confirmRef=this.dialog.open(AnnounDialogComponent);
