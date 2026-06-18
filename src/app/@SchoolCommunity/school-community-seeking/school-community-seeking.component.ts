@@ -12,6 +12,7 @@ import {
 } from 'lucide-angular';
 import { WishCardComponent } from "../../@component/wish-card/wish-card.component";
 import { CategoriesService } from '../../@Services/categories.service';
+import Swal from 'sweetalert2';
 
 export interface WishForm {
   title: string;
@@ -57,6 +58,8 @@ export class SchoolCommunitySeekingComponent {
   ) {}
 
   ngOnInit(): void {
+    console.log("userID:",  this.userService.currentUser()?.userId);
+
     const schoolId = Number(
       this.route.parent?.snapshot.paramMap.get('id')
     );
@@ -115,7 +118,21 @@ export class SchoolCommunitySeekingComponent {
   submitWish(): void {
     // ── 驗證 ──
     if (!this.wishForm.title.trim()) {
-      alert('請填寫許願標題！');
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+      });
       return;
     }
     if (this.wishForm.budgetMin !== null && this.wishForm.budgetMax !== null) {
@@ -128,7 +145,21 @@ export class SchoolCommunitySeekingComponent {
     // ── 取得 userId ──
     const userId = this.userService.currentUser()?.userId;
     if (!userId) {
-      alert('請先登入！');
+     Swal.fire({
+        title: "請先登入",
+        text: "登入後才能使用許願功能",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success"
+        });
+      });
       return;
     }
 
@@ -187,11 +218,13 @@ export class SchoolCommunitySeekingComponent {
         },
         error: (err) => {
           this.isSubmitting = false;
-          console.error('許願送出失敗：', err);
-          console.log(err.statusCode);
-          console.log(err.message);
-
           this.submitError = '網路錯誤，請稍後再試';
+
+          Swal.fire({
+            icon: "error",
+            title: this.submitError,
+            text: "伺服器連線錯誤或系統更新中",
+          });
         }
       });
   }

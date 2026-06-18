@@ -16,90 +16,84 @@
 
 
 
-<!-- ── Overlay ── -->
-<div class="panel-overlay" [class.active]="showPanel" (click)="closePanel()">
+@if (showPanel) {
+  <div class="panel-overlay" [class.active]="showPanel" (click)="closePanel()">
 
-  <!-- ── 許願面板 ── -->
-  <aside class="wish-panel" [class.open]="showPanel" (click)="stopPropagation($event)">
+    <section class="wish-panel" (click)="$event.stopPropagation()">
 
-    <div class="panel-header">
-      <h5>許個願吧 ✨</h5>
-      <button class="btn-close" (click)="closePanel()">
-        <lucide-icon name="X"></lucide-icon>
-      </button>
-    </div>
-
-    <div class="panel-body">
-
-      <!-- 標題 -->
-      <div class="form-group">
-        <label>許願標題 <span class="required">*</span></label>
-        <input
-          type="text"
-          [(ngModel)]="wishForm.title"
-          placeholder="例：找一本線性代數課本"
-          maxlength="50"
-        />
+      <div class="panel-header">
+        <h5>許個願吧 !</h5>
+        <button class="btn-close" (click)="closePanel()">
+          <lucide-icon name="X"></lucide-icon>
+        </button>
       </div>
 
-      <!-- 描述 -->
-      <div class="form-group">
-        <label>詳細說明</label>
-        <textarea
-          [(ngModel)]="wishForm.description"
-          placeholder="補充版本、狀況需求或其他細節…"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <!-- 交易地點 -->
-      <div class="form-group">
-        <label>偏好交易地點</label>
-        <div class="chip-group">
-          @for (city of cities; track city.id) {
-            <button
-              class="chip"
-              [class.selected]="isSelected(wishForm.location, city.name)"
-              (click)="toggleSelection(wishForm.location, city.name)"
-              type="button"
-            >{{ city.name }}</button>
-          }
-        </div>
-      </div>
-
-      <!-- 預算 -->
-      <div class="form-group">
-        <label>預算範圍（元）</label>
-        <div class="budget-row">
+      <div class="panel-body">
+        <div class="form-group">
+          <label>許願標題 <span class="required">*</span></label>
           <input
-            type="number"
-            [(ngModel)]="wishForm.budgetMin"
-            placeholder="最低"
-            min="0"
-          />
-          <span class="budget-sep">—</span>
-          <input
-            type="number"
-            [(ngModel)]="wishForm.budgetMax"
-            placeholder="最高"
-            min="0"
+            type="text"
+            [(ngModel)]="wishForm.title"
+            placeholder="例：找一本線性代數課本"
+            maxlength="50"
           />
         </div>
+
+        <div class="form-group">
+          <label>詳細說明</label>
+          <textarea
+            [(ngModel)]="wishForm.description"
+            placeholder="補充版本、狀況需求或其他細節…"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>偏好交易地點</label>
+          <div class="chip-group">
+            @for (city of cities; track city.id) {
+              <button
+                class="chip"
+                [class.selected]="isSelected(wishForm.location, city.name)"
+                (click)="toggleSelection(wishForm.location, city.name)"
+                type="button"
+              >{{ city.name }}</button>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>預算範圍（元）</label>
+          <div class="budget-row">
+            <input
+              type="number"
+              [(ngModel)]="wishForm.budgetMin"
+              placeholder="最低"
+              min="0"
+            />
+            <span class="budget-sep">—</span>
+            <input
+              type="number"
+              [(ngModel)]="wishForm.budgetMax"
+              placeholder="最高"
+              min="0"
+            />
+          </div>
+        </div>
+
+        @if (submitError) {
+          <p class="submit-error">⚠️ {{ submitError }}</p>
+        }
       </div>
 
-      <!-- 錯誤訊息 -->
-      @if (submitError) {
-        <p class="submit-error">⚠️ {{ submitError }}</p>
-      }
+      <div class="panel-footer">
+        <button class="btn-cancel" (click)="closePanel()" [disabled]="isSubmitting">取消</button>
+        <button class="btn-submit" (click)="submitWish()" [disabled]="isSubmitting">
+          {{ isSubmitting ? '送出中…' : '送出許願' }}
+        </button>
+      </div>
 
-    </div>
+    </section>
 
-    <div class="panel-footer">
-      <button class="btn-cancel" (click)="closePanel()" [disabled]="isSubmitting">取消</button>
-      <button class="btn-submit" (click)="submitWish()" [disabled]="isSubmitting">
-        {{ isSubmitting ? '送出中…' : '送出許願' }}
-      </button>
-    </div>
-
-  </aside>
-</div>
+  </div>
+}
