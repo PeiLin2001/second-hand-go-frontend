@@ -168,9 +168,16 @@
       <div class="seller-info">
         <span class="seller-name">{{ product.seller.userName }}</span>
         <span class="seller-meta">
-          {{ product.seller.school }} ・
-          上架 {{ sellerProductCount ?? '--' }} 件
+          {{ product.seller.school }}
+             @if (product.seller.department) {
+              ・{{ product.seller.department }}
+            }
+
         </span>
+          <span class="seller-meta">
+            上架 {{ sellerProductCount ?? '--' }} 件 ・
+            信譽評分 : {{ product.seller.goodLevel | number:'1.0-1' }} ★
+          </span>
       </div>
       <div class="seller-actions">
         <!-- <button class="btn-seller" (click)="openChat()">

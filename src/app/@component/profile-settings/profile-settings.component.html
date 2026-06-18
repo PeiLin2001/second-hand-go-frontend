@@ -63,7 +63,7 @@
           }
         </div>
 
-        <div class="main_card_right_dowm">
+        <!-- <div class="main_card_right_dowm">
           <div class="main_card_1 disabled" >
             <h5>{{score}}</h5>
             <p>評分</p>
@@ -73,7 +73,7 @@
             <h5>{{onTheShelves}}</h5>
             <p>目前上架</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -123,7 +123,7 @@
   <p class="field-title">
     <lucide-icon [name]="icons.MapPin"></lucide-icon>
     常出沒地區
-    <span class="optional-text">（最多填三個）</span>
+     @if (isEditingBasic) {<span class="optional-text">（最多填三個）</span>}
   </p>
 
   <div class="field-content-block">
