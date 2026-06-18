@@ -156,7 +156,7 @@ export class StoreComponent {
   goSettings() { this.router.navigate(['/profile_settings']); }
 
   // 聊聊
-  chat() { this.router.navigate(['/chat']); }
+  chat() { this.router.navigate(['/chat', this.shopOwnerData().userId]); }
 
   // 分頁
   prevPage() {

@@ -83,7 +83,7 @@ export class FrontReportComponent {
         productCtrl?.reset('');
       }
     } else {
-      // 💡 在獨立網頁模式下，切換分頁就「徹底清空」並「解除鎖定」
+      // 在獨立網頁模式下，切換分頁就「徹底清空」並「解除鎖定」
       nameCtrl?.enable();
       idCtrl?.enable();
       productCtrl?.enable();
@@ -255,6 +255,7 @@ export class FrontReportComponent {
 
   // 送出表單
   onSubmit() {
+    Swal.fire({ title: '正在送出檢舉', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
     const formValues = this.reportForm.getRawValue();
     const finalData = {
@@ -269,7 +270,8 @@ export class FrontReportComponent {
     console.log('JSON 封包已打包完成：', finalData);
     this.apiTestService.addReport(finalData).subscribe({
       next: (res) => {
-        console.error('成功：', res);
+        console.log('成功：', res);
+        Swal.close();
         Swal.fire({
           title: '檢舉已送出！',
           icon: 'success',

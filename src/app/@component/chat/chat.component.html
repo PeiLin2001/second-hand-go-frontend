@@ -1,10 +1,36 @@
 <main class="chat-container">
-  <section class="chat-box">
-    <div class="chat-left">
+  <div class="chat-box">
+    <!-- logo -->
+    <section class="chat-left">
       <img src="img/logo改版.png" alt="logo" class="logo" title="首頁" (click)="goToHome()">
-    </div>
 
-    <div class="chat-right">
+      <!-- 搜尋 -->
+      <div class="search-bar-wrapper">
+        <div class="text-search-wrapper">
+          <lucide-icon name="Search" class="icon" (click)="onSearch()"></lucide-icon>
+          <input type="text" placeholder="使用者名稱﹑ID..." [(ngModel)]="keyword" (keyup.enter)="onSearch()">
+        </div>
+      </div>
+
+      <!-- 聊天對象 -->
+      <div class="partner">
+        @for (partner of roomList; track partner.roomId) {
+        <div class="partner-wrapper" (click)="changePartner(partner)" [class.isChatting]="partner.roomId === roomId">
+          <img [src]="partner.targetUserImg" class="avatar" alt="user-avatar">
+
+          <div class="partner-info">
+            <span class="name"> {{ partner.targetUserName }} </span>
+            <span class="lastMessage"> {{ partner.lastMessage }} </span>
+            @if (partner.unreadCount>0) { <div> {{ partner.unreadCount }} </div> }
+          </div>
+        </div>
+        }
+      </div>
+
+    </section>
+
+    <!-- 聊天區塊 -->
+    <section class="chat-right">
       <div #scrollContainer class="message-list">
         @for (msg of message; track msg.messageId) {
         <div class="message-wrapper" [class.is-me]="msg.senderId === userId">
@@ -13,20 +39,60 @@
 
           <div class="message-body">
             <span class="name">{{ msg.senderName }}</span>
-            <div class="bubble">{{ msg.messageContent }}</div>
+            <div class="bubble">
+              <!-- 圖片訊息 -->
+              @if (msg.messageContent.includes('http')&&
+              (msg.messageContent.toLowerCase().endsWith('.jpg') ||
+              msg.messageContent.toLowerCase().endsWith('.png') ||
+              msg.messageContent.toLowerCase().endsWith('.gif'))) {
+              <div class="chat-image-gallery">
+                @for (url of msg.messageContent.split(','); track url) {
+                <img [src]="url" class="chat-shared-img" alt="圖片訊息" />
+                }
+              </div>
+              } @else {
+              <!-- 一般文字訊息 -->
+              {{ msg.messageContent }}
+              }
+            </div>
+            @if (msg.read && msg.senderId === userId) { <span> ✔️ 已讀 </span>}
             <span class="time">{{ msg.createdAt }}</span>
           </div>
 
         </div>
         } @empty {
-        <div class="no-message">目前沒有任何聊天訊息喔。</div>
+        <div class="no-message">開始發送聊天訊息。</div>
         }
+
+        <!-- 已上傳圖片的預覽 -->
+        @if(pictures.length > 0) {
+        <div class="preview-list">
+          @for (preview of pictures; track $index) {
+          <div class="preview-item">
+            <img [src]="preview" alt="圖片預覽" class="preview-img" />
+            <button type="button" class="btn-action report" (click)="removeImage($index)">
+              <lucide-icon name="Trash2"></lucide-icon>
+            </button>
+          </div>
+          }
+          <span class="sendPic" (click)="sendPic()">上傳圖片</span>
+        </div>
+        }
+        @if (errorMessage) { <small class="error-msg">{{ errorMessage }}</small> }
       </div>
 
+      @if (roomId != null) {
       <div class="input-group-box">
+        <!-- 圖片上傳 -->
+        <div class="upload" (click)="fileInput.click()">
+          <input type="file" #fileInput accept="image/*" style="display: none" (change)="uploadPicture($event)" />
+          <lucide-icon name="Camera" class="icon"></lucide-icon>
+        </div>
+
         <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter-input" placeholder="請輸入訊息...">
         <button class="send-btn" (click)="sendMsg()">送出</button>
       </div>
-    </div>
-  </section>
+      }
+    </section>
+  </div>
 </main>

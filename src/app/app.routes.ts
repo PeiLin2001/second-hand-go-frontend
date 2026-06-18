@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 import { AnnouncementComponent } from './@component/announcement/announcement.component';
 import { BackUserComponent } from './@component/back-user/back-user.component';
 import { ReportComponent } from './@component/report/report.component';
@@ -35,14 +36,14 @@ export const routes: Routes = [
       { path: 'product-list/:category', component: ProductListingComponent },
       { path: 'cart', component: ShoppingCartComponent },
       { path: 'test/:id', component: ForegroundTestComponent },
-      { path: 'order_information', component: OrderInformationComponent }, //訂單資料
-      { path: 'profile_settings', component: ProfileSettingsComponent }, //個人設定
-      { path: 'launch_product_info', component: LaunchProductInfoComponent }, //上架商品頁-資訊
-      { path: 'launch_product_price', component: LaunchProductPriceComponent }, //上架商品頁-價格
-      { path: 'draft_list', component: DraftListComponent }, //儲存草稿頁
+      { path: 'order_information', component: OrderInformationComponent, canActivate: [authGuard] }, //訂單資料
+      { path: 'profile_settings', component: ProfileSettingsComponent, canActivate: [authGuard] }, //個人設定
+      { path: 'launch_product_info', component: LaunchProductInfoComponent, canActivate: [authGuard] }, //上架商品頁-資訊
+      { path: 'launch_product_price', component: LaunchProductPriceComponent, canActivate: [authGuard] }, //上架商品頁-價格
+      { path: 'draft_list', component: DraftListComponent, canActivate: [authGuard] }, //儲存草稿頁
       { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page/:id', component: ProductPageComponent }, //商品頁
-      { path: 'front_report', component: FrontReportComponent }, //檢舉頁
+      { path: 'front_report', component: FrontReportComponent, canActivate: [authGuard] }, //檢舉頁
 
       // TODO: school-community/:universityName
       {
@@ -61,8 +62,8 @@ export const routes: Routes = [
     ],
   },
   { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
-  { path: 'chat', component: ChatComponent }, //聊天室
-  { path: 'chat/:id', component: ChatComponent }, //聊天室(從商品||交易...)點選(需要帶參數時用)
+  { path: 'chat', component: ChatComponent, canActivate: [authGuard] }, //聊天室
+  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] }, //聊天室(從商品||交易...)點選(需要帶參數時用)
 
   //後台
   {
