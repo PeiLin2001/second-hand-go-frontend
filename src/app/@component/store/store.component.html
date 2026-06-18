@@ -101,7 +101,7 @@
 
   <!-- 分頁 -->
   <nav class="pagination">
-    <span>共{{ allProducts.length }}筆資料</span>
+    <span>共{{ allProducts.length || 0 }}筆資料</span>
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
       <lucide-icon name="ChevronLeft"></lucide-icon>
     </button>

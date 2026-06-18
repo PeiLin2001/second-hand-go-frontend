@@ -1,5 +1,5 @@
-@use "../../styles/variables" as *;
 @use '../../styles/mixins' as *;
+@use "../../styles/variables" as *;
 
 .chat-container {
   width: 100%;
@@ -8,6 +8,7 @@
   padding: 0;
   overflow: hidden;
   background-color: $background-white;
+  user-select: none;
 }
 
 .chat-box {
@@ -17,19 +18,178 @@
 }
 
 // -----------------------------------------
-// 1. 左側欄（聯絡人/Logo 區塊）
+// 1. 左側欄（Logo、搜尋、聯絡人清單）
 // -----------------------------------------
 .chat-left {
   width: 25%;
-  min-width: 260px;
-  max-width: 350px;
+  min-width: 280px;
+  max-width: 360px;
   height: 100%;
-  background-color: $background-yellow; // 帶入品牌淺黃背景
+  background-color: $background-yellow;
   border-right: 1px solid $neutral-300;
   display: flex;
   flex-direction: column;
+  padding: 24px 16px;
+  box-sizing: border-box;
+
+
+  .logo {
+    height: 36px;
+    width: auto;
+    align-self: flex-start;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  // 1.2 搜尋列美化
+  .search-bar-wrapper {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    background-color: $background-white; // 搜尋列用純白突顯
+    border: 1px solid $neutral-300;
+    border-radius: 20px;
+    padding: 0 14px;
+    margin-bottom: 24px;
+    box-sizing: border-box;
+
+    .text-search-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .icon {
+        color: $neutral-500;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+
+        &:hover {
+          color: $primary-yellow-darker;
+        }
+      }
+
+      input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 14px;
+        background-color: transparent;
+        color: $text-black;
+
+        &::placeholder {
+          color: $neutral-500;
+        }
+      }
+    }
+  }
+}
+
+// 👥 1.3 聯絡人捲動列表
+.partner {
+  flex: 1;
+  overflow-y: auto; // 超出時自己內部滾動
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // 緊湊優雅的排列
+  width: 100%;
+
+  // 乾淨隱藏原生滾動條，讓視覺更好看
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 2px;
+  }
+}
+
+// 👤 單個聯絡人項目卡片
+.partner-wrapper {
+  display: flex;
   align-items: center;
-  padding: 20px 15px;
+  gap: 12px;
+  width: 100%; // 強制滿寬
+  padding: 12px;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  background-color: transparent;
+
+  &:hover {
+    background-color: rgba($background-white, 0.5);
+  }
+
+  // 當前選中的對話
+  &.isChatting {
+    background-color: $background-white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    background-color: $primary-gray;
+    flex-shrink: 0;
+  }
+
+  // 右側文字資訊區
+  .partner-info {
+    flex: 1;
+    min-width: 0; // 🚀 關鍵：防止長文字把 Flex 容器撐開破版
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+
+    .name {
+      font-size: 14px;
+      font-weight: 600;
+      color: $text-black;
+    }
+
+    // 最後一則訊息的裁切排版
+    .lastMessage {
+      font-size: 12px;
+      color: $neutral-500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; // 🚀 自動把過長文字變為「...」
+    }
+
+    // 🔥 漂亮的未讀訊息小紅點 / 數字標籤
+    div {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #ef4444; // 警戒紅
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: bold;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(#ef4444, 0.2);
+    }
+  }
 }
 
 // -----------------------------------------
@@ -39,35 +199,36 @@
   flex: 1;
   height: 100%;
   display: flex;
-  flex-direction: column; // 讓訊息列表與輸入框上下垂直排列
+  flex-direction: column;
   background-color: $background-white;
 }
 
-// 📜 訊息捲動區域
+// 📜 訊息對話主捲動區
 .message-list {
   flex: 1;
-  overflow-y: auto; // 超出時只有這裡會出現捲動條，輸入框會乖乖卡在底部
+  overflow-y: auto;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px; // 每條訊息之間的間距
+  gap: 20px;
 }
 
-// 💬 訊息包裝總殼（預設為「對方」的排版：大頭貼在左、內容在右）
+// 💬 訊息泡泡總殼（預設靠左、灰底）
 .message-wrapper {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  max-width: 75%; // 限制寬度，避免長文字拉得太滿
-  align-self: flex-start; // 靠左對齊
+  max-width: 70%;
+  align-self: flex-start;
 
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     background-color: $primary-gray;
+    flex-shrink: 0;
   }
 
   .message-body {
@@ -75,53 +236,168 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+
+    span:not(.name):not(.time) {
+      // 這是已讀 ✔️ 標籤
+      font-size: 11px;
+      color: $primary-yellow-dark;
+      font-weight: 500;
+      margin-top: 2px;
+    }
   }
 
   .name {
-    font-size: 13px;
+    font-size: 12px;
     color: $neutral-700;
     font-weight: 500;
   }
 
-  // 預設對方的對話氣泡
+  // 對話氣泡本體
   .bubble {
     background-color: $neutral-100;
     color: $text-black;
-    padding: 10px 16px;
-    border-radius: 4px 16px 16px 16px; // 左上角直角，其餘圓角
-    font-size: 15px;
-    line-height: 1.4;
-    word-break: break-all; // 避免長英文或網址撐破氣泡
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 10px 14px;
+    border-radius: 4px 16px 16px 16px;
+    font-size: 14.5px;
+    line-height: 1.45;
+    word-break: break-all;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+
+    // 🖼️ 聊天室內的分享圖片網格
+    .chat-image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      max-width: 320px;
+      margin: 4px 0;
+
+      .chat-shared-img {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: zoom-in;
+        transition: opacity 0.2s;
+
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
   }
 
   .time {
     font-size: 11px;
     color: $neutral-500;
-    margin-top: 2px;
   }
 
-  // 👑 關鍵：當是我自己發送的訊息時 `[class.is-me]`
+  // 👑 當是我自己發送的訊息時（靠右、黃底棕字）
   &.is-me {
     align-self: flex-end;
-    flex-direction: row-reverse; // 讓大頭貼和內容左右鏡像顛倒
+    flex-direction: row-reverse;
 
     .message-body {
       align-items: flex-end;
     }
 
-    // 自己的對話氣泡
     .bubble {
       background-color: $primary-yellow;
-      color: $accent-brown;
+      color: $accent-brown; // 完美的對比讀取色
       border-radius: 16px 4px 16px 16px;
-      box-shadow: 0 2px 8px rgba($primary-yellow-dark, 0.15);
+      box-shadow: 0 2px 8px rgba($primary-yellow-dark, 0.12);
     }
   }
 }
 
+// 📸 2.2 底部待傳送的圖片預覽區域
+.preview-list {
+  margin: 0 24px 12px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+
+  .preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid $neutral-300;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    .preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    // 懸浮刪除小按鈕
+    .btn-action.report {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      border-radius: 50%;
+      justify-content: center;
+      background-color: rgba($background-white, 0.9);
+      border: 1px solid rgba(#ef4444, 0.2);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      lucide-icon {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        color: #ef4444;
+      }
+
+      &:hover {
+        background-color: #ef4444;
+        transform: scale(1.05);
+
+        lucide-icon {
+          color: $background-white;
+        }
+      }
+    }
+  }
+
+  // 「上傳圖片」確認送出按鈕
+  .sendPic {
+    font-size: 13px;
+    font-weight: bold;
+    color: $primary-yellow-darker;
+    background-color: $primary-yellow-light;
+    padding: 8px 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: $primary-yellow;
+      color: $accent-brown;
+    }
+  }
+
+  .error-msg {
+    width: 100%; // 強制錯誤訊息換行
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background-color: #fef2f2;
+    color: #ef4444;
+    margin-top: 2px;
+    border: 1px solid rgba(#ef4444, 0.1);
+  }
+}
+
 // -----------------------------------------
-// 3. 底部輸入框區塊
+// 3. 底部輸入框欄位
 // -----------------------------------------
 .input-group-box {
   display: flex;
@@ -129,22 +405,49 @@
   padding: 16px 24px;
   background-color: $background-white;
   border-top: 1px solid $neutral-300;
-  gap: 12px;
+  gap: 14px;
+
+  // 相機上傳按鈕
+  .upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    .icon {
+      color: $neutral-700;
+      width: 22px;
+      height: 22px;
+    }
+
+    &:hover {
+      background-color: $neutral-100;
+
+      .icon {
+        color: $primary-yellow-darker;
+      }
+    }
+  }
 
   .enter-input {
     flex: 1;
     height: 42px;
-    padding: 0 16px;
+    padding: 0 18px;
     border: 1px solid $neutral-300;
-    border-radius: 24px;
+    border-radius: 21px;
     outline: none;
-    font-size: 15px;
+    font-size: 14.5px;
     background-color: $neutral-100;
     transition: all 0.2s ease;
 
     &:focus {
       border-color: $primary-yellow-dark;
       background-color: $background-white;
+      box-shadow: 0 0 0 3px rgba($primary-yellow, 0.15);
     }
 
     &::placeholder {
@@ -154,45 +457,79 @@
 
   .send-btn {
     height: 42px;
-    padding: 0 24px;
+    padding: 0 22px;
     background-color: $primary-yellow-light;
     color: $accent-brown;
     border: none;
-    border-radius: 24px;
-    font-size: 15px;
+    border-radius: 21px;
+    font-size: 14.5px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba($primary-yellow, 0.2);
+    box-shadow: 0 2px 6px rgba($primary-yellow-dark, 0.08);
 
     &:hover {
       background-color: $primary-yellow;
-      color: $background-white;
+      color: $accent-brown;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
 
-// 📭 沒有訊息時的空白畫面
-.no-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  color: $neutral-500;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.logo {
-  height: 1.5rem;
-  margin-right: 0.5rem;
+// -----------------------------------------
+// 全螢幕圖片放大
+// -----------------------------------------
+.lightbox-overlay {
   position: fixed;
-  top: 50px;
-  left: 50px;
-  transition: 0.2s ease;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.75); // 時尚半透明黑底
+  backdrop-filter: blur(4px); // 微毛玻璃效果，讓質感大加分
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out; // 點擊外面任何地方可以縮小關閉
 
-  &:hover {
+  .lightbox-content {
+    position: relative;
+    max-width: 85%;
+    max-height: 85%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 100vh;
+    object-fit: contain; // 保持比例縮放，絕不變形
+    border-radius: 8px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+  }
+
+  // 右上角極簡關閉按鈕
+  .lightbox-close-btn {
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    background: none;
+    border: none;
+    color: rgba(#fff, 0.7);
+    font-size: 28px;
     cursor: pointer;
-    opacity: 0.9;
+    transition: color 0.2s, transform 0.2s;
+
+    &:hover {
+      color: #fff;
+      transform: scale(1.1);
+    }
   }
 }
