@@ -58,6 +58,7 @@ export class ChatComponent {
   pictures: string[] = [];
   readonly MAX_IMAGES = 3;
   errorMessage: string | null = null;
+  activeImageUrl: string | null = null; // 控制放大圖片的變數
 
   ngOnInit(): void {
     this.scrollToBottom();
@@ -245,5 +246,14 @@ export class ChatComponent {
     })
   }
 
+  // 放大圖片
+  openLightBox(url: string) {
+    this.activeImageUrl = url;
+  }
+
+  // 關閉放大圖片
+  closeLightBox() {
+    this.activeImageUrl = null;
+  }
 
 }

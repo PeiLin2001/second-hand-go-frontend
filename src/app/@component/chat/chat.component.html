@@ -47,9 +47,18 @@
               msg.messageContent.toLowerCase().endsWith('.gif'))) {
               <div class="chat-image-gallery">
                 @for (url of msg.messageContent.split(','); track url) {
-                <img [src]="url" class="chat-shared-img" alt="圖片訊息" />
+                <img [src]="url" class="chat-shared-img" alt="圖片訊息" (click)="openLightBox(url)" />
                 }
               </div>
+              <!-- 點擊圖片放大 -->
+              @if (activeImageUrl) {
+              <div class="lightbox-overlay" (click)="closeLightBox()">
+                <div class="lightbox-content" (click)="$event.stopPropagation()">
+                  <img [src]="activeImageUrl" alt="放大圖片" class="lightbox-img" />
+                  <button class="lightbox-close-btn" (click)="closeLightBox()">✕</button>
+                </div>
+              </div>
+              }
               } @else {
               <!-- 一般文字訊息 -->
               {{ msg.messageContent }}
