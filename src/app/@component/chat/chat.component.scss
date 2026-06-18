@@ -491,12 +491,11 @@
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.75); // 時尚半透明黑底
   backdrop-filter: blur(4px); // 微毛玻璃效果，讓質感大加分
-  z-index: 9999; // 確保絕對壓在最上層
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: zoom-out; // 點擊外面任何地方可以縮小關閉
-  animation: fadeIn 0.25s ease-out; // 入場淡入動畫
 
   .lightbox-content {
     position: relative;
@@ -505,7 +504,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: default; // 圖片本體維持一般游標
+    cursor: default;
   }
 
   .lightbox-img {
@@ -514,7 +513,6 @@
     object-fit: contain; // 保持比例縮放，絕不變形
     border-radius: 8px;
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
-    animation: zoomIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); // 帶點 Q 彈的放大效果
   }
 
   // 右上角極簡關閉按鈕
@@ -533,28 +531,5 @@
       color: #fff;
       transform: scale(1.1);
     }
-  }
-}
-
-// 入場動畫定義
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes zoomIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
   }
 }
