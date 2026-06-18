@@ -79,7 +79,7 @@ export class StoreComponent {
   fetchProduct(userId: number) {
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
-        this.allProducts = res.productList;
+        this.allProducts = res.productList || [];
         this.pagination.init(this.allProducts.length, this.pageSize);  // 初始化分頁
         this.updatePaginationTotal(); // 切出當頁
       },
