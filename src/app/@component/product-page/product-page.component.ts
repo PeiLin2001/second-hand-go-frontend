@@ -204,7 +204,7 @@ export class ProductPageComponent {
 
 
 
- // 🌟 6. 圖片篩選功能大瘦身！因為後端已經是 List<String> 陣列，不需要再用逗號切開了！
+ // 6. 圖片篩選功能大瘦身！因為後端已經是 List<String> 陣列，不需要再用逗號切開了！
   get validImages(): string[] {
     return this.product?.imgPath ?? []; // 防呆：如果 product 還沒回來，先給空陣列
   }
@@ -297,8 +297,8 @@ if (index >= 0 && index < this.validImages.length) {
 //加入收藏
   toggleCollect(): void {
     if (!this.product) return;
-    if (!this.ensureLogin('收藏失敗!!', '您需要先登入，才能將心儀的商品收進清單喔！')) return;
-     if(!this.ifMyStore('無法收藏喔！','這是妳自己上架的商品，不需要再收藏自己啦 ✨')) return;
+    if (!this.ensureLogin('收藏失敗！', '您需要先登入，才能將心儀的商品收進清單喔！')) return;
+    if(!this.ifMyStore('無法收藏喔！','這是您自己上架的商品，不需要再收藏自己啦！')) return;
 
    if (!this.isCollected) {
     this.apiTestService.addCollect(this.product.productId).subscribe({
@@ -310,9 +310,7 @@ if (index >= 0 && index < this.validImages.length) {
             this.apiTestService.getUserCollect().subscribe({
               next: (collectRes) => {
                 const matched = collectRes.collectListVo?.find(item =>
-                  item.productName === this.product?.productName &&
-                  item.price === this.product?.price &&
-                  item.sellerName === this.product?.seller?.userName
+                  (item as any).productId === this.product?.productId
                 );
                 if (matched) this.currentCollectId = matched.collectId;
               }
@@ -361,17 +359,17 @@ if (index >= 0 && index < this.validImages.length) {
   // 發送請求按鈕
   sendRequest(): void {
     if (!this.product) return;
-    if (!this.ensureLogin('無法發送請求！', '請先登入，才能向同學發送請求喔！')) return;
+    if (!this.ensureLogin('無法發送購買請求！', '請先登入，才能向同學發送購買請求喔！')) return;
 // 防呆：如果已經發送過了，就不讓使用者再點擊
     if (this.isRequested) return;
-    if(!this.ifMyStore('無法發送請求喔！','這是妳自己上架的商品，沒辦法對自己發送請求喔 ✨')) return;
+    if(!this.ifMyStore('無法發送請求喔！','這是妳自己上架的商品，沒辦法對自己發送請求喔！')) return;
     Swal.fire({
       title: '確定要發送購買請求嗎？',
       text: `系統將會發送「${this.product.productName}」的購買意願給賣家。`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: '確定發送',
-      cancelButtonText: '先不要',
+      cancelButtonText: '我在想想',
       confirmButtonColor: '#EDA900',
       cancelButtonColor: '#999999',
       reverseButtons: true
@@ -436,7 +434,7 @@ shareProduct(): void {
       title: '連結已複製！',
       text: '快去分享給學校同學吧~',
       icon: 'success',
-      confirmButtonText: '太棒了',
+      confirmButtonText: '好的',
       confirmButtonColor: '#EDA900'
     });
   });
@@ -446,7 +444,7 @@ shareProduct(): void {
 onReportClick(): void {
   this.isMenuOpen = false; // 關閉選單
   if (!this.ensureLogin('請先登入！', '您需要登入後才能使用檢舉功能喔！')) return;
-  if(!this.ifMyStore('操作失敗！','這是妳自己上架的商品，不能檢舉自己喔 ✨')) return;
+  if(!this.ifMyStore('操作失敗！','這是您自己上架的商品，不能檢舉自己喔！')) return;
   this.reportProduct();    // 呼叫檢舉功能
 }
 
@@ -473,8 +471,9 @@ closeMenu(): void {
   openChat(): void {
     if (!this.product) return;
     if (!this.ensureLogin('請先登入！', '您需要登入後才能使用聊天功能喔！')) return;
-    if(!this.ifMyStore('不能跟自己聊天喔！','這是妳自己上架的商品，沒辦法跟自己開啟聊天室喔 ✨')) return;
-    this.router.navigate(['/chat'], { queryParams: { userId: this.product.userId } });
+    if(!this.ifMyStore('不能跟自己聊天喔！','這是您自己上架的商品，沒辦法跟自己開啟聊天室喔！')) return;
+    const targetUserId = this.product.seller?.userId || this.product.userId;
+    this.router.navigate(['/chat',targetUserId]);
   }
 
   gotoStore(): void {

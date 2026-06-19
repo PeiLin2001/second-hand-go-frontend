@@ -111,6 +111,22 @@
   }
 }
 
+mat-dialog-content {
+  overflow: visible !important;  // ✅ 改成 visible，不裁切內容
+  padding: 0 24px !important;
+}
+
+.cropper-wrapper {
+  width: 100%;
+
+  image-cropper {
+    max-height: 60vh;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
 // ==========================================================
 // 🧑‍🎨 3. 大卡片上半部：頭像、名稱、三大核心數據
 // ==========================================================
