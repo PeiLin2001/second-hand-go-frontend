@@ -105,7 +105,7 @@
           <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
           <div class="purchase-actions">
 
-            <button class="btn-tolk" (click)="openChat()">
+            <button class="btn-tolk" (click)="openChat()" title="聊聊">
               <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
               聊聊
             </button>
@@ -117,9 +117,9 @@
               </svg>
               @if (isCollected) {
                 <span class="text-default">已收藏</span>
-                <span class="text-hover">取消收藏</span>
+                <span class="text-hover" title="取消收藏">取消收藏</span>
               } @else {
-                <span>加入收藏</span>
+                <span title="加入收藏">加入收藏</span>
               }
             </button>
 
@@ -129,7 +129,7 @@
                 已發送請求
               } @else {
                 <lucide-icon [img]="SendIcon" size="18"></lucide-icon>
-                發送請求
+                <span title="發送請求">發送請求</span>
               }
             </button>
 
@@ -178,7 +178,7 @@
         <span class="seller-meta">
           {{ product.seller.school }}
              @if (product.seller.department) {
-              ・{{ product.seller.department }}
+              ・ {{ product.seller.department }}
             }
 
         </span>

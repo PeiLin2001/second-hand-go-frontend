@@ -48,7 +48,7 @@ export class ProductPageComponent {
   readonly Copy = Copy;
   readonly ShieldCheckIcon = ShieldCheck;
 
-  // 💡 抓取 HTML 中的滾動區域
+  // 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
   @ViewChild('descText') descText!: ElementRef;
 
@@ -248,7 +248,7 @@ if (index >= 0 && index < this.validImages.length) {
   }
 
 /**
-   * 💡 核心控制：點擊箭頭滑動縮圖
+   * 核心控制：點擊箭頭滑動縮圖
    * @param direction 'left' 或 'right'
    */
   scrollThumbnails(direction: 'left' | 'right'): void {
@@ -297,7 +297,7 @@ if (index >= 0 && index < this.validImages.length) {
 //加入收藏
   toggleCollect(): void {
     if (!this.product) return;
-    if (!this.ensureLogin('收藏失敗！', '您需要先登入，才能將心儀的商品收進清單喔！')) return;
+    if (!this.ensureLogin('收藏失敗！', '您需要先登入，才能收藏商品喔！')) return;
     if(!this.ifMyStore('無法收藏喔！','這是您自己上架的商品，不需要再收藏自己啦！')) return;
 
    if (!this.isCollected) {
@@ -423,7 +423,7 @@ toggleMenu(event: Event): void {
   this.isMenuOpen = !this.isMenuOpen;
 }
 
-// 🔗 分享商品功能
+// 分享商品功能
 shareProduct(): void {
   if (!this.product) return;
 
@@ -432,7 +432,7 @@ shareProduct(): void {
     this.isMenuOpen = false; // 複製完順手關閉選單
     Swal.fire({
       title: '連結已複製！',
-      text: '快去分享給學校同學吧~',
+      text: '快去分享給學校同學吧！',
       icon: 'success',
       confirmButtonText: '好的',
       confirmButtonColor: '#EDA900'

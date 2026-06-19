@@ -154,7 +154,7 @@ onDocumentClick(event: MouseEvent) {
 
       if (user.imgPath && user.imgPath.trim() !== '') {
           if (user.imgPath.startsWith('http')) {
-            this.avatarUrl = user.imgPath; // 👉 如果是 Cloudinary 網址，直球對決直接用！
+            this.avatarUrl = user.imgPath; // 如果是 Cloudinary 網址，直接用！
           } else {
             this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
           }
@@ -165,7 +165,7 @@ onDocumentClick(event: MouseEvent) {
         // 同步通知全站右上角
         this.userService.updateAvatar(this.avatarUrl as string);
 
-       // 2. 處理地區 (🌟 終極拆彈防禦：管他資料庫是字串、陣列、還是帶括號的亂碼，前端統統相容！)
+       // 2. 處理地區
         let backendAreas: string[] = [];
 
         if (Array.isArray(user.location)) {
@@ -212,13 +212,13 @@ onDocumentClick(event: MouseEvent) {
   }
 
   loadMyProducts(userId: number): void {
-    // 🎯 借用同學那支透過賣家 ID 搜尋商品的 API
+    // 透過賣家 ID 搜尋商品的 API
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
         if (res && res.productList) {
           this.myProducts = res.productList; // 1. 塞給卡片陣列去渲染 UI
 
-          // 🌟 2. 精華：直接數有幾筆卡片，就是上架數量！
+          // 2. 直接數有幾筆卡片，就是上架數量！
           this.onTheShelves = res.productList.length;
         }
       },
@@ -250,11 +250,11 @@ onDocumentClick(event: MouseEvent) {
       { validators: this.passwordMatchValidator },
     );
 
-  // 3. 呼叫 API 載入資料 (這裡面會自動幫你處理 FormArray 和水管)
+  // 3. 呼叫 API 載入資料
     this.loadUserProfile();
   }
 
-  // 神級重構 B：集體控制狀態的萬能開關工具
+  // 集體控制狀態的萬能開關工具
   private setBasicControlsStatus(enable: boolean, options = {}) {
     Object.values(this.basicControlsMap).forEach((control) => {
       if (enable) control.enable(options);
@@ -267,7 +267,7 @@ onDocumentClick(event: MouseEvent) {
     this.isEditingBasic = !this.isEditingBasic;
 
     if (this.isEditingBasic) {
-      // 🔓 一鍵解鎖所有控制項！
+      // 一鍵解鎖所有控制項！
       this.setBasicControlsStatus(true);
       this.tempName = this.name;
       this.backupData = {
@@ -282,7 +282,7 @@ onDocumentClick(event: MouseEvent) {
       // 確定儲存時的前端大檢查
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
-      // 🌟 1. 判斷圖片狀態
+      //  1. 判斷圖片狀態
       let base64Img: string | null = null;
       let isDelete = false;
 
@@ -292,7 +292,7 @@ onDocumentClick(event: MouseEvent) {
         base64Img = this.avatarUrl as string;
       }
 
-      // 🌟 2. 打包成 SetInfoVo 物件 (準備送給 Java)
+      //  2. 打包成 SetInfoVo 物件 (準備送給 Java)
       const updateData: SetInfoVo = {
         email: this.email,
         name: this.tempName,
@@ -314,11 +314,11 @@ onDocumentClick(event: MouseEvent) {
         }
       });
 
-      // 🌟 3. 正式發送給後端！
+      //  3. 正式發送給後端！
       this.userService.updateProfile(updateData).subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            // ✅ 後端說存檔成功了！
+            // 後端說存檔成功了！
             Swal.fire({ title: '儲存成功！', icon: 'success', confirmButtonColor: '#FB831D' });
 
             // 確定成功後，才一鍵集體鎖定表單並關閉編輯模式
@@ -334,7 +334,7 @@ onDocumentClick(event: MouseEvent) {
             this.selectedAvatarFile = null;
 
           } else {
-            // ❌ 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
+            // 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
             this.showWarningAlert(res.message);
           }
         },
@@ -643,14 +643,14 @@ onDocumentClick(event: MouseEvent) {
     this.passwordForm.reset();
   }
 
-  gotoStore() {
- if (this.isEditingBasic) return;
-    if (!this.currentUserId) {
-      console.warn('尚未取得使用者 ID，無法導向個人商城');
-      return;
-    }
-    this.router.navigate(['/store', this.currentUserId]);
-  }
+//   gotoStore() {
+//  if (this.isEditingBasic) return;
+//     if (!this.currentUserId) {
+//       console.warn('尚未取得使用者 ID，無法導向個人商城');
+//       return;
+//     }
+//     this.router.navigate(['/store', this.currentUserId]);
+//   }
 
 
 }

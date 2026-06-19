@@ -6,22 +6,25 @@ import {
   LucideAngularModule, LUCIDE_ICONS, LucideIconProvider,
   User, BookText, MapPin, School, MessageCircleMore, HeartPlus,
   Pencil, ArrowRight, Plus, ThumbsUp, Trash2, Flag, Phone, Mail,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight,
+  Heart
 } from 'lucide-angular';
 import { ReportService } from '../../@Services/report.service';
 import Swal from 'sweetalert2';
 import { PaginationService } from '../../@Services/pageination.service';
+import { CollectRes } from '../../@Interface/collect-res';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-store',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, DecimalPipe],
   templateUrl: './store.component.html',
   styleUrl: './store.component.scss',
   providers: [
     {
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({
-        User, BookText, MapPin, School, MessageCircleMore, HeartPlus, Pencil,
+        User, BookText, MapPin, School, MessageCircleMore, HeartPlus, Pencil,Heart,
         ArrowRight, Plus, ThumbsUp, Trash2, Flag, Phone, Mail, ChevronLeft, ChevronRight,
       })
     }
@@ -43,6 +46,7 @@ export class StoreComponent {
   pageSize = 6; // 分頁變數
   targetUserId?: number; // 賣場網址ID
   loggedInId?: number; // 使用者ID
+  collectedMap = new Map<number, number>(); // productId -> collectId
 
   ngOnInit(): void {
     let idFromUrl = this.route.snapshot.paramMap.get('id');
@@ -50,7 +54,23 @@ export class StoreComponent {
 
     if (!idFromUrl) return;
     this.fetchShopOwnerData(this.targetUserId);
+    this.fetchUserCollect();
   }
+
+  //撈收藏清單 韻
+  fetchUserCollect(): void {
+  this.apiTestService.getUserCollect().subscribe({
+    next: (res: CollectRes) => {
+      if (res.statusCode === 200 && res.collectListVo) {
+        this.collectedMap.clear();
+        res.collectListVo.forEach((item: any) => {
+          this.collectedMap.set(item.productId, item.collectId);
+        });
+      }
+    },
+    error: (err) => console.error('撈取收藏清單失敗：', err)
+  });
+}
 
   // 檢舉
   goRepot() {
@@ -126,27 +146,55 @@ export class StoreComponent {
   }
 
   // 收藏商品
-  goCollectProduct(productId: number) {
-    this.apiTestService.addCollect(productId).subscribe({
-      next: (res) => {
-        Swal.fire({
-          title: '商品已收藏！',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false,
-        })
-      },
-      error: (err) => {
-        console.error('收藏商品失敗：', err);
-        Swal.fire({
-          title: '商品收藏失敗！',
-          text: '請稍後再試！',
-          icon: 'error',
-          timer: 1500,
-          showConfirmButton: false,
-        })
+  goCollectProduct(productId: number): void {
+      // 未登入檢查
+  if (!this.userService.currentUser()) {
+    Swal.fire({
+      title: '收藏失敗！',
+      text: '您需要先登入，才能收藏商品喔！',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: '前往登入',
+      cancelButtonText: '先看看就好',
+      confirmButtonColor: '#EDA900',
+      cancelButtonColor: '#6c757d'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/login_register']);
       }
-    })
+    });
+    return;
+  }
+    if (!this.collectedMap.has(productId)) {
+      // 加入收藏
+      this.apiTestService.addCollect(productId).subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            // 加入成功後重撈，拿到新的 collectId
+            this.apiTestService.getUserCollect().subscribe({
+              next: (collectRes: CollectRes) => {
+                const matched = collectRes.collectListVo?.find((item: any) => item.productId === productId);
+                if (matched) this.collectedMap.set(productId, matched.collectId);
+              }
+            });
+            Swal.fire({ title: '商品已收藏！', icon: 'success', timer: 1500, showConfirmButton: false });
+          }
+        },
+        error: (err) => console.error('收藏失敗：', err)
+      });
+    } else {
+      // 取消收藏
+      const collectId = this.collectedMap.get(productId)!;
+      this.apiTestService.deleteCollect([collectId]).subscribe({
+        next: (res) => {
+          if (res.statusCode === 200) {
+            this.collectedMap.delete(productId);
+            Swal.fire({ title: '已取消收藏', icon: 'info', timer: 1500, showConfirmButton: false });
+          }
+        },
+        error: (err) => console.error('取消收藏失敗：', err)
+      });
+    }
   }
 
   // 前往商品詳情頁
