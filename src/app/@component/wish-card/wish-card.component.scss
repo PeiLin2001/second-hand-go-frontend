@@ -101,10 +101,11 @@ ul {
   gap: 4px;
 
   color: $text-price;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1.4;
 
+  margin-top: .5rem;
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -131,11 +132,12 @@ dl {
 }
 
 dt {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   color: $google-text-secondary;
   letter-spacing: 0.5px;
-  margin-top: 1rem;
+  margin-top: 1.2rem;
+  margin-bottom: .5rem;
 }
 
 dd {

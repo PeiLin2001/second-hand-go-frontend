@@ -36,7 +36,7 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({ Plus, X }),
     },
-  ],
+  ]
 })
 export class SchoolCommunitySeekingComponent {
   wishList: Wish[] = [];
@@ -216,9 +216,8 @@ export class SchoolCommunitySeekingComponent {
       return;
     }
 
-    const newWish = this.createLocalWish(res, payload, userId);
+    this.loadWishesByCurrentSchool();
 
-    this.wishList = [newWish, ...this.wishList];
     this.submitted = false;
     this.closePanel();
 

@@ -1,0 +1,42 @@
+<main class="content">
+
+  <nav class="filter-panel">
+
+    <!-- 麵包屑 -->
+    <nav class="breadcrumb" >
+      <a routerLink="/home" class="breadcrumb-link">
+        <lucide-icon name="Home" size="16"></lucide-icon>
+          首頁
+      </a>
+      <span class="sep">></span>
+      <span class="current">尋找賣家</span>
+    </nav>
+
+    <!-- 標題列 + 排序 -->
+    <header class="list-header">
+      <h1 class="category-name">尋找賣家</h1>
+
+      <div class="sort-container">
+        <button class="sort-button"
+        (click)="togglePanel($event, 'sort')"
+        [class.active]="panelState.sort">
+          <span>排序依據</span>
+          <span class="material-symbols-outlined">sort</span>
+        </button>
+
+        @if (panelState.sort) {
+           <ul class="dropdown-content" (click)="$event.stopPropagation()">
+            <li [class.selected]="sortOption === 'newest'"
+                (click)="setSort('newest', $event)">最新加入</li>
+            <li [class.selected]="sortOption === 'credit-score'"
+                (click)="setSort('credit-score', $event)">信用評分</li>
+            <li [class.selected]="sortOption === 'transaction-count'"
+                (click)="setSort('transaction-count', $event)">交易筆數</li>
+          </ul>
+        }
+      </div>
+    </header>
+
+  </nav>
+
+</main>
