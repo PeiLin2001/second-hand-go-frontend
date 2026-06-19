@@ -14,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
+import {  map, Observable, startWith } from 'rxjs';
 import {
   LucideAngularModule,
   PencilLine,
@@ -30,12 +30,14 @@ import {
   ChevronUp,
 } from 'lucide-angular';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
 import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 import { ApiTestService } from '../../@Services/api-test.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageCropDialogComponent } from '../../@Dialogs/image-crop-dialog/image-crop-dialog.component';
 
 @Component({
   selector: 'app-profile-settings',
@@ -65,7 +67,8 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
     private schoolService: SchoolDataService,
     private userService: UserService,
     private elementRef: ElementRef,
-    private apiTestService: ApiTestService
+    private apiTestService: ApiTestService,
+    private dialog: MatDialog
   ) {}
   // --- 狀態變數 ---
   isEditingBasic = false;
@@ -510,28 +513,46 @@ onDocumentClick(event: MouseEvent) {
 
   //更換照片
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      if (file.size > 2 * 1024 * 1024) {
-        Swal.fire({
-          title: '檔案太大囉，請選擇2MB以下的圖片!',
-          icon: 'warning',
-          confirmButtonColor: '#FB831D',
-        });
-        return;
-      }
-      this.selectedAvatarFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.avatarUrl = reader.result;
-        if (reader.result) {
-        this.userService.updateAvatar(reader.result as string);
-      }
-      };
-      reader.readAsDataURL(file);
-    }
+  const input = event.target as HTMLInputElement;
+  if (!input.files || !input.files[0]) return;
+
+  const file = input.files[0];
+
+  if (file.size > 2 * 1024 * 1024) {
+    Swal.fire({
+      title: '檔案太大囉，請選擇2MB以下的圖片!',
+      icon: 'warning',
+      confirmButtonColor: '#FB831D',
+    });
+    return;
   }
+
+  // 開啟裁切 Dialog
+  const dialogRef = this.dialog.open(ImageCropDialogComponent, {
+    // width: '500px',
+    // maxHeight: '90vh',
+    disableClose: true,
+    data: { file }
+  });
+
+  dialogRef.afterClosed().subscribe((croppedBase64: string | null) => {
+    if (!croppedBase64) return;  // 使用者按取消
+
+    // 把裁切後的 base64 當作預覽圖和上傳資料
+    this.avatarUrl = croppedBase64;
+    this.userService.updateAvatar(croppedBase64);
+
+    // 把 base64 轉回 File 物件（讓原本的上傳邏輯繼續運作）
+    fetch(croppedBase64)
+      .then(res => res.blob())
+      .then(blob => {
+        this.selectedAvatarFile = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+      });
+  });
+
+  // 清空 input，讓下次選同一張圖也能觸發
+  input.value = '';
+}
 
   //恢復預設頭像
   resetToDefaultAvatar() {

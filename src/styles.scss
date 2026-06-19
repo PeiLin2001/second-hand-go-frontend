@@ -47,3 +47,10 @@ body {
     background: $primary-yellow !important;
   }
 }
+
+
+//裁切照片
+.cdk-overlay-container {
+  z-index: 10000 !important;
+}
+
