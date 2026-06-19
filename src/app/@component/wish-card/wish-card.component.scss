@@ -93,53 +93,140 @@ ul {
     }
   }
 
-  // 右側：許願者側面板
-  .wisher-wrapper {
+}
+
+// //==============
+
+.kebab-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-kebab {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 999px;
+  color: $neutral-blue;
+  display: flex;
+  align-items: center;
+
+  justify-content: center; // ← 加這行
+  width: 36px;             // ← 固定寬
+  height: 36px;            // ← 固定高
+  flex-shrink: 0;
+
+  &:hover { background: $neutral-hover-blue; }
+}
+
+.kebab-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  width: 138px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 6px 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  z-index: 9999;
+}
+
+.kebab-item {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: $text-gray;
+  cursor: pointer;
+
+  span {
+    flex: 1;
+    text-align: left;
+  }
+
+  &:hover { background: #f9fafb; }
+  &.danger { color: $text-gray; }
+  &.danger:hover { background: #fef2f2; color: $Communist-red; }
+}
+
+// =====================
+
+.wisher-wrapper {
+  position: relative; // 必須加這行，讓內部的 kebab-wrap 可以對齊右上角
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .5rem;
-  min-width: 160px;
-  padding-left: 24px;
+  justify-content: space-between; // 讓核心資訊與聊聊按鈕完美分佈在上下
+  min-width: 170px;
+  padding: 16px 0 0 24px; // 留出內部適當間距
   border-left: 1px solid #f1f3f4;
-  justify-content: center;
+  box-sizing: border-box;
 
-  .img-wrapper {
-    .wisher-profile {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid $google-border-color;
+  // 1. 三點點按鈕定位到右上角
+  .kebab-wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: inline-block;
+  }
+
+  // 2. 許願者核心資訊（頭像、名字、評分）
+  .wisher-core-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; // 稍微拉開組件間距
+    margin-top: 12px; // 避免撞到右上角的 kebab
+    width: 100%;
+
+    .img-wrapper {
+      .wisher-profile {
+        width: 52px; // 稍微放大一點點，視覺比例更好
+        height: 52px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid $google-border-color;
+      }
+    }
+
+    .wisher-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: center;
+      width: 100%;
+
+      .wisher-name {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $google-text-primary;
+        line-height: 1.4;
+        // 防止名字過長爆開
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .school {
+        font-size: 0.8125rem;
+        color: $google-text-secondary;
+        line-height: 1.4;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
-  .wisher-info,
-  .credit-info {
-    display: flex;
-    flex-direction: column;
-    gap: .2rem;
-    text-align: center;
-  }
-
-  .wisher-name {
-    font-size: 1rem;
-    font-weight: 500;
-    color: $google-text-primary;
-    line-height: 1.4;
-  }
-
-  .school {
-    font-size: 0.875rem;
-    color: $google-text-secondary;
-    line-height: 1.4;
-  }
-
-
-
+  // 3. 聊聊按鈕固定在底部
   .btn-action.primary {
-    margin-top: .5rem;
-
+    margin-top: 16px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -149,7 +236,7 @@ ul {
     background-color: $semantic-orange;
     color: #ffffff;
     border: none;
-    border-radius: $border-radius-tiny;
+    border-radius: 8px; // 配合 Material 3 改為圓角
     padding: 10px 20px;
 
     font-size: 0.875rem;
@@ -169,27 +256,4 @@ ul {
       font-size: 1.1rem;
     }
   }
-}
-}
-
-
-.credit-info {
-  display: flex;
-  justify-content: center;
-}
-
-.credit-score {
-  margin: 0;
-
-  padding: 2px 8px;
-
-  font-size: 0.7rem;
-  font-weight: 400;
-
-  color: #137333;
-  background: #e6f4ea;
-
-  border-radius: 999px;
-
-  letter-spacing: .2px;
 }

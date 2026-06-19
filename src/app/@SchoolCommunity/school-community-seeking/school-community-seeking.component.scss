@@ -347,3 +347,22 @@ Retrieved 2026-06-18, License - CC BY-SA 4.0
 ::ng-deep.swal2-container {
     z-index: 10000;
 }
+
+
+// ── 必填驗證樣式 ──────────────────────────────────────────
+.input-error {
+  border-color: #e53935 !important;
+  background: #fff5f5 !important;
+}
+
+.chip-error {
+  outline: 2px solid #e53935;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.error-hint {
+  font-size: 0.78rem;
+  color: #e53935;
+  margin-top: 2px;
+}
