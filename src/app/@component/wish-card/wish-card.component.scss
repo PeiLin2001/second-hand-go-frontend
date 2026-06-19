@@ -1,120 +1,182 @@
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
-// Google 經典 Material 顏色規範
 $google-blue: #1a73e8;
-$google-blue-hover: #1557b0;
 $google-text-primary: #202124;
 $google-text-secondary: #5f6368;
 $google-border-color: #dadce0;
-$google-bg-chip: #f1f3f4;
 
-p, h4, h5 {
-  margin: 0;
+button {
+  all: unset;
+  cursor: pointer; /* 建議保留游標手勢 */
 }
 
+p, h4, h5, dl, dt, dd { margin: 0; }
+
+// ── 列表容器 ──────────────────────────────────
 ul {
   display: flex;
-  flex-direction: column; // 預設單欄直式排列，乾淨俐落
-  gap: 16px;             // Google 偏好 8px 倍數的間距
+  flex-direction: column;
+  gap: 16px;
   width: 100%;
-  box-sizing: border-box;
   padding: 0;
   list-style: none;
+  box-sizing: border-box;
 }
 
-.wishList-item {
+// ── 卡片 ─────────────────────────────────────
+.wish-card {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   gap: 24px;
-
-  background-color: #ffffff;
+  background: #fff;
   border: 1px solid $google-border-color;
-  border-radius: 12px; // Modern Material 3 採用的微大圓角
-  padding: 24px;
+  border-radius: 12px;
+  padding: 2rem;
   box-sizing: border-box;
-
-  // 處理卡片懸浮時的 Google 經典微陰影放大效果
-  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
     border-color: transparent;
-    box-shadow: 0 4px 12px 0 rgba(60, 64, 67, 0.15),
-                0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    box-shadow:
+      0 4px 12px rgba(60, 64, 67, 0.15),
+      0 1px 3px 1px rgba(60, 64, 67, 0.15);
   }
-
-  // 左側：需求內容區
-  .wish-info {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    flex: 1;
-
-    .wish-title {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      font-size: 1.5rem;
-      font-weight: 500;   // Google 偏好用 Medium 代替正粗體
-      color: $google-text-primary;
-      line-height: 1.5;
-    }
-
-    .description-wrapper, .budget {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    // 小標題轉為高辨識度的微縮型態
-    .subtitle {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: $google-text-secondary;
-      letter-spacing: 0.5px;
-    }
-
-    .wish-description {
-      font-size: 1rem;
-      color: $text-gray;
-      line-height: 1.6;
-
-      // white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .contex {
-      font-size: 1rem;
-      color: $text-gray;
-    }
-  }
-
 }
 
-// //==============
+// ── 左側：需求內容 ────────────────────────────
+.wish-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; // 防止 overflow 溢出 flex 容器
+}
 
-.kebab-wrap {
+.wish-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 5%;
+  color: $google-text-primary;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wish-description-box {
   position: relative;
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.wish-description {
+  width: 100%;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+  color: $text-gray;
+  font-size: 1rem;
+  line-height: 1.75;
+  letter-spacing: 0.03em;
+
+  white-space: pre-line;
+  word-break: break-word;
+
+  &.expanded {
+    display: block;
+    overflow: visible;
+  }
+}
+
+.btn-expand {
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  color: $text-price;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.4;
+
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+
+
+  &:hover {
+    opacity: 0.8;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &.is-expanded::after {
+    transform: rotate(180deg) translateY(1px);
+  }
+}
+
+dl {
+  display: flex;
+  flex-direction: column;
+}
+
+dt {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $google-text-secondary;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
+}
+
+dd {
+  font-size: 1rem;
+  color: $text-gray;
+  line-height: 1.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── 右側：許願者面板 ──────────────────────────
+.wisher-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 170px;
+  padding: 16px 0 0 24px;
+  border-left: 1px solid #f1f3f4;
+  box-sizing: border-box;
+}
+
+// ── 更多選單 ──────────────────────────────────
+.kebab-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .btn-kebab {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 999px;
-  color: $neutral-blue;
   display: flex;
   align-items: center;
-
-  justify-content: center; // ← 加這行
-  width: 36px;             // ← 固定寬
-  height: 36px;            // ← 固定高
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  border-radius: 999px;
+  color: $neutral-blue;
+  cursor: pointer;
   flex-shrink: 0;
 
   &:hover { background: $neutral-hover-blue; }
@@ -125,135 +187,108 @@ ul {
   top: calc(100% + 4px);
   right: 0;
   width: 138px;
+  padding: 6px 0;
+  list-style: none;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 6px 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   z-index: 9999;
 }
 
 .kebab-item {
-  width: 100%;
-  background: none;
-  border: none;
-  padding: 10px 16px;
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 100%;
+  padding: 10px 16px;
+  background: none;
+  border: none;
   font-size: 13px;
   color: $text-gray;
   cursor: pointer;
 
-  span {
-    flex: 1;
-    text-align: left;
-  }
+  span { flex: 1; text-align: left; }
 
   &:hover { background: #f9fafb; }
-  &.danger { color: $text-gray; }
-  &.danger:hover { background: #fef2f2; color: $Communist-red; }
+
+  &.danger:hover {
+    background: #fef2f2;
+    color: $Communist-red;
+  }
 }
 
-// =====================
-
-.wisher-wrapper {
-  position: relative; // 必須加這行，讓內部的 kebab-wrap 可以對齊右上角
+// ── 許願者核心資訊 ────────────────────────────
+.wisher-core-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; // 讓核心資訊與聊聊按鈕完美分佈在上下
-  min-width: 170px;
-  padding: 16px 0 0 24px; // 留出內部適當間距
-  border-left: 1px solid #f1f3f4;
-  box-sizing: border-box;
+  gap: 6px;
+  margin-top: 12px;
+  width: 100%;
+  text-align: center;
+}
 
-  // 1. 三點點按鈕定位到右上角
-  .kebab-wrap {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: inline-block;
+.wisher-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid $google-border-color;
+  margin-bottom: 6px;
+}
+
+.wisher-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: $google-text-primary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.wisher-school {
+  font-size: 0.8125rem;
+  color: $google-text-secondary;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.credit-score {
+  font-size: 0.875rem;
+  color: $google-text-secondary;
+}
+
+// ── 聊聊按鈕 ─────────────────────────────────
+.btn-chat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 60%;
+  margin-top: 16px;
+  padding: 10px 20px;
+  background: $semantic-orange;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: $primary-yellow-darker;
+    box-shadow:
+      0 1px 2px rgba(60, 64, 67, 0.3),
+      0 1px 3px 1px rgba(60, 64, 67, 0.15);
   }
 
-  // 2. 許願者核心資訊（頭像、名字、評分）
-  .wisher-core-info {
+  lucide-icon {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 12px; // 稍微拉開組件間距
-    margin-top: 12px; // 避免撞到右上角的 kebab
-    width: 100%;
-
-    .img-wrapper {
-      .wisher-profile {
-        width: 52px; // 稍微放大一點點，視覺比例更好
-        height: 52px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid $google-border-color;
-      }
-    }
-
-    .wisher-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      text-align: center;
-      width: 100%;
-
-      .wisher-name {
-        font-size: 1rem;
-        font-weight: 500;
-        color: $google-text-primary;
-        line-height: 1.4;
-        // 防止名字過長爆開
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .school {
-        font-size: 0.8125rem;
-        color: $google-text-secondary;
-        line-height: 1.4;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
-  // 3. 聊聊按鈕固定在底部
-  .btn-action.primary {
-    margin-top: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-
-    width: 100%;
-    background-color: $semantic-orange;
-    color: #ffffff;
-    border: none;
-    border-radius: 8px; // 配合 Material 3 改為圓角
-    padding: 10px 20px;
-
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-
-    &:hover {
-      background-color: $primary-yellow-darker;
-      box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3),
-                  0 1px 3px 1px rgba(60,64,67,0.15);
-    }
-
-    lucide-icon {
-      display: flex;
-      align-items: center;
-      font-size: 1.1rem;
-    }
   }
 }

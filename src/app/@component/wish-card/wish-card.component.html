@@ -1,66 +1,73 @@
 <ul>
-  @for (item of wishList; track $index) {
-    <li class="wishList-item">
-      <div class="wish-info">
+  @for (item of wishList; track item.id) {
+    <li class="wish-card">
 
-        <h4 class="wish-title">{{item.title}}</h4>
+      <article class="wish-info">
+        <h4 class="wish-title">{{ item.title }}</h4>
 
-        <div class="description-wrapper">
-          <h5 class="subtitle">需求描述</h5>
-          <p class="wish-description">{{item.description}}</p>
-        </div>
+        <dl>
+          <dt class="label">需求描述</dt>
+          <dd class="wish-description-box">
+            <p
+              #wishDescription
+              class="wish-description"
+              [class.expanded]="expandedIds.has(item.id)"
+            >
+              {{ item.description }}
+            </p>
 
-        <div class="budget">
-          <h5 class="subtitle">預算</h5>
-          <p class="contex">NT${{item.budgetMin}} - {{item.budgetMax}}</p>
-        </div>
+            @if (expandableIds.has(item.id)) {
+              <button
+                class="btn-expand"
+                [class.is-expanded]="expandedIds.has(item.id)"
+                (click)="toggleExpand(item.id)"
+                type="button"
+              >
+                {{ expandedIds.has(item.id) ? '收起內容' : '查看更多' }}
+              </button>
+            }
+          </dd>
 
-        <div class="budget">
-          <h5 class="subtitle">可面交地點</h5>
-          <p class="contex">{{item.location}}</p>
-        </div>
+          <dt>預算</dt>
+          <dd>NT${{ item.budgetMin }} - {{ item.budgetMax }}</dd>
 
-      </div>
+          <dt>可面交地點</dt>
+          <dd>{{ item.location }}</dd>
+        </dl>
+      </article>
 
+      <div class="wisher-panel">
 
-      <div class="wisher-wrapper">
-
+        <!-- 更多選單 -->
         <div class="kebab-wrap">
           <button class="btn-kebab" (click)="toggleMenu($event, item)" title="更多操作">
-            <lucide-icon name="MoreVertical" size="16"></lucide-icon>
+            <lucide-icon name="EllipsisVertical" size="16" />
           </button>
 
-          <div class="kebab-dropdown" [style.display]="openMenuWishId === item.id ? 'block' : 'none'">
-            <button class="kebab-item danger" (click)="goRepot(item)">
-              <lucide-icon name="Flag" size="14"></lucide-icon>
-              <span>檢舉</span>
-            </button>
-          </div>
+          <menu class="kebab-dropdown" [style.display]="openMenuWishId === item.id ? 'block' : 'none'">
+            <li>
+              <button class="kebab-item danger" (click)="goRepot(item)">
+                <lucide-icon name="Flag" size="14" />
+                <span>檢舉</span>
+              </button>
+            </li>
+          </menu>
         </div>
 
+        <!-- 頭像、名字、評分 -->
         <div class="wisher-core-info">
-          <div class="img-wrapper">
-            <img [src]="item.wisher.userImgPath" alt="♥" class="wisher-profile">
-          </div>
+          <img [src]="item.wisher.userImgPath" alt="{{ item.wisher.userName }} 的頭像" class="wisher-avatar">
 
-          <div class="wisher-info">
-            <h5 class="wisher-name">{{item.wisher.userName}}</h5>
-            <p class="school">{{item.wisher.school}}</p>
-          </div>
-
-          <div class="credit-info">
-            <p class="credit-score">
-              {{item.wisher.goodLevel}} ★
-            </p>
-          </div>
+          <p class="wisher-name">{{ item.wisher.userName }}</p>
+          <p class="wisher-school">{{ item.wisher.school }}</p>
+          <p class="credit-score">{{ item.wisher.goodLevel | number:'1.1-1' }} ★</p>
         </div>
 
-        <button class="btn-action primary" (click)="chat()">
-          <lucide-icon name="MessageCircleMore"></lucide-icon>聊聊
+        <button class="btn-chat" (click)="chat()">
+          <lucide-icon name="MessageCircleMore" />聊聊
         </button>
 
       </div>
-
     </li>
   }
 </ul>
