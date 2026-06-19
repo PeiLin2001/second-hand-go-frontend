@@ -72,7 +72,7 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
       @for (item of products ; track $index) {
       <div class="col">
-        <div class="card" (click)="goProductPage()">
+        <div class="card" (click)="goProductPage(item)">
           <!-- 左側圖片 -->
           <figure class="img-wrapper">
             <img [src]=item.imgPath[0] class="" alt="商品圖片">
@@ -101,7 +101,7 @@
 
   <!-- 分頁 -->
   <nav class="pagination">
-    <span>共{{ allProducts.length }}筆資料</span>
+    <span>共{{ allProducts.length || 0 }}筆資料</span>
     <button class="page-btn" [disabled]="pagination.currentPage === 1" (click)="prevPage()">
       <lucide-icon name="ChevronLeft"></lucide-icon>
     </button>

@@ -106,9 +106,26 @@ export class ApiTestService {
 
 
   // === chat ===
-  getOrCreateRoom(ChatRoomReq: any) {
+  getOrCreateRoom(ChatRoomReq: any): Observable<any> {
     return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
   }
+
+  history(roomId: number): Observable<any> {
+    return this.http.get(`${this.chatApiUrl}/history?roomId=${roomId}`);
+  }
+
+  getAllRoom(userId: number): Observable<any> {
+    return this.http.get(`${this.chatApiUrl}/get-all-room?userId=${userId}`);
+  }
+
+  readAllRoomMessages(roomId: number, userId: number) {
+    return this.http.post(`${this.chatApiUrl}/read-room?roomId=${roomId}&userId=${userId}`, {});
+  }
+
+  uploadPicture(pictures: any): Observable<any> {
+    return this.http.post(`${this.chatApiUrl}/upload-img`, pictures);
+  }
+
   //商品頁:單一商品詳情
   searchByProductId(productId: number): Observable<GetProductDataRes> {
     return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);

@@ -79,7 +79,7 @@ export class StoreComponent {
   fetchProduct(userId: number) {
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
-        this.allProducts = res.productList;
+        this.allProducts = res.productList || [];
         this.pagination.init(this.allProducts.length, this.pageSize);  // 初始化分頁
         this.updatePaginationTotal(); // 切出當頁
       },
@@ -150,13 +150,13 @@ export class StoreComponent {
   }
 
   // 前往商品詳情頁
-  goProductPage() { this.router.navigate(['/product_page']); }
+  goProductPage(item: any) { this.router.navigate(['/product_page', item.productId]); }
 
   // 編輯個人資料
   goSettings() { this.router.navigate(['/profile_settings']); }
 
   // 聊聊
-  chat() { this.router.navigate(['/chat']); }
+  chat() { this.router.navigate(['/chat', this.shopOwnerData().userId]); }
 
   // 分頁
   prevPage() {
