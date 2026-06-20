@@ -1,7 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
 import { HttpService } from '../../@Services/http.service';
 import { config } from 'rxjs';
@@ -18,16 +23,19 @@ export class ReportDialogComponent {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<ReportDialogComponent>,
     public http: HttpService,
-    public router: Router
-  ) { }
+    public router: Router,
+  ) {}
   data = inject(MAT_DIALOG_DATA);
 
   adminNote = '';
 
-  openChat():void{
-const targetUserId = this.data.accusedId || this.data.compId;
-const url = this.router.createUrlTree(['/chat', targetUserId]).toString();
-window.open(url, '_blank');
+  openChat(): void {
+  const targetUserId = this.data.type === '商品'
+    ? this.data.productUserId
+    : this.data.accusedId;
+    const url = this.router.createUrlTree(['/chat', targetUserId]).toString();
+    console.log(targetUserId);
+    window.open(url, '_blank');
   }
 
   confirm(action: '通過' | '駁回') {
@@ -37,16 +45,17 @@ window.open(url, '_blank');
         return;
       }
 
-      this.http.postApi('http://localhost:8080/report/check', {
-        reportId: this.data.reportId,
-        active: action
-      }).subscribe((res: any) => {
-        if (res.statusCode == 200) {
-          console.log(res);
-          this.dialogRef.close({ action });
-        }
-      });
-
-    })
+      this.http
+        .postApi('http://localhost:8080/report/check', {
+          reportId: this.data.reportId,
+          active: action,
+        })
+        .subscribe((res: any) => {
+          if (res.statusCode == 200) {
+            console.log(res);
+            this.dialogRef.close({ action });
+          }
+        });
+    });
   }
 }
