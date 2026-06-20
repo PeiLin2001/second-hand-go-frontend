@@ -473,14 +473,14 @@ export class ProductPageComponent {
     if (!this.ensureLogin('請先登入！', '您需要登入後才能使用聊天功能喔！')) return;
     if (!this.ifMyStore('不能跟自己聊天喔！', '這是您自己上架的商品，沒辦法跟自己開啟聊天室喔！')) return;
     const targetUserId = this.product.seller?.userId || this.product.userId;
-    this.router.navigate(['/chat', targetUserId]);
+    this.router.navigate(['/chat', targetUserId], {
+      queryParams: { productId: this.product.productId }
+    });
   }
 
   gotoStore(): void {
     if (!this.product) return;
-    this.router.navigate(['/store', this.product.userId], {
-      queryParams: { productId: this.product.productId }
-    });
+    this.router.navigate(['/store', this.product.userId]);
   }
 
   /**共用方法: 未登入 */
