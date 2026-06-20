@@ -24,12 +24,10 @@ export class ReportDialogComponent {
 
   adminNote='';
 
-  openChat(params:any){
-  const url = this.router.createUrlTree(['/chat'], {
-    queryParams: params
-  }).toString();
-
-  window.open(url, '_blank');
+  openChat():void{
+const targetUserId = this.data.accusedId || this.data.compId;
+const url = this.router.createUrlTree(['/chat', targetUserId]).toString();
+window.open(url, '_blank');
   }
 
   confirm(action: '通過' | '駁回'){
