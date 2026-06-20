@@ -46,16 +46,16 @@ export class ForegroundTestComponent {
 
     // this.submit();
 
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.productId = params['id'];
-    });
+    // this.activatedRoute.queryParams.subscribe(params => {
+    //   this.productId = params['id'];
+    // });
 
-    console.log(this.productId);
+    // console.log(this.productId);
 
 
   }
 
-  productId = 0;
+  // productId = 0;
   // ========================================================================
   //  用 navigator geolocation API 取得經緯度
   // ========================================================================

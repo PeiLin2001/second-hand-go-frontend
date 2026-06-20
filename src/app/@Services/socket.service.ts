@@ -43,4 +43,10 @@ export class SocketService {
     });
   }
 
+  // 離開房間
+  leaveRoom(roomId: number, userName: string) {
+    if (this.socket) {
+      this.socket.emit('leave_room', { roomId: roomId, userName: userName });
+    }
+  }
 }

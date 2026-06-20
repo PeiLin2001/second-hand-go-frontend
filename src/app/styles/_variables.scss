@@ -6,7 +6,6 @@ $primary-yellow:              #F7D175;   // 主色黃，品牌識別色
 $primary-yellow-dark:         #EDA900;   // 深一階，按鈕 hover、border
 $primary-yellow-darker:       #dd6b00;   // 深兩階，文字、icon 需要對比時用
 
-
 $accent-brown:                #775D3F;   // 已有，正式命名為強調棕
 $accent-brown-light:          #A07850;   // 較淺，次要文字、tag border
 
@@ -31,8 +30,12 @@ $neutral-c9: #c9c6c0;
 $neutral-ice: #f3f4f6;
 $neutral-snow: #f9fafc;
 
+$neutral-blue: #9ca3af;
+$neutral-hover-blue: #f3f4f6;
+
 // --- Text ---
 $text-black:                  #1E1E1E;   // 主文字黑
+$text-black-hover:            #292929;   // 主文字黑
 $text-price:                  #775D3F;   // 價格棕色
 $text-gray:                   #666;
 
@@ -40,6 +43,10 @@ $text-gray:                   #666;
 $semantic-green:              #5E9759;   // 交易狀況那邊
 $semantic-orange:             #FB831D;   // 提醒
 $semantic-lightgreen:         #7BE272;   // 淺綠（次要成功、標籤）
+$Communist-red:               #ef4444;
+
+// --- Decoration ---
+$gawr-gura-eyes:              #8adcfa;
 
 // 常用字體大小
 $font-size-base: 16px;

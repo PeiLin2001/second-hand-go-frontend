@@ -9,20 +9,20 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report-dialog',
-  imports: [MatDialogModule, MatButtonModule,FormsModule],
+  imports: [MatDialogModule, MatButtonModule, FormsModule],
   templateUrl: './report-dialog.component.html',
   styleUrl: './report-dialog.component.scss',
 })
 export class ReportDialogComponent {
-    constructor(
+  constructor(
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<ReportDialogComponent>,
-    public http:HttpService,
-    public router:Router
-  ) {}
+    public http: HttpService,
+    public router: Router
+  ) { }
   data = inject(MAT_DIALOG_DATA);
 
-  adminNote='';
+  adminNote = '';
 
   openChat():void{
 const targetUserId = this.data.accusedId || this.data.compId;
@@ -30,17 +30,18 @@ const url = this.router.createUrlTree(['/chat', targetUserId]).toString();
 window.open(url, '_blank');
   }
 
-  confirm(action: '通過' | '駁回'){
-    const confirmRef=this.dialog.open(AnnounDialogComponent);
-    confirmRef.afterClosed().subscribe((confirmed)=>{
-      if(confirmed!=true){
+  confirm(action: '通過' | '駁回') {
+    const confirmRef = this.dialog.open(AnnounDialogComponent);
+    confirmRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed != true) {
         return;
       }
 
-      this.http.postApi('http://localhost:8080/report/check',{reportId:this.data.reportId,
-        active:action
-      }).subscribe((res:any)=>{
-        if(res.statusCode==200){
+      this.http.postApi('http://localhost:8080/report/check', {
+        reportId: this.data.reportId,
+        active: action
+      }).subscribe((res: any) => {
+        if (res.statusCode == 200) {
           console.log(res);
           this.dialogRef.close({ action });
         }

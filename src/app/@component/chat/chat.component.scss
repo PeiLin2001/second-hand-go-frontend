@@ -203,7 +203,7 @@
   background-color: $background-white;
 }
 
-// 📜 訊息對話主捲動區
+// 訊息對話主捲動區
 .message-list {
   flex: 1;
   overflow-y: auto;
@@ -213,7 +213,7 @@
   gap: 20px;
 }
 
-// 💬 訊息泡泡總殼（預設靠左、灰底）
+// 訊息泡泡總殼（預設靠左、灰底）
 .message-wrapper {
   display: flex;
   align-items: flex-start;
@@ -263,7 +263,7 @@
     word-break: break-all;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 
-    // 🖼️ 聊天室內的分享圖片網格
+    // 聊天室內的分享圖片網格
     .chat-image-gallery {
       display: flex;
       flex-wrap: wrap;
@@ -291,7 +291,7 @@
     color: $neutral-500;
   }
 
-  // 👑 當是我自己發送的訊息時（靠右、黃底棕字）
+  //  當是我自己發送的訊息時（靠右、黃底棕字）
   &.is-me {
     align-self: flex-end;
     flex-direction: row-reverse;
@@ -309,7 +309,7 @@
   }
 }
 
-// 📸 2.2 底部待傳送的圖片預覽區域
+//  2.2 底部待傳送的圖片預覽區域
 .preview-list {
   margin: 0 24px 12px 24px;
   display: flex;
@@ -374,6 +374,8 @@
     border-radius: 16px;
     cursor: pointer;
     transition: all 0.2s;
+    outline: none;
+    border: none;
 
     &:hover {
       background-color: $primary-yellow;
@@ -382,8 +384,8 @@
   }
 
   .error-msg {
-    width: 100%; // 強制錯誤訊息換行
-    display: inline-flex;
+    width: 100%;
+    display: flex;
     align-items: center;
     font-size: 0.8rem;
     font-weight: 500;
@@ -531,5 +533,92 @@
       color: #fff;
       transform: scale(1.1);
     }
+  }
+}
+
+// 商品資訊小卡
+.product {
+  width: 20%;
+  padding: 16px 24px 8px 24px;
+  background-color: $background-white;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.ask {
+  font-size: 13px;
+  font-weight: 500;
+  color: $neutral-500;
+  margin: 0 0 8px 4px;
+}
+
+.product-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: $background-yellow;
+  border: 1px solid $primary-yellow-light;
+  border-radius: $border-radius-lg;
+  padding: 12px 16px;
+
+  // 商品縮圖
+  .product-thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba($accent-brown, 0.1);
+    background-color: $background-white;
+    flex-shrink: 0;
+  }
+
+  // 右側文字區
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: $accent-brown;
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      line-clamp: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .price {
+      font-size: 14px;
+      font-weight: 700;
+      color: $primary-yellow-darker;
+      margin: 0;
+    }
+  }
+}
+
+// 空白狀態提示 (No Message State)
+.no-message {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 14px;
+  font-weight: 500;
+  color: $neutral-500;
+  text-align: center;
+  gap: 8px;
+  padding: 40px 0;
+  opacity: 0.8;
+
+  &:before {
+    content: "💬";
+    font-size: 32px;
+    margin-bottom: 4px;
+    filter: grayscale(0.2);
   }
 }

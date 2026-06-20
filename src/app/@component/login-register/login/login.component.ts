@@ -56,6 +56,7 @@ export class LoginComponent {
             });
             this.router.navigate(['/home']);
           } else if (res.role === 'manager') {
+            sessionStorage.setItem('isLoggedIn', 'true');
             this.router.navigate(['/report']);
           }
         },

@@ -53,7 +53,6 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/logOut`, {}, { withCredentials: true })
       .pipe(tap(() => {
         this.isLoggedIn.set(false);
-        // sessionStorage.removeItem('isLoggedIn');
         this.currentUser.set(null);
         sessionStorage.clear();
       }));
@@ -99,7 +98,18 @@ export class UserService {
   }
 
   // 取得各校成員
-  getUserDataBySchool(school : string):Observable<any> {
+  getUserDataBySchool(school: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/getClassmate?school=${school}`);
   }
+
+  // 取得地區成員
+  getUserDataByLocation(location : string):Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getTheNearBy?location=${location}`);
+  }
+
+  // 取得所有使用者
+  getAllUser():Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/getUsers`);
+  }
+
 }

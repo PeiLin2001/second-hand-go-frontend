@@ -26,11 +26,12 @@ import { CategoriesService } from '../../@Services/categories.service';
 import Swal from 'sweetalert2';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 
+
 @Component({
-  selector: 'app-school-community-seeking',
+  selector: 'app-wish',
   imports: [LucideAngularModule, WishCardComponent, FormsModule],
-  templateUrl: './school-community-seeking.component.html',
-  styleUrl: './school-community-seeking.component.scss',
+  templateUrl: './wish.component.html',
+  styleUrl: './wish.component.scss',
   providers: [
     {
       provide: LUCIDE_ICONS,
@@ -38,7 +39,8 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
     },
   ]
 })
-export class SchoolCommunitySeekingComponent {
+export class WishComponent {
+
   wishList: Wish[] = [];
 
   showPanel = false;
@@ -58,34 +60,15 @@ export class SchoolCommunitySeekingComponent {
   ) {}
 
   ngOnInit(): void {
-    this.loadWishesByCurrentSchool();
+    this.loadAllWishes();
   }
 
   // ── 初始化資料 ─────────────────────────────────────
 
-  private loadWishesByCurrentSchool(): void {
-    const schoolId = Number(this.route.parent?.snapshot.paramMap.get('id'));
-
-    if (!schoolId) return;
-
-    this.eduApiGovService
-      .getSchools()
-      .pipe(
-        switchMap((schools) => {
-          const school = schools.find((s) => Number(s['代碼']) === schoolId);
-
-          if (!school) return EMPTY;
-
-          return this.wishServiceService.getWishesBySchool(school['學校名稱']);
-        }),
-        catchError(() => {
-          this.wishList = [];
-          return EMPTY;
-        }),
-      )
-      .subscribe((res) => {
-        this.wishList = res.wishesList ?? [];
-      });
+  private loadAllWishes(): void {
+    this.wishServiceService.getAllWishes().subscribe({
+      next:(res) => {this.wishList = res.wishesList},
+    })
   }
 
   // ── 面板操作 ─────────────────────────────────────
@@ -216,7 +199,7 @@ export class SchoolCommunitySeekingComponent {
       return;
     }
 
-    this.loadWishesByCurrentSchool();
+    this.loadAllWishes();
 
     this.submitted = false;
     this.closePanel();

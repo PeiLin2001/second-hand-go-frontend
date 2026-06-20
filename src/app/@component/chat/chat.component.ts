@@ -12,7 +12,6 @@ import {
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-chat',
   imports: [FormsModule, LucideAngularModule],
@@ -34,11 +33,18 @@ export class ChatComponent {
   ) {
     effect(() => {
       const user = this.userService.currentUser();
+      const islogin = this.userService.isLoggedIn;
       if (user) {
         this.userName = user.userName;
         this.userId = user.userId;
-        this.getAllRoom(user.userId);
         this.checkAndFetchRoom();
+        this.getAllRoom(user.userId);
+      } else if (islogin() && !user && !this.adminRoomInitiated) {
+        this.adminRoomInitiated = true;
+        this.userName = 'admin';
+        this.userId = 0;
+        this.checkAndFetchRoom();
+        this.getAllRoom(this.userId);
       }
     });
   }
@@ -47,11 +53,13 @@ export class ChatComponent {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   enter: string = '';
-  userId?: number;
+  userId: number = 0;
   userName: string = '我恨非同步。';
   message: any[] = [];
   partnerId: number | null = null;
   roomId: number | null = null;
+  roomProductId: number = 0;
+  urlProductId: number | null = null; // 網址帶來的商品 ID
   chatHistoryList: any[] = []; // 側邊欄的歷史紀錄清單
   keyword = ''; // 搜尋
   roomList: any[] = [];
@@ -59,14 +67,22 @@ export class ChatComponent {
   readonly MAX_IMAGES = 3;
   errorMessage: string | null = null;
   activeImageUrl: string | null = null; // 控制放大圖片的變數
+  product: any;
+  private adminRoomInitiated = false; // 防止重複建立
 
   ngOnInit(): void {
     this.scrollToBottom();
-    // 帶參數
+    // 帶聊天對象ID
     let idFromUrl = this.route.snapshot.paramMap.get('id');
     if (idFromUrl) {
       this.partnerId = Number(idFromUrl);
-      this.checkAndFetchRoom();
+    }
+
+    // 帶商品ID
+    let productIdStr = this.route.snapshot.queryParamMap.get('productId');
+    if (productIdStr) {
+      this.urlProductId = +productIdStr;
+      this.fetchProduct(this.urlProductId);
     }
 
     this.socketService.getMessage().pipe(
@@ -76,7 +92,6 @@ export class ChatComponent {
         console.log('data:', data);
         this.zone.run(() => {
           this.message = [...this.message, data];
-          console.log('即時收到新訊息並更新畫面！data:', data);
           this.scrollToBottom();
         })
       },
@@ -86,22 +101,23 @@ export class ChatComponent {
 
 
   private checkAndFetchRoom() {
-    if (!this.userId || !this.partnerId) return;
+    if (this.userId == null || this.partnerId == null) return;
 
-    let ChatRoomReq = {
-      initiatorId: this.userId,
-      receiverId: this.partnerId
-    };
+    let ChatRoomReq = { initiatorId: this.userId, receiverId: this.partnerId };
     this.apiTestService.getOrCreateRoom(ChatRoomReq).subscribe({
       next: (room: any) => {
         console.log('room', room);
-
         this.roomId = room.roomId;
-        console.log(' 成功取得/建立房間！房號為：', this.roomId);
+        this.roomProductId = room.productId;
+
         if (this.roomId !== null) {
           this.socketService.joinRoom(this.roomId, this.userName);
           this.readAllRoomMessages(this.roomId, this.userId!);
           this.fetchHistory(this.roomId);
+          this.checkAndUpdateRoomProduct();
+          this.getAllRoom(this.userId!);
+
+          if (this.roomProductId) { this.fetchProduct(this.roomProductId); }
         } else {
           console.error('得到的房號是 null，無法加入 Socket 房間！');
         }
@@ -113,7 +129,6 @@ export class ChatComponent {
   private fetchHistory(roomId: number) {
     this.apiTestService.history(roomId).subscribe({
       next: (res) => {
-        console.log('歷史訊息', res);
         this.message = res.chatMessageVo || [];
         this.scrollToBottom();// 滾輪捲到最底下
       },
@@ -133,7 +148,7 @@ export class ChatComponent {
 
   readAllRoomMessages(roomId: number, userId: number) {
     this.apiTestService.readAllRoomMessages(roomId, userId).subscribe({
-      next: (res) => { console.log('read', res); },
+      next: (res) => { },
       error: (err) => console.error('readMessages 失敗:', err)
     })
   }
@@ -166,17 +181,35 @@ export class ChatComponent {
     }
   }
 
-  onSearch() {
+  // 側邊搜尋
+  get filteredRoomList() {
+    if (!this.keyword.trim()) { return this.roomList; }
 
+    const keyword = this.keyword.toLowerCase().trim();
+
+    // 名字或 ID 只要包含了關鍵字就留下來
+    return this.roomList.filter(room => {
+      const nameMatch = room.targetUserName?.toLowerCase().includes(keyword);
+      const idMatch = room.targetUserId?.toString().includes(keyword);
+
+      return nameMatch || idMatch;
+    });
   }
 
   changePartner(partner: any) {
     if (!partner || !partner.roomId) return;
+    console.log(partner);
+
+    this.product = null;
     this.roomId = partner.roomId;
     partner.unreadCount = 0;
+    this.router.navigate(['/chat', partner.targetUserId]); // 同步更新網址
     this.socketService.joinRoom(partner.roomId, this.userName);
     this.readAllRoomMessages(partner.roomId, this.userId!);
     this.fetchHistory(partner.roomId);
+    if (partner.productId > 0) {
+      this.fetchProduct(partner.productId);
+    }
   }
 
   // 上傳圖片
@@ -189,18 +222,21 @@ export class ChatComponent {
     // 張數上限
     if (this.pictures.length >= this.MAX_IMAGES) {
       this.errorMessage = `最多只能上傳 ${this.MAX_IMAGES} 張圖片！`;
+      this.scrollToBottom();
       return;
     }
 
     // 格式檢查
     if (!file.type.startsWith('image/')) {
       this.errorMessage = '請上傳正確的圖片格式（PNG, JPG, JPEG）！';
+      this.scrollToBottom();
       return;
     }
 
     // 大小檢查（2MB）
     if (file.size > 2 * 1024 * 1024) {
       this.errorMessage = '檔案大小不能超過 2MB！';
+      this.scrollToBottom();
       return;
     }
 
@@ -210,7 +246,7 @@ export class ChatComponent {
       this.pictures.push(reader.result as string);
     };
     reader.readAsDataURL(file);
-
+    this.scrollToBottom();
     element.value = '';    // 清空 input，讓同一張圖可以重複選
   }
 
@@ -247,13 +283,31 @@ export class ChatComponent {
   }
 
   // 放大圖片
-  openLightBox(url: string) {
-    this.activeImageUrl = url;
-  }
+  openLightBox(url: string) { this.activeImageUrl = url; }
 
   // 關閉放大圖片
-  closeLightBox() {
-    this.activeImageUrl = null;
+  closeLightBox() { this.activeImageUrl = null; }
+
+  // 商品資訊
+  private fetchProduct(productId: number) {
+    this.apiTestService.searchByProductId(productId).subscribe({
+      next: (product) => { this.product = product.productList[0]; },
+      error: (err) => console.error('撈取商品資訊失敗:', err)
+    })
   }
 
+  private checkAndUpdateRoomProduct() {
+    if (this.urlProductId && this.urlProductId !== this.roomProductId) {
+      this.apiTestService.updateProductId(this.urlProductId, this.roomId!).subscribe({
+        next: () => { this.roomProductId = this.urlProductId!; },
+        error: (err) => console.error('更新房間商品失敗:', err)
+      });
+    }
+  }
+
+  // 關閉聊天室
+  ngOnDestroy() {
+    if (!this.roomId && !this.userName) return;
+    this.socketService.leaveRoom(this.roomId!, this.userName);
+  }
 }

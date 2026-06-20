@@ -24,6 +24,8 @@ import { SchoolCommunityMemberComponent } from './@SchoolCommunity/school-commun
 import { SchoolCommunitySeekingComponent } from './@SchoolCommunity/school-community-seeking/school-community-seeking.component';
 import { SchoolCommunityChattingComponent } from './@SchoolCommunity/school-community-chatting/school-community-chatting.component';
 import { ChatComponent } from './@component/chat/chat.component';
+import { WishComponent } from './@component/wish/wish.component';
+import { SellerComponent } from './@component/seller/seller.component';
 
 export const routes: Routes = [
   //前台
@@ -43,6 +45,8 @@ export const routes: Routes = [
       { path: 'draft_list', component: DraftListComponent, canActivate: [authGuard] }, //儲存草稿頁
       { path: 'store/:id', component: StoreComponent }, //賣場頁面
       { path: 'product_page/:id', component: ProductPageComponent }, //商品頁
+      { path: 'wish', component: WishComponent }, //許願池
+      { path: 'seller', component: SellerComponent}, //尋找賣家
       { path: 'front_report', component: FrontReportComponent, canActivate: [authGuard] }, //檢舉頁
 
       // TODO: school-community/:universityName

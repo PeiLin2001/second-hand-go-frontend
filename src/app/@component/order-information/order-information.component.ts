@@ -84,6 +84,7 @@ export class OrderInformationComponent {
             myRank: myRole === '買家' ? order.buyerRank : order.salesmanRank, // 交易對象給使用者的評分
           }
         });
+        this.allOrders.sort((a, b) => b.orderId - a.orderId);
         this.updatePaginationTotal(); // 初始化分頁器
 
       },

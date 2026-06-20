@@ -1,122 +1,73 @@
 <ul>
-  @for (item of wishList; track $index) {
-    <li class="wishList-item">
-      <div class="wish-info">
-        <!-- <h5 class="subtitle">商品許願</h5> -->
+  @for (item of wishList; track item.id) {
+    <li class="wish-card">
 
-        <h4 class="wish-title">{{item.title}}</h4>
+      <article class="wish-info">
+        <h4 class="wish-title">{{ item.title }}</h4>
 
-        <div class="description-wrapper">
-          <h5 class="subtitle">需求描述</h5>
-          <p class="wish-description">{{item.description}}</p>
+        <dl>
+          <dt class="label">需求描述</dt>
+          <dd class="wish-description-box">
+            <p
+              #wishDescription
+              class="wish-description"
+              [class.expanded]="expandedIds.has(item.id)"
+            >
+              {{ item.description }}
+            </p>
+
+            @if (expandableIds.has(item.id)) {
+              <button
+                class="btn-expand"
+                [class.is-expanded]="expandedIds.has(item.id)"
+                (click)="toggleExpand(item.id)"
+                type="button"
+              >
+                {{ expandedIds.has(item.id) ? '收起內容' : '查看更多' }}
+              </button>
+            }
+          </dd>
+
+          <dt>預算</dt>
+          <dd>NT${{ item.budgetMin }} - {{ item.budgetMax }}</dd>
+
+          <dt>可面交地點</dt>
+          <dd>{{ item.location }}</dd>
+        </dl>
+      </article>
+
+      <div class="wisher-panel">
+
+        <!-- 更多選單 -->
+        <div class="kebab-wrap">
+          <button class="btn-kebab" (click)="toggleMenu($event, item)" title="更多操作">
+            <lucide-icon name="EllipsisVertical" size="16" />
+          </button>
+
+          <menu class="kebab-dropdown" [style.display]="openMenuWishId === item.id ? 'block' : 'none'">
+            <li>
+              <button class="kebab-item danger" (click)="goRepot(item)">
+                <lucide-icon name="Flag" size="14" />
+                <span>檢舉</span>
+              </button>
+            </li>
+          </menu>
         </div>
 
-        <div class="budget">
-          <h5 class="subtitle">預算</h5>
-          <p class="contex">NT${{item.budgetMin}} - {{item.budgetMax}}</p>
+        <!-- 頭像、名字、評分 -->
+        <div class="wisher-core-info">
+          <img [src]="item.wisher.userImgPath" alt="{{ item.wisher.userName }} 的頭像" class="wisher-avatar">
+
+          <p class="wisher-name">{{ item.wisher.userName }}</p>
+          <p class="wisher-school">{{ item.wisher.school }}</p>
+          <p class="credit-score">{{ item.wisher.goodLevel | number:'1.1-1' }} ★</p>
         </div>
 
-        <div class="budget">
-          <h5 class="subtitle">可面交地點</h5>
-          <p class="contex">{{item.location}}</p>
-        </div>
-
-      </div>
-
-
-      <div class="wisher-wrapper">
-        <div class="img-wrapper">
-          <img [src]="item.wisher.userImgPath" alt="♥" class="wisher-profile">
-        </div>
-
-        <div class="wisher-info">
-          <h5 class="wisher-name">{{item.wisher.userName}}</h5>
-          <p class="school"> {{item.wisher.school}} </p>
-        </div>
-
-        <div class="credit-info">
-          <p class="credit-score">
-            {{item.wisher.goodLevel}} ★
-          </p>
-        </div>
-
-        <button class="btn-action primary" (click)="chat()">
-          <lucide-icon name="MessageCircleMore"></lucide-icon>聊聊
+        <button class="btn-chat" (click)="chat()">
+          <lucide-icon name="MessageCircleMore" />聊聊
         </button>
-      </div>
 
+      </div>
     </li>
   }
 </ul>
-
-<!--
-<section class="wish-section">
-  <div class="wish-header">
-    <h4>許願池</h4>
-    <p>歡迎向同學們提出你的需求</p>
-  </div>
-
-  <ul class="wish-list">
-    @for (item of wishList; track $index) {
-      <li class="wish-card">
-        <div class="wish-content">
-          <span class="wish-badge">商品許願</span>
-
-          <h3 class="wish-title">{{ item.title }}</h3>
-
-          <div class="wish-info-block">
-            <p class="wish-label">預算</p>
-            <p class="wish-price">NT${{ item.budgetMin }} – {{ item.budgetMax }}</p>
-          </div>
-
-          <div class="wish-divider"></div>
-
-          <div class="wish-info-block">
-            <p class="wish-label">分類</p>
-            <div class="wish-tags">
-              <span class="wish-tag">3C 電子</span>
-            </div>
-          </div>
-
-          <div class="wish-divider"></div>
-
-          <div class="wish-info-block">
-            <p class="wish-label">需求描述</p>
-            <p class="wish-description">{{ item.description }}</p>
-          </div>
-        </div>
-
-        <aside class="wisher-panel">
-          <img
-            [src]="item.wisher.userImgPath"
-            alt="許願者頭像"
-            class="wisher-profile"
-          />
-
-          <div class="wisher-meta">
-            <p class="wisher-name">{{ item.wisher.userName }}</p>
-            <p class="wisher-school">{{ item.wisher.school }}</p>
-          </div>
-
-          <div class="reputation-card">
-            <lucide-icon name="ShieldCheck"></lucide-icon>
-
-            <div class="reputation-text">
-              <span>信譽評分</span>
-              <strong>{{ 4.8 }}</strong>
-            </div>
-
-            <span class="reputation-max">/ 5.0</span>
-          </div>
-
-          <p class="trade-count">{{ 32 }} 筆交易</p>
-
-          <button class="btn-chat" (click)="chat()">
-            <lucide-icon name="MessageCircleMore"></lucide-icon>
-            聊聊
-          </button>
-        </aside>
-      </li>
-    }
-  </ul>
-</section> -->

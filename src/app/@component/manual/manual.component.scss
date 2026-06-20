@@ -134,4 +134,354 @@
   z-index: 1;  // 確保 logo 和文字在裝飾層上方
 }
 
+.context-p{
+  margin: 0;
+}
 
+.email-validation{
+  background-color: $primary-yellow;
+  width: 20dvw;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+lucide-icon{
+  display: flex;
+  align-items: center;
+}
+
+// =========
+/* PAGE TWO - 註冊須知 */
+
+.manual-hero.page-two {
+  padding: 5rem 10%;
+  gap: 5rem;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffef8 0%,
+      #fffaf0 100%
+    );
+
+
+
+  .hero-right {
+    max-width: 560px;
+
+    h2 {
+      position: relative;
+      margin-bottom: 1.25rem;
+
+      font-size: 2.3rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: $text-black;
+
+      &::after {
+        content: "";
+        display: block;
+
+        width: 3.2rem;
+        height: 4px;
+
+        margin-top: 0.9rem;
+        border-radius: 999px;
+        background-color: $primary-yellow;
+      }
+    }
+
+    .context-p {
+      margin: 0;
+
+      font-size: 1.08rem;
+      line-height: 1.9;
+      letter-spacing: 0.03em;
+      color: $text-gray;
+    }
+  }
+
+  .email-validation {
+    flex-shrink: 0;
+
+    width: clamp(11rem, 18vw, 15rem);
+    aspect-ratio: 1;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: $text-black;
+    background-color: $primary-yellow-light;
+    border: 8px solid $background-yellow-hover;
+
+    lucide-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: $text-black;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 2.8rem;
+
+    padding: 4rem 1.5rem;
+    text-align: center;
+
+    .hero-right {
+      h2 {
+        font-size: 2rem;
+
+        &::after {
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+
+      .context-p {
+        font-size: 1rem;
+        line-height: 1.8;
+      }
+    }
+
+    .email-validation {
+      width: 10rem;
+      border-width: 6px;
+
+      lucide-icon {
+        transform: scale(0.85);
+      }
+    }
+  }
+}
+
+.page-two::before {
+  content: "";
+
+  position: absolute;
+
+  width: 420px;
+  height: 420px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      rgba(255, 210, 80, .18),
+      transparent 70%
+    );
+
+  right: -120px;
+  top: -120px;
+}
+
+
+// =======================
+
+/* PAGE THREE - 交易流程 */
+
+.manual-flow {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  padding: 5.5rem 8% 6rem;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fffdf8 100%
+    );
+  text-align: center;
+
+
+
+  h2 {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: $text-black;
+
+    span {
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -0.55rem;
+
+        width: 100%;
+        height: 3px;
+
+        border-radius: 999px;
+        background-color: $primary-yellow;
+      }
+    }
+  }
+}
+
+.flow-steps {
+  position: relative;
+  z-index: 1;
+
+  max-width: 1280px;
+  margin: 4rem auto 0;
+
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.flow-step {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 3.45rem;
+    left: calc(50% + 4.6rem);
+
+    width: calc(100% - 6rem);
+    height: 3px;
+
+    border-radius: 999px;
+    background-color: $text-price;
+    opacity: 0.85;
+  }
+
+  h3 {
+    margin: 1.25rem 0 0.45rem;
+
+    font-size: 1.55rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: $text-black;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: .8rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: $text-black;
+  }
+}
+
+.icon-circle {
+  position: relative;
+
+  width: 7rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: $primary-yellow;
+  color: $text-black;
+
+  lucide-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    stroke-width: 2.6;
+  }
+}
+
+.step-number {
+  position: absolute;
+  top: 50%;
+  right: -1.05rem;
+
+  width: 2.7rem;
+  aspect-ratio: 1;
+  border: 2px solid white;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: $gawr-gura-eyes;
+
+  transform: translateY(-50%);
+}
+
+/* RWD */
+
+@media (max-width: 992px) {
+  .flow-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem 2rem;
+  }
+
+  .flow-step {
+    &:not(:last-child)::after {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .manual-flow {
+    padding: 4rem 1.5rem;
+
+    h2 {
+      font-size: 1.9rem;
+
+      &::after {
+        width: 9rem;
+      }
+    }
+  }
+
+  .flow-steps {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .icon-circle {
+    width: 6.5rem;
+  }
+
+  .flow-step {
+    h3 {
+      font-size: 1.45rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.five-step{
+  border: .7rem solid $background-yellow-hover;
+}

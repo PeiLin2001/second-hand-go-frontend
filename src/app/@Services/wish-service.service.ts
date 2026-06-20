@@ -7,7 +7,6 @@ export interface Wish {
   userId: number;
   title: string;
   description: string;
-  // type: string[];
   location: string[];
   budgetMin: number;
   budgetMax: number;
@@ -26,18 +25,68 @@ export interface Wisher {
   goodLevel: number;
 }
 
+export interface WishForm {
+  title: string;
+  description: string;
+  location: string[];
+  budgetMin: number | null;
+  budgetMax: number | null;
+  expiredAt: string;
+}
+
+export interface WishReq {
+  title: string;
+  description: string;
+  location: string[];
+  budgetMin: number;
+  budgetMax: number;
+}
+
+export interface ApiResponse<T = unknown> {
+  statusCode?: number;
+  message?: string;
+  data?: T;
+}
+
+export interface WishListRes extends ApiResponse {
+  wishesList: Wish[];
+}
+
+export interface WishInsertData {
+  id?: number;
+}
+
+export type WishInsertRes = ApiResponse<WishInsertData>;
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class WishServiceService {
-  private readonly BASE = 'http://localhost:8080/wish';
-  constructor(private http:HttpClient) { }
+  private readonly BASE_URL = 'http://localhost:8080/wish';
 
-  getWishesBySchool(school: string): Observable<any> {
-    const params = new HttpParams()
-      .set('school', school);
+  constructor(private http: HttpClient) {}
 
-     return this.http
-      .get<any>(`${this.BASE}/query/school`, {params})
+  getWishesBySchool(school: string): Observable<WishListRes> {
+    const params = new HttpParams().set('school', school);
+
+    return this.http.get<WishListRes>(`${this.BASE_URL}/query/school`, {
+      params,
+      withCredentials: true,
+    });
+  }
+
+  getAllWishes(): Observable<WishListRes> {
+    return this.http.get<WishListRes>(`${this.BASE_URL}/query/all`, {
+      withCredentials: true,
+    });
+  }
+
+  addWish(wishReq: WishReq, userId: number): Observable<WishInsertRes> {
+    const params = new HttpParams().set('userId', String(userId));
+
+    return this.http.post<WishInsertRes>(`${this.BASE_URL}/insert`, wishReq, {
+      params,
+      withCredentials: true,
+    });
   }
 }
