@@ -6,7 +6,11 @@
 <mat-dialog-content>
 
   <!-- 當事人 -->
-  <div class="info-row"><span class="label">檢舉人:</span><span>{{ data.compName }}</span></div>
+  <div class="info-row">
+    <span class="label">檢舉人:</span>
+    <span>{{ data.compName }}</span>
+    <span (click)="openChat(({ userId: data.compId}))">聯絡當事人</span>
+  </div>
 
   <!-- 相關資料 -->
 
@@ -14,12 +18,13 @@
   <div class="info-row">
     <span class="label">相關商品:</span>
     <span>{{ data.productName }}（ID: {{ data.productId }}）</span>
-    <a [href]="'/product_page/' + data.productId" target="_blank">前往商品頁面</a>
+    <span (click)="openChat({ userId: data.productUserId})">連絡賣家</span>
   </div>
 } @else {
   <div class="info-row">
     <span class="label">被檢舉人:</span>
     <span>{{ data.accusedName }}（ID: {{ data.accusedId }}）</span>
+    <span (click)="openChat({ userId: data.accusedId})">聯絡當事人</span>
   </div>
 }
 

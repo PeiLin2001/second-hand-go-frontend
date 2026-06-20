@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>裁切頭像</h2>
+
+<mat-dialog-content>
+  <div class="cropper-wrapper">
+    <image-cropper
+      #cropper
+      [imageFile]="data.file"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="1"
+      [roundCropper]="true"
+
+      format="jpeg"
+      (imageCropped)="onCropped($event)"
+    ></image-cropper>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="button_group">
+  <button class="cancel_btn" (click)="dialogRef.close(null)">
+    取消
+  </button>
+  <button class="edit_btn" (click)="confirmCrop()">
+    確認裁切
+  </button>
+</mat-dialog-actions>

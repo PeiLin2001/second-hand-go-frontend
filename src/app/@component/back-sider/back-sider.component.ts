@@ -3,7 +3,6 @@ import { Router, RouterModule } from '@angular/router';
 
 import {
   LucideAngularModule,
-  Home,
   Users,
   Handbag,
   Bell,
@@ -20,7 +19,6 @@ export class BackSiderComponent {
   constructor(private router: Router) {}
 
   // Declare icon
-  readonly HomeIcon = Home;
   readonly UserIcon = Users;
   readonly HandbagIcon = Handbag;
   readonly BellIcon = Bell;

@@ -31,11 +31,11 @@ export class ReportComponent {
   activeTab: 'pending' | 'done' = 'pending';
 
   private allDisputes: Dispute[] = [
-    { reportId: 1,  productId: 101, productName: '快樂羊駝玩偶',     accusedId: 3,  accusedName: 'Bob Wang',    compId: 1,  compName: 'Alice Chen',  reportDate: '2026-04-10', status: '待處理', type: '商品',   violationType: '描述不符', filePath: ['https://placehold.co/400x300?text=商品顏色尺寸不符'], description: '商品與描述嚴重不符，實際收到的顏色和尺寸都不對。',         note: null },
-    { reportId: 2,  productId: null, productName: null,              accusedId: 4,  accusedName: 'David Wu',    compId: 2,  compName: 'Carol Lin',   reportDate: '2026-04-18', status: '待處理', type: '使用者', violationType: '未出貨',   filePath: ['https://placehold.co/400x300?text=賣家未回應截圖'], description: '付款後超過兩週賣家未出貨也未回應。',                       note: null },
-    { reportId: 3,  productId: 102, productName: '羊駝羊毛氈包',     accusedId: 5,  accusedName: 'Frank Lee',   compId: 6,  compName: 'Eva Huang',   reportDate: '2026-04-25', status: '待處理', type: '商品',   violationType: '瑕疵品',   filePath: ['https://placehold.co/400x300?text=包裝破損照片'],                                      description: '收到商品時包裝破損，內部商品有明顯刮傷與污漬。',           note: null },
-    { reportId: 4,  productId: null, productName: null,              accusedId: 7,  accusedName: 'Henry Liu',   compId: 8,  compName: 'Grace Tsai',  reportDate: '2026-05-01', status: '待處理', type: '使用者', violationType: '拒絕退款', filePath: ['https://placehold.co/400x300?text=退款拒絕截圖'], description: '商品有問題申請退款，賣家持續拒絕並封鎖買家。',               note: null },
-    { reportId: 5,  productId: 103, productName: '限定版草泥馬公仔', accusedId: 9,  accusedName: 'James Hsu',   compId: 10, compName: 'Iris Chang',  reportDate: '2026-05-08', status: '待處理', type: '商品',   violationType: '仿冒品',   filePath: ['https://placehold.co/400x300?text=仿冒品與正品對比'], description: '懷疑商品為仿冒品，與官方正品做工及標籤有明顯差異。',         note: null },
+    // { reportId: 1,  productId: 101, productName: '快樂羊駝玩偶',     accusedId: 3,  accusedName: 'Bob Wang',    compId: 1,  compName: 'Alice Chen',  reportDate: '2026-04-10', status: '待處理', type: '商品',   violationType: '描述不符', filePath: ['https://placehold.co/400x300?text=商品顏色尺寸不符'], description: '商品與描述嚴重不符，實際收到的顏色和尺寸都不對。',         note: null },
+    // { reportId: 2,  productId: null, productName: null,              accusedId: 4,  accusedName: 'David Wu',    compId: 2,  compName: 'Carol Lin',   reportDate: '2026-04-18', status: '待處理', type: '使用者', violationType: '未出貨',   filePath: ['https://placehold.co/400x300?text=賣家未回應截圖'], description: '付款後超過兩週賣家未出貨也未回應。',                       note: null },
+    // { reportId: 3,  productId: 102, productName: '羊駝羊毛氈包',     accusedId: 5,  accusedName: 'Frank Lee',   compId: 6,  compName: 'Eva Huang',   reportDate: '2026-04-25', status: '待處理', type: '商品',   violationType: '瑕疵品',   filePath: ['https://placehold.co/400x300?text=包裝破損照片'],                                      description: '收到商品時包裝破損，內部商品有明顯刮傷與污漬。',           note: null },
+    // { reportId: 4,  productId: null, productName: null,              accusedId: 7,  accusedName: 'Henry Liu',   compId: 8,  compName: 'Grace Tsai',  reportDate: '2026-05-01', status: '待處理', type: '使用者', violationType: '拒絕退款', filePath: ['https://placehold.co/400x300?text=退款拒絕截圖'], description: '商品有問題申請退款，賣家持續拒絕並封鎖買家。',               note: null },
+    // { reportId: 5,  productId: 103, productName: '限定版草泥馬公仔', accusedId: 9,  accusedName: 'James Hsu',   compId: 10, compName: 'Iris Chang',  reportDate: '2026-05-08', status: '待處理', type: '商品',   violationType: '仿冒品',   filePath: ['https://placehold.co/400x300?text=仿冒品與正品對比'], description: '懷疑商品為仿冒品，與官方正品做工及標籤有明顯差異。',         note: null },
   ];
 
   private allDoneDisputes: Dispute[] = [
@@ -118,7 +118,6 @@ export class ReportComponent {
       subscribe((res:any)=>{
         console.log(res);
         if(res.statusCode==200){
-          console.log(res.report.filePath);
           const fullData={
             reportId: res.report.reportId,
             productId: res.report.productId,
@@ -133,8 +132,9 @@ export class ReportComponent {
             type: res.report.type,
             violationType: res.report.violationType,
             note: res.report.note,
+            productUserId:res.report.productUserId,
+            compId:res.report.compId,
           };
-          console.log('傳進dialog的資料:', fullData);
           const dialogRef = this.dialog.open(ReportDialogComponent, { data: fullData });
 
           dialogRef.afterClosed().subscribe(result => {
@@ -210,4 +210,5 @@ export interface Dispute {
   type: string;
   violationType: string;
   note: string | null;
+  productUserId:number|null;
 }

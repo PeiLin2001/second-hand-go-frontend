@@ -15,12 +15,16 @@
     <div class="col-md-4 profile-list">
       <div class="userName">
         <p><lucide-icon name="User"></lucide-icon>賣家名稱：{{shopOwnerData()?.userName}}</p>
-        @if (isGood) {
+        <!-- @if (isGood) {
         <div class="ThumbsUp" [title]="'沒想好寫什麼，之後可能改hover，現在這樣有點醜。'">
           <lucide-icon name="ThumbsUp"></lucide-icon>
           信譽良好
         </div>
-        }
+        } -->
+        <div class="ThumbsUp">
+          <!-- <lucide-icon name="Star"></lucide-icon> -->
+          信譽評分：{{ shopOwnerData()?.goodLevel | number:'1.0-1' }} ★
+        </div>
       </div>
       <p> <lucide-icon name="MapPin"></lucide-icon>常出沒地區： {{formattedLocation}}</p>
       <p> <lucide-icon name="School"></lucide-icon>就讀學校： {{shopOwnerData()?.school}}</p>
@@ -87,8 +91,14 @@
               <span class="price">${{item.price}}</span>
 
               @if (!isOwner) {
-              <button class="btn-icon-action" (click)="goCollectProduct(item.productId); $event.stopPropagation()">
-                <lucide-icon name="HeartPlus" [title]="'收藏該商品'"></lucide-icon>
+              <button class="btn-icon-action" [class.is-collected]="collectedMap.has(item.productId)"
+               (click)="goCollectProduct(item.productId);
+                $event.stopPropagation()">
+                <lucide-icon
+                  [name]="collectedMap.has(item.productId) ? 'Heart' : 'HeartPlus'"
+                  [title]="collectedMap.has(item.productId) ? '取消收藏' : '收藏商品'"
+                  [class.collected]="collectedMap.has(item.productId)">
+                </lucide-icon>
               </button>
               }
             </div>
