@@ -75,6 +75,12 @@ export class WishServiceService {
     });
   }
 
+  getAllWishes(): Observable<WishListRes> {
+    return this.http.get<WishListRes>(`${this.BASE_URL}/query/all`, {
+      withCredentials: true,
+    });
+  }
+
   addWish(wishReq: WishReq, userId: number): Observable<WishInsertRes> {
     const params = new HttpParams().set('userId', String(userId));
 
