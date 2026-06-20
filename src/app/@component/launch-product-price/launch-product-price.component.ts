@@ -1,6 +1,5 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
 import { UserService } from '../../@Services/user.service';
 
@@ -8,7 +7,7 @@ import { UserService } from '../../@Services/user.service';
 
 @Component({
   selector: 'app-launch-product-price',
-  imports: [NgFor, NgIf],
+  imports: [],
   templateUrl: './launch-product-price.component.html',
   styleUrl: './launch-product-price.component.scss'
 })
@@ -45,6 +44,7 @@ export class LaunchProductPriceComponent implements OnInit {
   // 按鈕狀態驗證
   isNextDisabled = true;
 
+
   // === 從 step1 移入：價格 & AI ===
   // aiBoxText = 'AI 推薦：點擊下方按鈕將為您評估合適的二手轉售價';
   // aiHasContent = false;
@@ -63,11 +63,23 @@ export class LaunchProductPriceComponent implements OnInit {
   constructor(
     private router: Router,
     private formService: LaunchProductFormService,
-    private userService: UserService
-
+    private userService: UserService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
+    // 帶商品ID
+    let productIdStr = this.route.snapshot.queryParamMap.get('productId');
+    if (productIdStr) {
+      this.formService.setUpdateStatus(true);
+      this.formService.searchByProductId(+productIdStr).subscribe({
+        next: (res) => {
+          this.formService.fromProductRes(res.productList[0]);
+          this.updateNextButtonStatus();
+        },
+        error: (err) => console.error('取得商品資訊失敗:', err)
+      })
+    }
     // 初始化時，如果 Service 內本來就有暫存文字，可以同步觸發驗證
     this.updateNextButtonStatus();
   }
@@ -275,19 +287,19 @@ export class LaunchProductPriceComponent implements OnInit {
   //   this.aiHasContent = false;
   //   this.aiBoxText = '';
 
-    // try {
-    //   const response = await fetch('https://api.anthropic.com/v1/messages', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({
-    //       model: this.API_MODEL,
-    //       max_tokens: 500,
-    //       messages: [{
-    //         role: 'user',
-    //         content: `你是一位二手校園交易專家。根據以下商品分類與狀況，請給出一個合理的建議轉售價格數字（新台幣）。\n\n${this.buildProductContext()}\n\n請以如下格式輸出，不要有任何額外廢話：\n建議價格：NT$ [數字]\n原因簡述：[一句話說明]`,
-    //       }],
-    //     }),
-    //   });
+  // try {
+  //   const response = await fetch('https://api.anthropic.com/v1/messages', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({
+  //       model: this.API_MODEL,
+  //       max_tokens: 500,
+  //       messages: [{
+  //         role: 'user',
+  //         content: `你是一位二手校園交易專家。根據以下商品分類與狀況，請給出一個合理的建議轉售價格數字（新台幣）。\n\n${this.buildProductContext()}\n\n請以如下格式輸出，不要有任何額外廢話：\n建議價格：NT$ [數字]\n原因簡述：[一句話說明]`,
+  //       }],
+  //     }),
+  //   });
   //     const data = await response.json();
   //     const text: string = data?.content?.[0]?.text ?? '無法取得建議';
   //     this.aiBoxText = text;
@@ -334,10 +346,24 @@ export class LaunchProductPriceComponent implements OnInit {
   }
 
   // 儲存草稿
-  async onSaveDraft(): Promise<void> {
-    const userId = Number(this.userService.currentUser().userId);
-    await this.formService.saveDraft();
-    this.showToast('✓ 草稿已儲存');
+  onSaveDraft() {
+    if (this.formService.isUpdate()) {
+      // update
+      this.formService.updateProduct(this.formService.toProductReq(this.state)).subscribe({
+        next: (res) => { this.showToast('✓ 草稿已儲存'); },
+        error: (err) => console.error('儲存草稿失敗:', err)
+      })
+    } else {
+      // add
+      this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
+        next: (res) => { this.showToast('✓ 草稿已新增'); },
+        error: (err) => console.error('新增草稿失敗:', err)
+      })
+    }
+
+    // const userId = Number(this.userService.currentUser().userId);
+    // // await this.formService.saveDraft();
+    // this.showToast('✓ 草稿已儲存');
   }
 
 }
