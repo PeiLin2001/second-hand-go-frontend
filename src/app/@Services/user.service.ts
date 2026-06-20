@@ -68,6 +68,10 @@ export class UserService {
     this.avatarUrl.set(newUrl);
   }
 
+  updateCurrentUser(partial: Partial<any>) {
+  this.currentUser.update(user => user ? { ...user, ...partial } : user);
+  }
+
   //註冊
   register(data: UserReq): Observable<BasicResponse> {
     return this.http.post<BasicResponse>(`${this.apiUrl}/insert`, data, {
