@@ -7,23 +7,25 @@
       <!-- 搜尋 -->
       <div class="search-bar-wrapper">
         <div class="text-search-wrapper">
-          <lucide-icon name="Search" class="icon" (click)="onSearch()"></lucide-icon>
-          <input type="text" placeholder="使用者名稱﹑ID..." [(ngModel)]="keyword" (keyup.enter)="onSearch()">
+          <lucide-icon name="Search" class="icon"></lucide-icon>
+          <input type="text" placeholder="使用者名稱﹑ID..." [(ngModel)]="keyword">
         </div>
       </div>
 
       <!-- 聊天對象 -->
       <div class="partner">
-        @for (partner of roomList; track partner.roomId) {
+        @for (partner of filteredRoomList; track partner.roomId) {
         <div class="partner-wrapper" (click)="changePartner(partner)" [class.isChatting]="partner.roomId === roomId">
           <img [src]="partner.targetUserImg" class="avatar" alt="user-avatar">
 
           <div class="partner-info">
             <span class="name"> {{ partner.targetUserName }} </span>
             <span class="lastMessage"> {{ partner.lastMessage }} </span>
-            @if (partner.unreadCount>0) { <div> {{ partner.unreadCount }} </div> }
+            @if (partner.unreadCount > 0) { <div> {{ partner.unreadCount }} </div> }
           </div>
         </div>
+        }@empty {
+        <div class="no-result">找不到相符的聊天對象</div>
         }
       </div>
 

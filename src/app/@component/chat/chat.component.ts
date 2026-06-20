@@ -181,8 +181,19 @@ export class ChatComponent {
     }
   }
 
-  onSearch() {
+  // 側邊搜尋
+  get filteredRoomList() {
+    if (!this.keyword.trim()) { return this.roomList; }
 
+    const keyword = this.keyword.toLowerCase().trim();
+
+    // 名字或 ID 只要包含了關鍵字就留下來
+    return this.roomList.filter(room => {
+      const nameMatch = room.targetUserName?.toLowerCase().includes(keyword);
+      const idMatch = room.targetUserId?.toString().includes(keyword);
+
+      return nameMatch || idMatch;
+    });
   }
 
   changePartner(partner: any) {

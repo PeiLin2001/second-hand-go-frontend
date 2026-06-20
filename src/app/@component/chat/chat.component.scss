@@ -203,7 +203,7 @@
   background-color: $background-white;
 }
 
-// 📜 訊息對話主捲動區
+// 訊息對話主捲動區
 .message-list {
   flex: 1;
   overflow-y: auto;
@@ -213,7 +213,7 @@
   gap: 20px;
 }
 
-// 💬 訊息泡泡總殼（預設靠左、灰底）
+// 訊息泡泡總殼（預設靠左、灰底）
 .message-wrapper {
   display: flex;
   align-items: flex-start;
@@ -263,7 +263,7 @@
     word-break: break-all;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 
-    // 🖼️ 聊天室內的分享圖片網格
+    // 聊天室內的分享圖片網格
     .chat-image-gallery {
       display: flex;
       flex-wrap: wrap;
@@ -291,7 +291,7 @@
     color: $neutral-500;
   }
 
-  // 👑 當是我自己發送的訊息時（靠右、黃底棕字）
+  //  當是我自己發送的訊息時（靠右、黃底棕字）
   &.is-me {
     align-self: flex-end;
     flex-direction: row-reverse;
@@ -309,7 +309,7 @@
   }
 }
 
-// 📸 2.2 底部待傳送的圖片預覽區域
+//  2.2 底部待傳送的圖片預覽區域
 .preview-list {
   margin: 0 24px 12px 24px;
   display: flex;
@@ -375,6 +375,7 @@
     cursor: pointer;
     transition: all 0.2s;
     outline: none;
+    border: none;
 
     &:hover {
       background-color: $primary-yellow;
@@ -383,7 +384,7 @@
   }
 
   .error-msg {
-    width: 100%; // 強制錯誤訊息換行
+    width: 100%;
     display: flex;
     align-items: center;
     font-size: 0.8rem;
