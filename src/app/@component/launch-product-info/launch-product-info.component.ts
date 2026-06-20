@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
 import { UserService } from '../../@Services/user.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -236,7 +237,12 @@ export class LaunchProductInfoComponent implements OnInit {
     const userId = Number(this.userService.currentUser().userId);
     this.formService.publishProduct(this.state.productId).subscribe({
       next: (res) => {
-        this.showToast('✓ 商品已上架');
+        Swal.fire({
+          title: '商品已上架！',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        });
         this.formService.resetState();
         this.router.navigate(['/store', userId]);
       },
