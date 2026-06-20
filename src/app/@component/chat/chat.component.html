@@ -7,23 +7,25 @@
       <!-- 搜尋 -->
       <div class="search-bar-wrapper">
         <div class="text-search-wrapper">
-          <lucide-icon name="Search" class="icon" (click)="onSearch()"></lucide-icon>
-          <input type="text" placeholder="使用者名稱﹑ID..." [(ngModel)]="keyword" (keyup.enter)="onSearch()">
+          <lucide-icon name="Search" class="icon"></lucide-icon>
+          <input type="text" placeholder="使用者名稱﹑ID..." [(ngModel)]="keyword">
         </div>
       </div>
 
       <!-- 聊天對象 -->
       <div class="partner">
-        @for (partner of roomList; track partner.roomId) {
+        @for (partner of filteredRoomList; track partner.roomId) {
         <div class="partner-wrapper" (click)="changePartner(partner)" [class.isChatting]="partner.roomId === roomId">
           <img [src]="partner.targetUserImg" class="avatar" alt="user-avatar">
 
           <div class="partner-info">
             <span class="name"> {{ partner.targetUserName }} </span>
             <span class="lastMessage"> {{ partner.lastMessage }} </span>
-            @if (partner.unreadCount>0) { <div> {{ partner.unreadCount }} </div> }
+            @if (partner.unreadCount > 0) { <div> {{ partner.unreadCount }} </div> }
           </div>
         </div>
+        }@empty {
+        <div class="no-result">找不到相符的聊天對象</div>
         }
       </div>
 
@@ -31,6 +33,21 @@
 
     <!-- 聊天區塊 -->
     <section class="chat-right">
+      <!-- 商品資訊 -->
+      <div class="product">
+        @if (product) {
+        <p class="ask">目前正在詢問：</p>
+        <div class="product-summary-card">
+          <img [src]="product.imgPath[0]" alt="商品圖片" class="product-thumb" />
+          <div class="product-info">
+            <h4>{{ product.productName }}</h4>
+            <p class="price">${{ product.price }}</p>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- 訊息 -->
       <div #scrollContainer class="message-list">
         @for (msg of message; track msg.messageId) {
         <div class="message-wrapper" [class.is-me]="msg.senderId === userId">
@@ -84,10 +101,10 @@
             </button>
           </div>
           }
-          <span class="sendPic" (click)="sendPic()">上傳圖片</span>
+          <button class="sendPic" (click)="sendPic()">上傳圖片</button>
         </div>
         }
-        @if (errorMessage) { <small class="error-msg">{{ errorMessage }}</small> }
+        @if (errorMessage) { <small class=" error-msg">{{ errorMessage }}</small> }
       </div>
 
       @if (roomId != null) {

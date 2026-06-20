@@ -34,10 +34,10 @@ export class ShoppingCartComponent {
   // =========================================================
 
   productAmount = 0;
-  alert ="";
+  alert = "";
   products: any[] = [];
   expandedDescriptions = new Set<number>();
-  constructor(private router: Router,private apiTestService: ApiTestService) {}
+  constructor(private router: Router, private apiTestService: ApiTestService) { }
 
   ngOnInit(): void {
     this.loadUserFavorites(); // 網頁一打開，立刻載入後端收藏清單
@@ -52,7 +52,7 @@ export class ShoppingCartComponent {
         if (res.statusCode === 200 && res.collectListVo) {
           this.products = res.collectListVo.map(item => ({
             collectId: item.collectId,
-            productId:item.productId,
+            productId: item.productId,
             sellerId: item.sellerId,
             title: item.productName,
             price: item.price,
@@ -96,7 +96,7 @@ export class ShoppingCartComponent {
   deleteList() {
     const selectedItems = this.products.filter(p => p.selected);
 
-  if (selectedItems.length > 0) {
+    if (selectedItems.length > 0) {
       this.alert = ""; // 清空警告訊息
 
       Swal.fire({
@@ -144,17 +144,17 @@ export class ShoppingCartComponent {
     }
   }
 
-    openChat(sellerId: number): void {
+  openChat(sellerId: number): void {
     if (!sellerId) {
-    Swal.fire({
-      title: '無法開啟聊天',
-      text: '暫時找不到該同學的資訊',
-      icon: 'warning',
-      confirmButtonColor: '#EDA900'
-    });
-    return;
-  }
-    this.router.navigate(['/chat'], { queryParams: {userId: sellerId } });
+      Swal.fire({
+        title: '無法開啟聊天',
+        text: '暫時找不到該同學的資訊',
+        icon: 'warning',
+        confirmButtonColor: '#EDA900'
+      });
+      return;
+    }
+    this.router.navigate(['/chat', sellerId], { queryParams: { productId: this.products[0].productId } });
   }
 
-  }
+}
