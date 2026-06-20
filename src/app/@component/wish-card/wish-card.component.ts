@@ -21,9 +21,12 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
+import { RouterLink } from '@angular/router';
+
+
 @Component({
   selector: 'app-wish-card',
-  imports: [LucideAngularModule, DecimalPipe],
+  imports: [LucideAngularModule, DecimalPipe, RouterLink],
   templateUrl: './wish-card.component.html',
   styleUrl: './wish-card.component.scss',
   providers: [

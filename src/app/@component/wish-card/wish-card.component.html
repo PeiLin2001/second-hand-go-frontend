@@ -63,7 +63,7 @@
           <p class="credit-score">{{ item.wisher.goodLevel | number:'1.1-1' }} ★</p>
         </div>
 
-        <button class="btn-chat" (click)="chat()">
+        <button class="btn-chat"  [routerLink]="['/chat', item.wisher.userId]">
           <lucide-icon name="MessageCircleMore" />聊聊
         </button>
 

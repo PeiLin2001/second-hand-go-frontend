@@ -260,12 +260,16 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     priceValue:     0,
     priceHighValue: 5000,
     sellerGrade:    1,
+    sellerHighestGrade:    5,
     condition: "",
     type: "",
   } as const;
 
   priceValue     = this.DEFAULT_FILTERS.priceValue;
   priceHighValue = this.DEFAULT_FILTERS.priceHighValue;
+
+  scoreValue = this.DEFAULT_FILTERS.sellerGrade;
+  scoreHighValue = this.DEFAULT_FILTERS. sellerHighestGrade;
 
   priceOptions: Options = {
     floor: 0,
@@ -529,6 +533,16 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
+  // protected matchCredictScore(product: ProductCard): boolean{
+  //   if (this.scoreHighValue >= 5) {
+  //     return product.price >= this.priceValue;  // 上限拉滿就不限上限
+  //   }
+  //   return (
+  //     product.price >= this.priceValue &&
+  //     product.price <= this.priceHighValue
+  //   );
+  // }
+
 
   get filteredProducts(): ProductCard[] {
     return this.products.filter(product =>
@@ -561,6 +575,7 @@ get sortedProducts(): ProductCard[] {
   get cities(): any[]{
     return this.ctgService.cities;
   }
+
 
 
 }
