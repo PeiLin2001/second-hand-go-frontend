@@ -1,0 +1,101 @@
+@use 'sass:color' as c;
+@use '../../styles/variables' as *;
+
+// ==========================================
+// 1. 解決相片上方被裁切的問題
+// ==========================================
+mat-dialog-content {
+  padding: 0 16px !important;
+  overflow-y: auto !important;
+}
+
+.cropper-wrapper {
+  width: 100%;
+
+  image-cropper {
+   display: block !important;
+  width: 100% !important;
+  }
+}
+
+
+
+// ==========================================
+// 2. 按鈕群組
+// ==========================================
+mat-dialog-actions.button_group {
+  padding: 16px 24px !important;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+
+  .edit_btn, .cancel_btn {
+    padding: 6px 16px;
+    border-radius: $border-radius-sm;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    white-space: nowrap;
+    font-size: 16px;
+
+    @media (max-width: 480px) {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+
+  // 確定儲存鈕
+  .edit_btn {
+    background-color: $primary-yellow;
+    color: $text-black;
+    border: none !important;
+
+    &:hover {
+      background-color: c.adjust($primary-yellow, $lightness: -5%);
+      transform: translateY(-2px);
+    }
+  }
+
+  // 取消修改鈕
+  .cancel_btn {
+    background-color: transparent !important;
+    color: $text-gray;
+    border: 1px solid $text-gray !important;
+
+    // 當滑鼠移上去時，強制驅逐 Material 的原生灰色陰影！
+    &:hover {
+      background-color: $background-yellow !important;
+      color: $text-black !important;
+      transform: translateY(-1px);
+
+      // 把 Material 偷偷塞進來的灰色背景遮罩徹底抹殺！
+      &::before, &::after {
+        display: none !important;
+        background-color: transparent !important;
+      }
+    }
+  }
+}
+
+
+.crop-dialog-panel {
+  .mat-mdc-dialog-surface {
+    display: flex !important;
+    flex-direction: column !important;
+    max-height: 90vh !important;
+    overflow: hidden !important;
+  }
+
+  mat-dialog-content, .mat-mdc-dialog-content {
+    flex: 1 !important;
+    overflow-y: auto !important;   // 允許滾動
+    max-height: none !important;
+    padding: 0 16px !important;
+  }
+
+  image-cropper {
+    display: block !important;
+
+  }
+}
+
