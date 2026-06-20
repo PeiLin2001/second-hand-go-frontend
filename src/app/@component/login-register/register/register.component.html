@@ -41,9 +41,10 @@
 
                       } @else if (registerForm.get('name')?.hasError('minlength')) {
                         <p class="field-hint error-text">⚠ 姓名最少需要 2 個字喔！</p>
-                      }@else if (registerForm.get('name')?.hasError('pattern')) {
-                        <p class="field-hint error-text">✘ 姓名只能包含中英文，不能有數字或符號！</p>
                       }
+                      <!-- @else if (registerForm.get('name')?.hasError('pattern')) {
+                        <p class="field-hint error-text">✘ 姓名只能包含中英文，不能有數字或符號！</p>
+                      } -->
 
                     }
                   </div>
