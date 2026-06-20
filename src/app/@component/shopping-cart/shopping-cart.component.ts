@@ -41,6 +41,8 @@ export class ShoppingCartComponent {
 
   ngOnInit(): void {
     this.loadUserFavorites(); // 網頁一打開，立刻載入後端收藏清單
+    console.log(this.products);
+
   }
 
   // 載入後端收藏清單功能

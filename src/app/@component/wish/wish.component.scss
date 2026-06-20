@@ -1,4 +1,68 @@
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
+
+// 針對手機版最佳化
+@media (max-width: 768px) {
+  .sub-list {
+    gap: 1.2rem;
+  }
+  .sub-link {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.1rem;
+  }
+}
+
+// =========================================================
+// 基礎
+// =========================================================
+
+
+.content {
+  @include common-layout;
+}
+
+a {
+  @include reset-link;
+}
+
+lucide-icon { display: flex; align-items: center; }
+
+// =========================================================
+// 篩選面板（nav 容器）
+// =========================================================
+
+.filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.breadcrumb {
+  @include breadcrumb-style;
+}
+
+// 標題列
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+.category-name {
+  @include main-title-style;
+}
+
+// =========================================================
+// wish
+// =========================================================
 
 .wish-page {
   width: 100%;

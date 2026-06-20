@@ -142,6 +142,14 @@ selectSchool(school: any): void {
       behavior: "smooth"});
   }
 
+  goToWish(){
+    this.router.navigate(['/wish']);
+  }
+
+  goToSeller(){
+    this.router.navigate(['/seller']);
+  }
+
   // =========================================================
   // PANEL OPEN / CLOSE
   // =========================================================
