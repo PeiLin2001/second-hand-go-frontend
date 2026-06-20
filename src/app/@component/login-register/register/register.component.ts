@@ -135,7 +135,7 @@ export class RegisterComponent {
         Validators.required,
         Validators.minLength(2),
         Validators.maxLength(20),
-        Validators.pattern(/^[\u4e00-\u9fa5a-zA-Z\s]{2,20}$/)
+        // Validators.pattern(/^[\u4e00-\u9fa5a-zA-Z\s]{2,20}$/)
       ]),
       area: new FormControl('', [Validators.required, this.isInListValidator('area')]),
       school: new FormControl('', [Validators.required, this.isInListValidator('school')]),

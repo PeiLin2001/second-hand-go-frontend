@@ -187,3 +187,18 @@
 {
   aspect-ratio: 1;
 }
+
+.picture {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: $neutral-300;
+  flex-shrink: 0; // 避免被旁邊文字擠壓變形
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
