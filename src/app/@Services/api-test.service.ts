@@ -50,11 +50,6 @@ export class ApiTestService {
   //   return this.http.get(`${this.apiUrl}/getByUserId?userId=${userId}`);
   // }
 
-  // 取得單一帳號內的商品資訊
-  searchBySellerId(userId: number): Observable<any> {
-    return this.http.get(`${this.productApiUrl}/search/userId?userId=${userId}`);
-  }
-
   // 新增檢舉
   addReport(data: reportReq) { return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true }); }
 
@@ -106,24 +101,40 @@ export class ApiTestService {
 
 
   // === chat ===
+  // 取得或創建房間
   getOrCreateRoom(ChatRoomReq: any): Observable<any> {
     return this.http.post(`${this.chatApiUrl}/get-or-create`, ChatRoomReq);
   }
 
+  // 訊息歷史紀錄
   history(roomId: number): Observable<any> {
     return this.http.get(`${this.chatApiUrl}/history?roomId=${roomId}`);
   }
 
+  // 取得單一使用者的所有房間
   getAllRoom(userId: number): Observable<any> {
     return this.http.get(`${this.chatApiUrl}/get-all-room?userId=${userId}`);
   }
 
+  // 已讀所有訊息
   readAllRoomMessages(roomId: number, userId: number) {
     return this.http.post(`${this.chatApiUrl}/read-room?roomId=${roomId}&userId=${userId}`, {});
   }
 
+  // 上傳圖片
   uploadPicture(pictures: any): Observable<any> {
     return this.http.post(`${this.chatApiUrl}/upload-img`, pictures);
+  }
+
+  // 更改房間帶的商品ID
+  updateProductId(productId: number, roomId: number) {
+    return this.http.post(`${this.chatApiUrl}/update-productId?productId=${productId}&roomId=${roomId}`, {});
+  }
+
+  // === product ===
+  // 取得單一帳號內的商品資訊
+  searchBySellerId(userId: number): Observable<any> {
+    return this.http.get(`${this.productApiUrl}/search/userId?userId=${userId}`);
   }
 
   //商品頁:單一商品詳情

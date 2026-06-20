@@ -31,6 +31,21 @@
 
     <!-- 聊天區塊 -->
     <section class="chat-right">
+      <!-- 商品資訊 -->
+      <div class="product">
+        @if (product) {
+        <p class="ask">目前正在詢問：</p>
+        <div class="product-summary-card">
+          <img [src]="product.imgPath[0]" alt="商品圖片" class="product-thumb" />
+          <div class="product-info">
+            <h4>{{ product.productName }}</h4>
+            <p class="price">${{ product.price }}</p>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- 訊息 -->
       <div #scrollContainer class="message-list">
         @for (msg of message; track msg.messageId) {
         <div class="message-wrapper" [class.is-me]="msg.senderId === userId">
@@ -84,10 +99,10 @@
             </button>
           </div>
           }
-          <span class="sendPic" (click)="sendPic()">上傳圖片</span>
+          <button class="sendPic" (click)="sendPic()">上傳圖片</button>
         </div>
         }
-        @if (errorMessage) { <small class="error-msg">{{ errorMessage }}</small> }
+        @if (errorMessage) { <small class=" error-msg">{{ errorMessage }}</small> }
       </div>
 
       @if (roomId != null) {
