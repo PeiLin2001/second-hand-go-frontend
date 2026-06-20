@@ -4,6 +4,8 @@ export interface SellerVo {
   userName: string;
   school: string;
   userImgPath: string;
+  department: string;
+  goodLevel: number;
 }
 
 //商品核心資訊

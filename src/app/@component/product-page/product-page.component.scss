@@ -152,11 +152,15 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border-radius: 50%;
   color: #9ca3af;
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   &:hover { background: #f3f4f6; }
 }
 
@@ -351,32 +355,60 @@
   }
 }
 
+
+
 .btn-cart {
   background: $background-white;
   border: 1.5px solid $accent-brown-light;
   color: $accent-brown;
-  transition: background-color 0.15s; // 💡 修正為 background-color 防止紅字
+  transition: background-color 0.15s;
 
+  //  控制未收藏時的「空心咖啡色愛心」
+  .heart-svg {
+    width: 18px;
+    height: 18px;
+    fill: none;                 // 空心！
+    stroke: currentColor;       // 線條自動跟隨字的顏色（咖啡色）
+    stroke-width: 2;            // 線條粗細
+  }
+
+  // 預設讓「取消收藏」文字隱形
+  .text-hover { display: none; }
+
+  // 尚未收藏時的 Hover
   &:hover {
     background-color: $background-yellow;
     border-color: $accent-brown;
   }
 
+  // 當處於「已收藏」狀態時
   &.active {
     background-color: $accent-brown;
     color: $background-white;
     border-color: $accent-brown;
 
-    // 讓 Lucide Icon 的愛心變成實心
-    .fill-icon {
-      fill: currentColor; // 自動填滿當前的文字顏色 (白色)
+    .heart-svg {
+      fill: currentColor;
+      stroke: currentColor;
     }
 
+    .text-default { display: inline; }
+    .text-hover { display: none; }
+
+    // 滑鼠移上去的瞬間（懸停變更深棕色，字變取消收藏，愛心鐵定維持實心白）
     &:hover {
-      background-color: #644a30; // 稍微加深一點的棕色
+      background-color: #644a30 !important;
+      border-color: #644a30 !important;
+      color: $background-white !important;
+
+      // 文字切換
+      .text-default { display: none !important; }    // 「已收藏」隱形
+      .text-hover { display: inline !important; }   // 「取消收藏」現身！
+
     }
   }
 }
+
 
 .btn-buy {
   background: $primary-yellow;
@@ -392,7 +424,7 @@
     background-color: $neutral-300; // 淺灰色底
     color: $neutral-500;            // 深灰色字
     border: 1px solid $neutral-300;
-    cursor: not-allowed;            // 滑鼠變成禁止符號 🚫
+    cursor: not-allowed;            // 滑鼠變成禁止符號
     box-shadow: none;               // 移除陰影，看起來更扁平
   }
 }
@@ -510,9 +542,6 @@
   }
 }
 
-
-
-//------------------------------------------------
 /* ── 商品說明（置底獨立大卡片 - 已整合查看更多功能） ── */
 .description-section {
   position: relative; // 為內部的絕對定位做準備
@@ -527,10 +556,10 @@
   }
 
 
-  /* 💡 新增：包裹內文的容器（負責控制高度與漸層遮罩） */
+  /*包裹內文的容器（負責控制高度與漸層遮罩） */
   .desc-content-wrapper {
     position: relative;
-    max-height: 140px;      // 💡 預設收起時的最大高度（大約能看4-5行字）
+    max-height: 140px;      // 預設收起時的最大高度（大約能看4-5行字）
     overflow: hidden;       // 超出高度的字自動藏起來
     transition: max-height 0.3s ease-in-out; // 讓展開時有滑順拉長的動畫效果
 
@@ -545,35 +574,34 @@
         line-height: 1.8;
         color: $neutral-700;
         margin: 0;
-        white-space: pre-line; // 保留你辛苦做的 \n 換行排版
+        white-space: pre-line; // 保留 \n 換行排版
       }
     }
 
-    /* 💡 新增：底部朦朧淡出漸層遮罩 */
+    /* 底部朦朧淡出漸層遮罩 */
     .fade-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
       height: 60px; // 遮罩高度
-      // 💡 由透明 (rgba 0) 漸層轉到純白背景 ($background-white)，達成漂亮的淡出效果
       background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, $background-white 100%);
       pointer-events: none; // 確保這層透明遮罩不會擋到文字的滑鼠選取
     }
   }
 
-  /* 💡 新增：置中的查看更多按鈕容器 */
+  /* 置中的查看更多按鈕容器 */
   .toggle-btn-container {
     display: flex;
     justify-content: center;
     margin-top: 16px;
-    border-top: 1px dashed $neutral-300; // 在按鈕上方加一條精緻的虛線
+    border-top: 1px dashed $neutral-300;
     padding-top: 16px;
 
     .btn-toggle-desc {
       background: none;
       border: none;
-      color: $accent-brown-light; // 採用你的品牌特調較淺棕色
+      color: $accent-brown-light;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;

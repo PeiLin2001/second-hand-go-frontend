@@ -64,6 +64,9 @@
 .userName {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+
 }
 
 .ThumbsUp {
@@ -80,6 +83,8 @@
   transition: transform 0.3s;
   cursor: default;
   user-select: none;
+  white-space: nowrap;  // 信譽評分不換行
+  flex-shrink: 0;       // 不被壓縮
 
   &:hover {
     transform: scale(1.05) rotate(3deg);
@@ -125,6 +130,10 @@
 
 .msg {
   overflow-y: auto;
+  white-space: pre-wrap;
+  tab-size: 4;
+  letter-spacing: 0.04em;
+  text-align: justify;
 }
 
 .introBtn {
@@ -331,11 +340,26 @@
     margin: 0;
   }
 
+    lucide-icon.collected {
+    color: #e53935;  // 實心紅愛心
+  }
+
+   &.is-collected {
+    border-color: #ffcdd2;
+    // background-color: #fff5f5;
+
+    &:hover {
+      background-color: #ffcdd2;
+    }
+  }
+
   &:hover {
     background-color: $background-yellow;
     border-color: $primary-yellow;
   }
 }
+
+
 
 // 頁碼
 .pagination {

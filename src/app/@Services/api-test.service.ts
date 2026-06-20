@@ -99,7 +99,6 @@ export class ApiTestService {
 
   // 取得目前登入者的所有收藏清單
   getUserCollect() {
-    // 🌟 在 .get 後面加上 <CollectRes>，告訴 Angular 這一條水管流出來的資料一定是這種規格！
     return this.http.get<CollectRes>(`${this.collectApiUrl}/getUserCollect`, { withCredentials: true });
   }
 

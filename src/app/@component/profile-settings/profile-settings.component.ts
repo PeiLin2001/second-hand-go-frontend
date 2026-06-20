@@ -14,7 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
+import {  map, Observable, startWith } from 'rxjs';
 import {
   LucideAngularModule,
   PencilLine,
@@ -30,12 +30,14 @@ import {
   ChevronUp,
 } from 'lucide-angular';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { SchoolDataService } from '../../@Services/school-data.service';
 import Swal from 'sweetalert2';
 import { UserService } from '../../@Services/user.service';
 import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 import { ApiTestService } from '../../@Services/api-test.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageCropDialogComponent } from '../../@Dialogs/image-crop-dialog/image-crop-dialog.component';
 
 @Component({
   selector: 'app-profile-settings',
@@ -65,7 +67,8 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
     private schoolService: SchoolDataService,
     private userService: UserService,
     private elementRef: ElementRef,
-    private apiTestService: ApiTestService
+    private apiTestService: ApiTestService,
+    private dialog: MatDialog
   ) {}
   // --- 狀態變數 ---
   isEditingBasic = false;
@@ -151,7 +154,7 @@ onDocumentClick(event: MouseEvent) {
 
       if (user.imgPath && user.imgPath.trim() !== '') {
           if (user.imgPath.startsWith('http')) {
-            this.avatarUrl = user.imgPath; // 👉 如果是 Cloudinary 網址，直球對決直接用！
+            this.avatarUrl = user.imgPath; // 如果是 Cloudinary 網址，直接用！
           } else {
             this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
           }
@@ -162,7 +165,7 @@ onDocumentClick(event: MouseEvent) {
         // 同步通知全站右上角
         this.userService.updateAvatar(this.avatarUrl as string);
 
-       // 2. 處理地區 (🌟 終極拆彈防禦：管他資料庫是字串、陣列、還是帶括號的亂碼，前端統統相容！)
+       // 2. 處理地區
         let backendAreas: string[] = [];
 
         if (Array.isArray(user.location)) {
@@ -209,13 +212,13 @@ onDocumentClick(event: MouseEvent) {
   }
 
   loadMyProducts(userId: number): void {
-    // 🎯 借用同學那支透過賣家 ID 搜尋商品的 API
+    // 透過賣家 ID 搜尋商品的 API
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
         if (res && res.productList) {
           this.myProducts = res.productList; // 1. 塞給卡片陣列去渲染 UI
 
-          // 🌟 2. 精華：直接數有幾筆卡片，就是上架數量！
+          // 2. 直接數有幾筆卡片，就是上架數量！
           this.onTheShelves = res.productList.length;
         }
       },
@@ -247,11 +250,11 @@ onDocumentClick(event: MouseEvent) {
       { validators: this.passwordMatchValidator },
     );
 
-  // 3. 呼叫 API 載入資料 (這裡面會自動幫你處理 FormArray 和水管)
+  // 3. 呼叫 API 載入資料
     this.loadUserProfile();
   }
 
-  // 神級重構 B：集體控制狀態的萬能開關工具
+  // 集體控制狀態的萬能開關工具
   private setBasicControlsStatus(enable: boolean, options = {}) {
     Object.values(this.basicControlsMap).forEach((control) => {
       if (enable) control.enable(options);
@@ -264,7 +267,7 @@ onDocumentClick(event: MouseEvent) {
     this.isEditingBasic = !this.isEditingBasic;
 
     if (this.isEditingBasic) {
-      // 🔓 一鍵解鎖所有控制項！
+      // 一鍵解鎖所有控制項！
       this.setBasicControlsStatus(true);
       this.tempName = this.name;
       this.backupData = {
@@ -279,7 +282,7 @@ onDocumentClick(event: MouseEvent) {
       // 確定儲存時的前端大檢查
       if (this.validateAndMarkBasicFields()) return; // 遭攔截則中斷
 
-      // 🌟 1. 判斷圖片狀態
+      //  1. 判斷圖片狀態
       let base64Img: string | null = null;
       let isDelete = false;
 
@@ -289,7 +292,7 @@ onDocumentClick(event: MouseEvent) {
         base64Img = this.avatarUrl as string;
       }
 
-      // 🌟 2. 打包成 SetInfoVo 物件 (準備送給 Java)
+      //  2. 打包成 SetInfoVo 物件 (準備送給 Java)
       const updateData: SetInfoVo = {
         email: this.email,
         name: this.tempName,
@@ -311,11 +314,11 @@ onDocumentClick(event: MouseEvent) {
         }
       });
 
-      // 🌟 3. 正式發送給後端！
+      //  3. 正式發送給後端！
       this.userService.updateProfile(updateData).subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            // ✅ 後端說存檔成功了！
+            // 後端說存檔成功了！
             Swal.fire({ title: '儲存成功！', icon: 'success', confirmButtonColor: '#FB831D' });
 
             // 確定成功後，才一鍵集體鎖定表單並關閉編輯模式
@@ -331,7 +334,7 @@ onDocumentClick(event: MouseEvent) {
             this.selectedAvatarFile = null;
 
           } else {
-            // ❌ 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
+            // 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改
             this.showWarningAlert(res.message);
           }
         },
@@ -510,28 +513,46 @@ onDocumentClick(event: MouseEvent) {
 
   //更換照片
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      if (file.size > 2 * 1024 * 1024) {
-        Swal.fire({
-          title: '檔案太大囉，請選擇2MB以下的圖片!',
-          icon: 'warning',
-          confirmButtonColor: '#FB831D',
-        });
-        return;
-      }
-      this.selectedAvatarFile = file;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.avatarUrl = reader.result;
-        if (reader.result) {
-        this.userService.updateAvatar(reader.result as string);
-      }
-      };
-      reader.readAsDataURL(file);
-    }
+  const input = event.target as HTMLInputElement;
+  if (!input.files || !input.files[0]) return;
+
+  const file = input.files[0];
+
+  if (file.size > 2 * 1024 * 1024) {
+    Swal.fire({
+      title: '檔案太大囉，請選擇2MB以下的圖片!',
+      icon: 'warning',
+      confirmButtonColor: '#FB831D',
+    });
+    return;
   }
+
+  // 開啟裁切 Dialog
+  const dialogRef = this.dialog.open(ImageCropDialogComponent, {
+    // width: '500px',
+    // maxHeight: '90vh',
+    disableClose: true,
+    data: { file }
+  });
+
+  dialogRef.afterClosed().subscribe((croppedBase64: string | null) => {
+    if (!croppedBase64) return;  // 使用者按取消
+
+    // 把裁切後的 base64 當作預覽圖和上傳資料
+    this.avatarUrl = croppedBase64;
+    this.userService.updateAvatar(croppedBase64);
+
+    // 把 base64 轉回 File 物件（讓原本的上傳邏輯繼續運作）
+    fetch(croppedBase64)
+      .then(res => res.blob())
+      .then(blob => {
+        this.selectedAvatarFile = new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
+      });
+  });
+
+  // 清空 input，讓下次選同一張圖也能觸發
+  input.value = '';
+}
 
   //恢復預設頭像
   resetToDefaultAvatar() {
@@ -622,14 +643,14 @@ onDocumentClick(event: MouseEvent) {
     this.passwordForm.reset();
   }
 
-  gotoStore() {
- if (this.isEditingBasic) return;
-    if (!this.currentUserId) {
-      console.warn('尚未取得使用者 ID，無法導向個人商城');
-      return;
-    }
-    this.router.navigate(['/store', this.currentUserId]);
-  }
+//   gotoStore() {
+//  if (this.isEditingBasic) return;
+//     if (!this.currentUserId) {
+//       console.warn('尚未取得使用者 ID，無法導向個人商城');
+//       return;
+//     }
+//     this.router.navigate(['/store', this.currentUserId]);
+//   }
 
 
 }

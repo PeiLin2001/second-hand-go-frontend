@@ -106,14 +106,22 @@
           <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
           <div class="purchase-actions">
 
-            <button class="btn-tolk" (click)="openChat()">
+            <button class="btn-tolk" (click)="openChat()" title="聊聊">
               <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
               聊聊
             </button>
 
             <button class="btn-cart" [class.active]="isCollected" (click)="toggleCollect()">
-              <lucide-icon [img]="HeartIcon" size="18" [class.fill-icon]="isCollected"></lucide-icon>
-              {{ isCollected ? '已收藏' : '加入收藏' }}
+              <!-- <lucide-icon [img]="HeartIcon" size="18" [class.fill-icon]="isCollected"></lucide-icon> -->
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="heart-svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              @if (isCollected) {
+                <span class="text-default">已收藏</span>
+                <span class="text-hover" title="取消收藏">取消收藏</span>
+              } @else {
+                <span title="加入收藏">加入收藏</span>
+              }
             </button>
 
             <button class="btn-buy" [disabled]="isRequested" (click)="sendRequest()">
@@ -122,7 +130,7 @@
                 已發送請求
               } @else {
                 <lucide-icon [img]="SendIcon" size="18"></lucide-icon>
-                發送請求
+                <span title="發送請求">發送請求</span>
               }
             </button>
 
@@ -169,9 +177,16 @@
       <div class="seller-info">
         <span class="seller-name">{{ product.seller.userName }}</span>
         <span class="seller-meta">
-          {{ product.seller.school }} ・
-          上架 {{ sellerProductCount ?? '--' }} 件
+          {{ product.seller.school }}
+             @if (product.seller.department) {
+              ・ {{ product.seller.department }}
+            }
+
         </span>
+          <span class="seller-meta">
+            上架 {{ sellerProductCount ?? '--' }} 件 ・
+            信譽評分 : {{ product.seller.goodLevel | number:'1.0-1' }} ★
+          </span>
       </div>
       <div class="seller-actions">
         <!-- <button class="btn-seller" (click)="openChat()">
