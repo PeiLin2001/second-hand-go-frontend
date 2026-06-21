@@ -5,8 +5,9 @@ import { UserService } from '../../@Services/user.service';
 import { PaginationService } from '../../@Services/pageination.service';
 import {
   LucideAngularModule, LUCIDE_ICONS, LucideIconProvider,
-  ChevronRight, ChevronLeft,
+  ChevronRight, ChevronLeft, Search,
 } from 'lucide-angular';
+import { FormsModule } from '@angular/forms';
 
 // 對應後端 Product Entity
 interface Product {
@@ -27,13 +28,13 @@ interface Product {
 
 @Component({
   selector: 'app-draft-list',
-  imports: [LucideAngularModule],
+  imports: [LucideAngularModule, FormsModule],
   templateUrl: './draft-list.component.html',
   styleUrl: './draft-list.component.scss',
   providers: [
     {
       provide: LUCIDE_ICONS,
-      useValue: new LucideIconProvider({ ChevronRight, ChevronLeft })
+      useValue: new LucideIconProvider({ ChevronRight, ChevronLeft, Search })
     }
   ]
 })
@@ -65,6 +66,7 @@ export class DraftListComponent {
   allProducts: Product[] = [];
   showConfirm = false;
   userId?: number;
+  keyword = ''; // 搜尋
 
   private pendingDeleteId: number | null = null;
 
@@ -104,9 +106,9 @@ export class DraftListComponent {
   nextPage(): void { this.pagination.nextPage(); }
   goToPage(page: number): void { this.pagination.goToPage(page); }
 
-  // 更新分頁總數
+  // 更新分頁總數（依目前 tab + 關鍵字篩選後的總筆數）
   private updatePaginationTotal(): void {
-    const filteredTotal = this.allProducts.filter(p => this.matchesTab(p)).length;
+    const filteredTotal = this.getFilteredList().length;
     this.pagination.init(filteredTotal, this.pageSize);
   }
 
@@ -115,13 +117,31 @@ export class DraftListComponent {
     return targetStatus === '' || product.status === targetStatus;
   }
 
-  // 統一列表：依目前 tab 篩選 + 分頁切片
+  private matchesKeyword(product: Product): boolean {
+    const keyword = this.keyword.toLowerCase().trim();
+    if (!keyword) return true;
+    const nameMatch = product.productName?.toLowerCase().includes(keyword);
+    const idMatch = product.productId?.toString().includes(keyword);
+    return !!(nameMatch || idMatch);
+  }
+
+  // 統一篩選：tab + 關鍵字，兩者都套用同一份結果，分頁也基於這份結果計算
+  private getFilteredList(): Product[] {
+    return this.allProducts.filter(p => this.matchesTab(p) && this.matchesKeyword(p));
+  }
+
+  // 統一列表：依目前 tab + 關鍵字篩選 + 分頁切片
   filteredOrders(): Product[] {
-    const filtered = this.allProducts.filter(p => this.matchesTab(p));
+    const filtered = this.getFilteredList();
     this.filteredTotalCount = filtered.length;
 
     const start = (this.pagination.currentPage - 1) * this.pageSize;
     return filtered.slice(start, start + this.pageSize);
+  }
+
+  onSearchChange() {
+    this.updatePaginationTotal();
+    this.pagination.goToPage(1);
   }
 
   changeTab(tabName: string): void {
@@ -185,7 +205,7 @@ export class DraftListComponent {
     this.formService.publishProduct(productId).subscribe({
       next: (res) => {
         console.log('重新上架:', res);
-        this.showToast('✓ 草稿已新增');
+        this.showToast('✓ 商品已重新上架');
         this.fetchProduct(this.userId!);
       },
       error: (err) => console.error('重新上架失敗:', err)
@@ -193,8 +213,8 @@ export class DraftListComponent {
   }
 
   // 交易中商品
-  goToOrders(): void {
-    this.router.navigate(['/order_information']);
+  goToOrders(productName: String): void {
+    this.router.navigate(['/order_information'], { queryParams: { targetProductName: productName } });
   }
 
   // 顏色

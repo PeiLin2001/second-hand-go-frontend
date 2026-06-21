@@ -7,6 +7,43 @@
   min-height: calc(100vh - 270px);
 }
 
+// 搜尋列
+.search-bar-wrapper {
+  height: 2.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.005);
+  margin-bottom: 8px;
+
+  .text-search-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+
+    .icon {
+      color: $text-gray;
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 0 0.5rem;
+      font-size: 0.9rem;
+      background-color: transparent;
+    }
+  }
+}
+
 // tabs 列 + 按鈕同排
 .tabs-header {
   display: flex;
@@ -341,5 +378,37 @@
     background: $background-yellow-hover;
     color: $text-gray;
     border-color: $background-yellow-hover;
+  }
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: #fcfcfc;
+  color: #1E1E1E;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* 響應式佈局：當螢幕太小時，自動切換回單欄上下排列 */
+@media (max-width: 640px) {
+  .form-vertical-container {
+    padding: 20px;
+    gap: 16px;
   }
 }

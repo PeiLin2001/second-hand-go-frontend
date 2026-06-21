@@ -1,6 +1,14 @@
 <main class="draft-wrapper">
   <h1 class="page-title">商品管理</h1>
 
+  <!-- 搜尋 -->
+  <div class="search-bar-wrapper">
+    <div class="text-search-wrapper">
+      <lucide-icon name="Search" class="icon"></lucide-icon>
+      <input type="text" placeholder="商品者名稱﹑ID..." [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
+    </div>
+  </div>
+
   <!-- tabs -->
   <header class="tabs-header">
     <nav class="tabs-container" aria-label="商品狀態分類">
@@ -80,7 +88,7 @@
         <button class="btn-load" type="button" (click)="onRepublish(product.productId)">重新上架</button>
         }
         @case ('交易中') {
-        <button class="btn-load" type="button" (click)="goToOrders()">查看交易</button>
+        <button class="btn-load" type="button" (click)="goToOrders(product.productName)">查看交易</button>
         }
         }
       </div>
@@ -121,3 +129,5 @@
     </button>
   </nav>
 </main>
+
+<p class="toast" [class.show]="toastVisible" role="status">{{ toastText }}</p>

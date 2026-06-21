@@ -125,6 +125,10 @@ $semantic-red-dark: #c62828;
       background-color: #faffff;
     }
   }
+
+  &.order-card.highlight-active {
+    border: 2px solid $semantic-green;
+  }
 }
 
 .order-header {
