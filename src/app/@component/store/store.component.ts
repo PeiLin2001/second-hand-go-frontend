@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
 import { Component, HostListener, signal } from '@angular/core';
@@ -24,7 +25,7 @@ import { DecimalPipe } from '@angular/common';
     {
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({
-        User, BookText, MapPin, School, MessageCircleMore, HeartPlus, Pencil,Heart,
+        User, BookText, MapPin, School, MessageCircleMore, HeartPlus, Pencil, Heart,
         ArrowRight, Plus, ThumbsUp, Trash2, Flag, Phone, Mail, ChevronLeft, ChevronRight,
       })
     }
@@ -59,18 +60,18 @@ export class StoreComponent {
 
   //撈收藏清單 韻
   fetchUserCollect(): void {
-  this.apiTestService.getUserCollect().subscribe({
-    next: (res: CollectRes) => {
-      if (res.statusCode === 200 && res.collectListVo) {
-        this.collectedMap.clear();
-        res.collectListVo.forEach((item: any) => {
-          this.collectedMap.set(item.productId, item.collectId);
-        });
-      }
-    },
-    error: (err) => console.error('撈取收藏清單失敗：', err)
-  });
-}
+    this.apiTestService.getUserCollect().subscribe({
+      next: (res: CollectRes) => {
+        if (res.statusCode === 200 && res.collectListVo) {
+          this.collectedMap.clear();
+          res.collectListVo.forEach((item: any) => {
+            this.collectedMap.set(item.productId, item.collectId);
+          });
+        }
+      },
+      error: (err) => console.error('撈取收藏清單失敗：', err)
+    });
+  }
 
   // 檢舉
   goRepot() {
@@ -99,7 +100,9 @@ export class StoreComponent {
   fetchProduct(userId: number) {
     this.apiTestService.searchBySellerId(userId).subscribe({
       next: (res) => {
-        this.allProducts = res.productList || [];
+        this.allProducts = res.productList.filter((p: any) =>
+          p.status === '販售中') || [];
+
         this.pagination.init(this.allProducts.length, this.pageSize);  // 初始化分頁
         this.updatePaginationTotal(); // 切出當頁
       },
@@ -147,24 +150,24 @@ export class StoreComponent {
 
   // 收藏商品
   goCollectProduct(productId: number): void {
-      // 未登入檢查
-  if (!this.userService.currentUser()) {
-    Swal.fire({
-      title: '收藏失敗！',
-      text: '您需要先登入，才能收藏商品喔！',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: '前往登入',
-      cancelButtonText: '先看看就好',
-      confirmButtonColor: '#EDA900',
-      cancelButtonColor: '#6c757d'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.router.navigate(['/login_register']);
-      }
-    });
-    return;
-  }
+    // 未登入檢查
+    if (!this.userService.currentUser()) {
+      Swal.fire({
+        title: '收藏失敗！',
+        text: '您需要先登入，才能收藏商品喔！',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: '前往登入',
+        cancelButtonText: '先看看就好',
+        confirmButtonColor: '#EDA900',
+        cancelButtonColor: '#6c757d'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.router.navigate(['/login_register']);
+        }
+      });
+      return;
+    }
     if (!this.collectedMap.has(productId)) {
       // 加入收藏
       this.apiTestService.addCollect(productId).subscribe({

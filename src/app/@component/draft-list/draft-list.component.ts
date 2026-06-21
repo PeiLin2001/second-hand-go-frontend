@@ -44,14 +44,23 @@ export class DraftListComponent {
   tabsColumns: string[] = [
     '全部商品',
     '已上架',
-    '未上架',
+    '草稿',
+    '已下架',
+    '交易中',
   ];
   // tab 對應 status
   statusMap: Record<string, string> = {
     全部商品: '',
     已上架: '販售中',
-    未上架: '未上架',
+    草稿: '未上架',
+    已下架: '已下架',
+    交易中: '交易中',
   };
+
+  // ── Toast ──
+  toastText = '';
+  toastVisible = false;
+  private toastTimer: any;
 
   allProducts: Product[] = [];
   showConfirm = false;
@@ -125,15 +134,11 @@ export class DraftListComponent {
   get isPublishedTab(): boolean { return this.currentTab === '已上架'; }
   get isDraftTab(): boolean { return this.currentTab === '未上架'; }
 
-  isDraft(product: Product): boolean {
-    return product.status === '未上架';
-  }
-
   goAddProduct(): void {
     this.router.navigate(['/launch_product_price']);
   }
 
-  // 草稿「繼續編輯」：先跳轉表單頁，不帶參數
+  // 草稿「繼續編輯」
   onLoad(productId: number): void {
     this.router.navigate(['/launch_product_price'],
       { queryParams: { productId: productId } });
@@ -173,5 +178,43 @@ export class DraftListComponent {
       },
       error: (err) => console.error('下架商品失敗:', err)
     })
+  }
+
+  // 重新上架
+  onRepublish(productId: number): void {
+    this.formService.publishProduct(productId).subscribe({
+      next: (res) => {
+        console.log('重新上架:', res);
+        this.showToast('✓ 草稿已新增');
+        this.fetchProduct(this.userId!);
+      },
+      error: (err) => console.error('重新上架失敗:', err)
+    });
+  }
+
+  // 交易中商品
+  goToOrders(): void {
+    this.router.navigate(['/order_information']);
+  }
+
+  // 顏色
+  getStatusColor(status: string): string {
+    switch (status) {
+      case '販售中':
+        return '#5E9759'; // 綠色
+      case '已下架': case '未上架':
+        return '#8c8c8c'; // 灰色
+      case '交易中':
+        return '#FB831D'; // 橘色
+      default:
+        return '#000000'; // 預設黑色
+    }
+  }
+
+  showToast(msg: string): void {
+    this.toastText = msg;
+    this.toastVisible = true;
+    clearTimeout(this.toastTimer);
+    this.toastTimer = setTimeout(() => { this.toastVisible = false; }, 1500);
   }
 }

@@ -38,10 +38,14 @@
     目前沒有任何草稿
     }
   </p>
-  } @else {
+  }
+
+  @if (filteredOrders().length > 0) {
   <ul class="draft-list">
     @for (product of filteredOrders(); track product.productId) {
     <li class="draft-card">
+
+      <!-- 縮圖 -->
       <div class="draft-thumb">
         @if (product.imgPath) {
         <img [src]="product.imgPath[0]" alt="{{ product.productName }} 商品圖" />
@@ -54,18 +58,33 @@
         </svg>
         }
       </div>
+
+      <!-- 基本資訊 -->
       <div class="draft-info">
         <p class="draft-title">{{ product.productName || '（未命名草稿）' }}</p>
         <p class="draft-meta">{{ product.type || '未分類' }} ・ NT$ {{ product.price }}</p>
+        <p class="draft-status" [style.color]="getStatusColor(product.status)">{{ product.status }}</p>
       </div>
+
+      <!-- 依商品狀態顯示對應操作按鈕 -->
       <div class="draft-actions">
-        @if (isDraft(product)) {
+        @switch (product.status) {
+        @case ('未上架') {
         <button class="btn-load" type="button" (click)="onLoad(product.productId)">繼續編輯</button>
         <button class="btn-del" type="button" (click)="onDelete(product.productId)">刪除</button>
-        } @else {
+        }
+        @case ('販售中') {
         <button class="btn-del" type="button" (click)="onUnpublish(product.productId)">下架</button>
         }
+        @case ('已下架') {
+        <button class="btn-load" type="button" (click)="onRepublish(product.productId)">重新上架</button>
+        }
+        @case ('交易中') {
+        <button class="btn-load" type="button" (click)="goToOrders()">查看交易</button>
+        }
+        }
       </div>
+
     </li>
     }
   </ul>
