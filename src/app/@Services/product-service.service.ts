@@ -99,6 +99,7 @@ export class ProductServiceService {
         'https://www.townlinepaint.com/cdn/shop/products/B6B4B2.png?v=1646778952&width=1200/default.jpg',
         university: p.seller?.school || '吉利開心大學',
         department: p.seller?.department || '未設定系所',
+        goodLevel: p.seller?.goodLevel || '尚未有評分'
       }
     };
   }

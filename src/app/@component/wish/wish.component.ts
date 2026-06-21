@@ -19,6 +19,7 @@ import {
   LucideIconProvider,
   Plus,
   X,
+  House
 } from 'lucide-angular';
 
 import { WishCardComponent } from '../../@component/wish-card/wish-card.component';
@@ -35,7 +36,7 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
   providers: [
     {
       provide: LUCIDE_ICONS,
-      useValue: new LucideIconProvider({ Plus, X }),
+      useValue: new LucideIconProvider({ Plus, X, House }),
     },
   ]
 })

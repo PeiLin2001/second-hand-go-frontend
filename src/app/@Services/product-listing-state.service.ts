@@ -153,6 +153,15 @@ export class ProductListingStateService {
       : true;
   }
 
+  matchCreditScore(product: ProductCard): boolean {
+    if (this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade) {
+      return true;
+    }
+
+    const goodLevel = Number(product.user?.goodLevel ?? 0);
+    return goodLevel >= this.sellerGrade;
+  }
+
   get filteredProducts(): ProductCard[] {
     return this.products.filter(p =>
       this.matchCategory(p) &&
@@ -160,7 +169,8 @@ export class ProductListingStateService {
       this.matchCity(p) &&
       this.matchSchool(p) &&
       this.matchType(p) &&
-      this.matchCondition(p)
+      this.matchCondition(p)&&
+      this.matchCreditScore(p)
     );
   }
 

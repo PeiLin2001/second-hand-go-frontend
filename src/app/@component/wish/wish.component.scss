@@ -18,11 +18,19 @@
 
 
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   @include common-layout;
 }
 
 a {
   @include reset-link;
+}
+
+.breadcrumb {
+  margin-top: 1.5rem;
+  @include breadcrumb-style;
 }
 
 lucide-icon { display: flex; align-items: center; }
@@ -37,9 +45,7 @@ lucide-icon { display: flex; align-items: center; }
   gap: 1.5rem;
 }
 
-.breadcrumb {
-  @include breadcrumb-style;
-}
+
 
 // 標題列
 .list-header {
