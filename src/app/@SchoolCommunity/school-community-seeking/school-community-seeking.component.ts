@@ -41,6 +41,12 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 export class SchoolCommunitySeekingComponent {
   wishList: Wish[] = [];
 
+  // ── 1. 定義成 Component 內部的全域變數（成員變數） ──
+  currentUser: any = null;
+  currentUserSchool = '';
+  currentUserId: number | undefined = undefined;
+  currentBoardSchool = '';
+
   showPanel = false;
   isSubmitting = false;
   submitted = false;
@@ -58,6 +64,11 @@ export class SchoolCommunitySeekingComponent {
   ) {}
 
   ngOnInit(): void {
+    // ── 2. 在初始化時，先將使用者變數撈出來存好 ──
+    this.currentUser = this.userService.currentUser();
+    this.currentUserSchool = this.currentUser?.school ?? '';
+    this.currentUserId = this.currentUser?.userId;
+
     this.loadWishesByCurrentSchool();
   }
 
@@ -68,6 +79,7 @@ export class SchoolCommunitySeekingComponent {
 
     if (!schoolId) return;
 
+
     this.eduApiGovService
       .getSchools()
       .pipe(
@@ -75,6 +87,8 @@ export class SchoolCommunitySeekingComponent {
           const school = schools.find((s) => Number(s['代碼']) === schoolId);
 
           if (!school) return EMPTY;
+
+          this.currentBoardSchool = school['學校名稱'];
 
           return this.wishServiceService.getWishesBySchool(school['學校名稱']);
         }),
@@ -84,7 +98,18 @@ export class SchoolCommunitySeekingComponent {
         }),
       )
       .subscribe((res) => {
-        this.wishList = res.wishesList ?? [];
+        const allWishes = res.wishesList ?? [];
+
+        // 2. 在這裡進行過濾，只有符合以下任一條件的願望才會被留下來：
+        //    - 條件 A：狀態不是 'school-only'（所有人都能看）
+        //    - 條件 B：狀態是 'school-only'，且許願者的學校與當前登入者相同
+        this.wishList = allWishes.filter((item) => {
+          if (item.status !== 'school-only') {
+            return true;
+          }
+          return item.wisher.school === this.currentUserSchool;
+        });
+
       });
   }
 
