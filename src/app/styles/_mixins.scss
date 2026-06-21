@@ -635,11 +635,12 @@
 // 橘色小UI
 // =========================================================
 
-@mixin active-tag {
+@mixin orange-active-tag {
   background-color: $background-yellow;
   border: 1px solid $semantic-orange;
   color: $semantic-orange;
 }
+
 
 @mixin white-pill {
   padding: 0.45rem 1rem;

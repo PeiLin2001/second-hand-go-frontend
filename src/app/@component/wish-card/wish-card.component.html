@@ -1,73 +1,73 @@
 <ul>
   @for (item of wishList; track item.id) {
-    <li class="wish-card">
+  <li class="wish-card">
 
-      <article class="wish-info">
-        <h4 class="wish-title">{{ item.title }}</h4>
+    <article class="wish-info">
+      @if(item.status === 'school-only')
+      {
+        <span class="school-only">僅限校內</span>
+      }
+      <h4 class="wish-title">{{ item.title }}</h4>
 
-        <dl>
-          <dt class="label">需求描述</dt>
-          <dd class="wish-description-box">
-            <p
-              #wishDescription
-              class="wish-description"
-              [class.expanded]="expandedIds.has(item.id)"
-            >
-              {{ item.description }}
-            </p>
+      <dl>
+        <dt class="label">需求描述</dt>
+        <dd class="wish-description-box">
+          <p #wishDescription class="wish-description" [class.expanded]="expandedIds.has(item.id)">
+            {{ item.description }}
+          </p>
 
-            @if (expandableIds.has(item.id)) {
-              <button
-                class="btn-expand"
-                [class.is-expanded]="expandedIds.has(item.id)"
-                (click)="toggleExpand(item.id)"
-                type="button"
-              >
-                {{ expandedIds.has(item.id) ? '收起內容' : '查看更多' }}
-              </button>
-            }
-          </dd>
-
-          <dt>預算</dt>
-          <dd>NT${{ item.budgetMin }} - {{ item.budgetMax }}</dd>
-
-          <dt>可面交地點</dt>
-          <dd>{{ item.location }}</dd>
-        </dl>
-      </article>
-
-      <div class="wisher-panel">
-
-        <!-- 更多選單 -->
-        <div class="kebab-wrap">
-          <button class="btn-kebab" (click)="toggleMenu($event, item)" title="更多操作">
-            <lucide-icon name="EllipsisVertical" size="16" />
+          @if (expandableIds.has(item.id)) {
+          <button class="btn-expand" [class.is-expanded]="expandedIds.has(item.id)" (click)="toggleExpand(item.id)"
+            type="button">
+            {{ expandedIds.has(item.id) ? '收起內容' : '查看更多' }}
           </button>
+          }
+        </dd>
 
-          <menu class="kebab-dropdown" [style.display]="openMenuWishId === item.id ? 'block' : 'none'">
-            <li>
-              <button class="kebab-item danger" (click)="goRepot(item)">
-                <lucide-icon name="Flag" size="14" />
-                <span>檢舉</span>
-              </button>
-            </li>
-          </menu>
-        </div>
+        <dt>預算</dt>
+        @if (item.budgetMin === 0 && item.budgetMax === 0) {
+        <dd class="tag-negotiable">預算面議</dd>
+        } @else {
+        <dd>${{ item.budgetMin }} - ${{ item.budgetMax }}</dd>
+        }
 
-        <!-- 頭像、名字、評分 -->
-        <div class="wisher-core-info">
-          <img [src]="item.wisher.userImgPath" alt="{{ item.wisher.userName }} 的頭像" class="wisher-avatar">
+        <dt>可面交地點</dt>
+        <dd>{{ item.location }}</dd>
+      </dl>
+    </article>
 
-          <p class="wisher-name">{{ item.wisher.userName }}</p>
-          <p class="wisher-school">{{ item.wisher.school }}</p>
-          <p class="credit-score">{{ item.wisher.goodLevel | number:'1.1-1' }} ★</p>
-        </div>
+    <div class="wisher-panel">
 
-        <button class="btn-chat"  [routerLink]="['/chat', item.wisher.userId]">
-          <lucide-icon name="MessageCircleMore" />聊聊
+      <!-- 更多選單 -->
+      <div class="kebab-wrap">
+        <button class="btn-kebab" (click)="toggleMenu($event, item)" title="更多操作">
+          <lucide-icon name="EllipsisVertical" size="16" />
         </button>
 
+        <menu class="kebab-dropdown" [style.display]="openMenuWishId === item.id ? 'block' : 'none'">
+          <li>
+            <button class="kebab-item danger" (click)="goRepot(item)">
+              <lucide-icon name="Flag" size="14" />
+              <span>檢舉</span>
+            </button>
+          </li>
+        </menu>
       </div>
-    </li>
+
+      <!-- 頭像、名字、評分 -->
+      <div class="wisher-core-info">
+        <img [src]="item.wisher.userImgPath" alt="{{ item.wisher.userName }} 的頭像" class="wisher-avatar">
+
+        <p class="wisher-name">{{ item.wisher.userName }}</p>
+        <p class="wisher-school">{{ item.wisher.school }}</p>
+        <p class="credit-score">{{ item.wisher.goodLevel | number:'1.1-1' }} ★</p>
+      </div>
+
+      <button class="btn-chat" [routerLink]="['/chat', item.wisher.userId]">
+        <lucide-icon name="MessageCircleMore" />聊聊
+      </button>
+
+    </div>
+  </li>
   }
 </ul>

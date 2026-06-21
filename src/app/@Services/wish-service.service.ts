@@ -32,6 +32,7 @@ export interface WishForm {
   budgetMin: number | null;
   budgetMax: number | null;
   expiredAt: string;
+  status: string;
 }
 
 export interface WishReq {
@@ -40,6 +41,7 @@ export interface WishReq {
   location: string[];
   budgetMin: number;
   budgetMax: number;
+  status: string;
 }
 
 export interface ApiResponse<T = unknown> {

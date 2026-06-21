@@ -335,6 +335,10 @@ lucide-icon {
 
   input {
     flex: 1;
+
+    &:disabled{
+      cursor: no-drop;
+    }
   }
 
   .budget-sep {

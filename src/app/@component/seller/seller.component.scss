@@ -74,7 +74,7 @@ lucide-icon {
 .sort-container {
   @include sort-style;
   .sort-button.has-value {
-    @include active-tag;
+    @include orange-active-tag;
   }
 }
 
@@ -150,7 +150,7 @@ lucide-icon {
     }
 
     &.active {
-      @include active-tag;
+      @include orange-active-tag;
     }
 
     &:disabled {

@@ -20,7 +20,7 @@
 
       <button (click)="switchPanel()">
         <lucide-icon name="Plus"></lucide-icon>
-        我要許願
+        向全站許願
       </button>
     </div>
 
@@ -64,11 +64,17 @@
 
         <div class="form-group">
           <label>預算範圍（元）<span class="required">*</span></label>
+
           <div class="budget-row">
-            <input type="number" [(ngModel)]="wishForm.budgetMin" placeholder="最低" min="0" />
+            <input type="number" [(ngModel)]="wishForm.budgetMin" placeholder="最低" min="0" [disabled]="isNegotiable" />
             <span class="budget-sep">—</span>
-            <input type="number" [(ngModel)]="wishForm.budgetMax" placeholder="最高" min="0" />
+            <input type="number" [(ngModel)]="wishForm.budgetMax" placeholder="最高" min="0" [disabled]="isNegotiable"/>
           </div>
+
+          <label class="checkbox-item" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+            <input type="checkbox" (change)="toggleNegotiable($event)">
+            <span>預算面議 / 無上限</span>
+          </label>
         </div>
 
         @if (submitError) {

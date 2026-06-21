@@ -36,7 +36,7 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({ Plus, X }),
     },
-  ]
+  ],
 })
 export class SchoolCommunitySeekingComponent {
   wishList: Wish[] = [];
@@ -165,6 +165,10 @@ export class SchoolCommunitySeekingComponent {
 
     const { budgetMin, budgetMax } = this.wishForm;
 
+    if (budgetMin === 0 && budgetMax === 0) {
+      return true;
+    }
+
     if (budgetMin !== null && budgetMax !== null && budgetMin > budgetMax) {
       Swal.fire({
         title: '預算範圍錯誤！',
@@ -179,6 +183,23 @@ export class SchoolCommunitySeekingComponent {
     return true;
   }
 
+  // 用來記錄畫面上是否勾選了面議
+  get isNegotiable(): boolean {
+    return this.wishForm.budgetMin === 0 && this.wishForm.budgetMax === 0;
+  }
+
+  // 用來記錄畫面上是否勾選了面議
+  toggleNegotiable(event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      this.wishForm.budgetMin = 0;
+      this.wishForm.budgetMax = 0;
+    } else {
+      this.wishForm.budgetMin = null;
+      this.wishForm.budgetMax = null;
+    }
+  }
+
   private getMissingFields(): string[] {
     const missing: string[] = [];
 
@@ -187,6 +208,7 @@ export class SchoolCommunitySeekingComponent {
     if (this.wishForm.location.length === 0) missing.push('偏好交易地點');
     if (this.wishForm.budgetMin === null) missing.push('預算最低');
     if (this.wishForm.budgetMax === null) missing.push('預算最高');
+    if (!this.wishForm.status.trim()) missing.push('瀏覽權限');
 
     return missing;
   }
@@ -198,6 +220,7 @@ export class SchoolCommunitySeekingComponent {
       location: [...this.wishForm.location],
       budgetMin: this.wishForm.budgetMin ?? 0,
       budgetMax: this.wishForm.budgetMax ?? 0,
+      status: this.wishForm.status,
     };
   }
 
@@ -258,7 +281,7 @@ export class SchoolCommunitySeekingComponent {
       location: [...payload.location],
       budgetMin: payload.budgetMin,
       budgetMax: payload.budgetMax,
-      status: 'active',
+      status: payload.status,
       createdAt: new Date().toISOString(),
       expiredAt: this.wishForm.expiredAt,
       wisher: {
@@ -339,6 +362,7 @@ export class SchoolCommunitySeekingComponent {
       budgetMin: null,
       budgetMax: null,
       expiredAt: '',
+      status: 'active',
     };
   }
 

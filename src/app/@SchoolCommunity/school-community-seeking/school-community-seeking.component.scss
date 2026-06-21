@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .wish-page {
   width: 100%;
@@ -81,7 +81,6 @@ lucide-icon {
   display: flex;
   align-items: center;
 }
-
 
 // ── Overlay ──────────────────────────────────────────────
 .panel-overlay {
@@ -194,9 +193,9 @@ lucide-icon {
     }
   }
 
-  input[type='text'],
-  input[type='number'],
-  input[type='date'],
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
   textarea {
     width: 100%;
     padding: 10px 12px;
@@ -258,6 +257,7 @@ lucide-icon {
 }
 
 // ── 預算 row ─────────────────────────────────────────────
+
 .budget-row {
   display: flex;
   align-items: center;
@@ -265,6 +265,10 @@ lucide-icon {
 
   input {
     flex: 1;
+
+    &:disabled {
+      cursor: no-drop;
+    }
   }
 
   .budget-sep {
@@ -337,7 +341,6 @@ lucide-icon {
 //   }
 // }
 
-
 /*
 Source - https://stackoverflow.com/a/45064096
 Posted by Limon Monte, modified by community. See post 'Timeline' for change history
@@ -345,9 +348,8 @@ Retrieved 2026-06-18, License - CC BY-SA 4.0
 */
 
 ::ng-deep.swal2-container {
-    z-index: 10000;
+  z-index: 10000;
 }
-
 
 // ── 必填驗證樣式 ──────────────────────────────────────────
 .input-error {

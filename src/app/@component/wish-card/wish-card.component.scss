@@ -294,3 +294,17 @@ dd {
     align-items: center;
   }
 }
+
+.school-only{
+  width: fit-content;
+
+  color: $semantic-green;
+  background-color: $neutral-ice;
+  border: 1px solid $semantic-green;
+  border-radius: 9999px;
+
+  font-weight: 700;
+  font-size: 1rem;
+  padding: .5rem 1rem;
+  margin-bottom: .8rem;
+}
