@@ -7,7 +7,7 @@ import {
 } from './../../@Services/wish-service.service';
 
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
 import { UserService } from '../../@Services/user.service';
 import { Wish } from './../../@Services/wish-service.service';
@@ -29,7 +29,7 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-wish',
-  imports: [LucideAngularModule, WishCardComponent, FormsModule],
+  imports: [LucideAngularModule, WishCardComponent, FormsModule,  RouterLink],
   templateUrl: './wish.component.html',
   styleUrl: './wish.component.scss',
   providers: [

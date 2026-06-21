@@ -1,6 +1,7 @@
 import { UserService } from './../../@Services/user.service';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 import {
   LUCIDE_ICONS,
@@ -22,7 +23,7 @@ type SortOption = 'newest' | 'credit-score' | 'same-location' | 'recommended';
 
 @Component({
   selector: 'app-seller',
-  imports: [FormsModule, LucideAngularModule, UserCardComponent],
+  imports: [FormsModule, LucideAngularModule, UserCardComponent, RouterLink],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.scss',
   providers: [
