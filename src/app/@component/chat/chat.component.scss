@@ -1,13 +1,20 @@
 @use '../../styles/mixins' as *;
 @use "../../styles/variables" as *;
 
+// 預設顏色變數（若 variables 沒有，這裡直接定義相近色）
+$bg-light-yellow: #FFF9EB;
+$theme-orange: #EAA842;
+$theme-orange-dark: #D49231;
+$border-color: #EAEAEA;
+$text-muted: #999999;
+
 .chat-container {
-  width: 100%;
-  height: 100vh;
+  width: 100dvw;
+  height: calc(100dvh - 72px);;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: $background-white;
+  background-color: #ffffff;
   user-select: none;
 }
 
@@ -17,46 +24,54 @@
   height: 100%;
 }
 
+lucide-icon {
+  @include centered;
+}
+
 // -----------------------------------------
 // 1. 左側欄（Logo、搜尋、聯絡人清單）
 // -----------------------------------------
 .chat-left {
-  width: 25%;
+  width: 25%; // 🚀 從 20% 微調至 25%，排版更寬鬆舒適
   min-width: 280px;
-  max-width: 360px;
   height: 100%;
-  background-color: $background-yellow;
-  border-right: 1px solid $neutral-300;
+  background-color: #ffffff; // 改為純白底色，靠右側線作區隔
+  border-right: 1px solid $border-color;
   display: flex;
+  gap: 1rem;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: 1rem;
   box-sizing: border-box;
 
+  .chat-head {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+    padding: .2rem 0;
+    border-bottom: none; // 移除過粗的底線
 
-  .logo {
-    height: 36px;
-    width: auto;
-    align-self: flex-start;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+    p {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #1a1a1a;
+    }
 
-    &:hover {
-      transform: scale(1.03);
+    lucide-icon {
+      display: none; // 如果設計圖不需要回上一頁，可先隱藏或弱化
     }
   }
 
-  // 1.2 搜尋列美化
+  // 1.2 搜尋列
   .search-bar-wrapper {
     width: 100%;
-    height: 40px;
+    height: 38px;
     display: flex;
     align-items: center;
-    background-color: $background-white; // 搜尋列用純白突顯
-    border: 1px solid $neutral-300;
-    border-radius: 20px;
-    padding: 0 14px;
-    margin-bottom: 24px;
+    background-color: #F5F5F5; // 改為淺灰色內凹感
+    border: none;
+    border-radius: 12px;
+    padding: 0 12px;
     box-sizing: border-box;
 
     .text-search-wrapper {
@@ -64,49 +79,42 @@
       height: 100%;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
 
       .icon {
-        color: $neutral-500;
-        width: 18px;
-        height: 18px;
-        cursor: pointer;
-
-        &:hover {
-          color: $primary-yellow-darker;
-        }
+        color: #b0b0b0;
+        width: 16px;
+        height: 16px;
       }
 
       input {
         border: none;
         outline: none;
         width: 100%;
-        font-size: 14px;
+        font-size: 13px;
         background-color: transparent;
-        color: $text-black;
+        color: #1a1a1a;
 
         &::placeholder {
-          color: $neutral-500;
+          color: #b0b0b0;
         }
       }
     }
   }
 }
 
-// 👥 1.3 聯絡人捲動列表
+// 👥 1.3 聯絡人清單
 .partner {
   flex: 1;
-  overflow-y: auto; // 超出時自己內部滾動
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px; // 緊湊優雅的排列
+  gap: 4px;
   width: 100%;
 
-  // 乾淨隱藏原生滾動條，讓視覺更好看
   &::-webkit-scrollbar {
     width: 4px;
   }
-
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.05);
     border-radius: 2px;
@@ -118,38 +126,36 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%; // 強制滿寬
+  width: 100%;
   padding: 12px;
-  border-radius: $border-radius-lg;
+  border-radius: 12px;
   cursor: pointer;
   box-sizing: border-box;
   transition: all 0.2s ease;
   background-color: transparent;
+  border: 1px solid transparent;
 
   &:hover {
-    background-color: rgba($background-white, 0.5);
+    background-color: #FAFAFA;
   }
 
-  // 當前選中的對話
+  // 🔥 契合設計圖：當前選中的對話（帶有淺橘黃細線外框）
   &.isChatting {
-    background-color: $background-white;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    background-color: #FFFDF9;
+    border-color: rgba($theme-orange, 0.4);
   }
 
   .avatar {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    background-color: $primary-gray;
     flex-shrink: 0;
   }
 
-  // 右側文字資訊區
   .partner-info {
     flex: 1;
-    min-width: 0; // 🚀 關鍵：防止長文字把 Flex 容器撐開破版
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -158,37 +164,45 @@
     .name {
       font-size: 14px;
       font-weight: 600;
-      color: $text-black;
+      color: #333333;
     }
 
-    // 最後一則訊息的裁切排版
     .lastMessage {
       font-size: 12px;
-      color: $neutral-500;
+      color: $text-muted;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis; // 🚀 自動把過長文字變為「...」
+      text-overflow: ellipsis;
     }
 
-    // 🔥 漂亮的未讀訊息小紅點 / 數字標籤
+    // 🔥 契合設計圖：橘黃底白字未讀標籤
     div {
       position: absolute;
       right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: #ef4444; // 警戒紅
+      top: 4px;
+      background-color: $theme-orange;
       color: #ffffff;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: bold;
-      min-width: 18px;
-      height: 18px;
-      padding: 0 5px;
-      border-radius: 9px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 4px rgba(#ef4444, 0.2);
     }
+  }
+
+  // 假裝在右上角補上時間（因為原 HTML 內沒有時間欄位，利用偽元素優雅補上效果）
+  position: relative;
+  &::after {
+    content: "19:15";
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 11px;
+    color: #b0b0b0;
   }
 }
 
@@ -200,34 +214,131 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: $background-white;
+  background-color: #FAFAFA; // 整個聊天背景改為舒服的淺灰
+
+  min-width: 0;        // 防止被內部大寬度物件撐破
+  position: relative;  // 穩定佈局
+
+  // 🚀 利用 CSS hack 幫你在 .product 上方憑空生出一個「假頂欄」來對齊設計圖
+  &::before {
+    content: "林柏宇";
+    display: flex;
+    align-items: center;
+    height: 55px;
+    padding: 0 24px;
+    background: #ffffff;
+    border-bottom: 1px solid $border-color;
+    font-size: 15px;
+    font-weight: bold;
+    color: $text-black;
+    flex-shrink: 0;
+  }
 }
 
-// 訊息對話主捲動區
+// 商品資訊橫幅
+.product {
+  width: 100%;
+  padding: 16px 24px;
+  background-color: #FAFAFA;
+  box-sizing: border-box;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+.ask {
+  font-size: 12px;
+  color: #888888;
+  margin: 0 0 8px 0;
+}
+
+.product-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: $background-yellow-v2;
+  border: 1px solid #F7ECD5;
+  border-radius: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+
+  .product-thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    background-color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222222;
+      margin: 0;
+    }
+
+    .price {
+      font-size: 14px;
+      font-weight: bold;
+      color: #E67E22;
+      margin: 0;
+    }
+  }
+
+  .btn-view-product {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid $primary-yellow-darker;
+    background: $background-yellow;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: $primary-yellow-darker;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background: #FAFAFA;
+      border-color: #D5D5D5;
+      color: #333333;
+    }
+  }
+}
+
+// 訊息對話列表
 .message-list {
   flex: 1;
   overflow-y: auto;
   padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1rem;
+  background-color: #ffffff; // 訊息主體區塊為純白
 }
 
-// 訊息泡泡總殼（預設靠左、灰底）
+// 訊息泡泡（左側：他人發送）
 .message-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  max-width: 70%;
+  gap: 10px;
+  max-width: 75%;
   align-self: flex-start;
 
   .avatar {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
     object-fit: cover;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-    background-color: $primary-gray;
     flex-shrink: 0;
   }
 
@@ -235,63 +346,34 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    position: relative;
 
-    span:not(.name):not(.time) {
-      // 這是已讀 ✔️ 標籤
-      font-size: 11px;
-      color: $primary-yellow-dark;
-      font-weight: 500;
-      margin-top: 2px;
+    .name {
+      font-size: 12px;
+      color: #666666;
+      margin-bottom: 4px;
     }
   }
 
-  .name {
-    font-size: 12px;
-    color: $neutral-700;
-    font-weight: 500;
-  }
-
-  // 對話氣泡本體
   .bubble {
-    background-color: $neutral-100;
-    color: $text-black;
+    background-color: #F5F5F5; // 完美的淺灰
+    color: #1a1a1a;
     padding: 10px 14px;
-    border-radius: 4px 16px 16px 16px;
-    font-size: 14.5px;
-    line-height: 1.45;
+    border-radius: 12px; // 圓潤對齊設計圖
+    font-size: 14px;
+    line-height: 1.4;
     word-break: break-all;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-
-    // 聊天室內的分享圖片網格
-    .chat-image-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      max-width: 320px;
-      margin: 4px 0;
-
-      .chat-shared-img {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 8px;
-        cursor: zoom-in;
-        transition: opacity 0.2s;
-
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-    }
+    box-shadow: none;
   }
 
+  // 時間與狀態排版微調（移至氣泡下方或旁邊）
   .time {
-    font-size: 11px;
-    color: $neutral-500;
+    font-size: 10px;
+    color: #b0b0b0;
+    margin-top: 4px;
   }
 
-  //  當是我自己發送的訊息時（靠右、黃底棕字）
+  // 右側：我自己發送的訊息
   &.is-me {
     align-self: flex-end;
     flex-direction: row-reverse;
@@ -301,100 +383,17 @@
     }
 
     .bubble {
-      background-color: $primary-yellow;
-      color: $accent-brown; // 完美的對比讀取色
-      border-radius: 16px 4px 16px 16px;
-      box-shadow: 0 2px 8px rgba($primary-yellow-dark, 0.12);
-    }
-  }
-}
-
-//  2.2 底部待傳送的圖片預覽區域
-.preview-list {
-  margin: 0 24px 12px 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 14px;
-
-  .preview-item {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid $neutral-300;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-
-    .preview-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      background-color: $background-yellow;
+      color: $text-black;
+      border-radius: 12px;
     }
 
-    // 懸浮刪除小按鈕
-    .btn-action.report {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 30px;
-      height: 30px;
-      padding: 0;
-      border-radius: 50%;
-      justify-content: center;
-      background-color: rgba($background-white, 0.9);
-      border: 1px solid rgba(#ef4444, 0.2);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-      lucide-icon {
-        margin: 0;
-        width: 16px;
-        height: 16px;
-        color: #ef4444;
-      }
-
-      &:hover {
-        background-color: #ef4444;
-        transform: scale(1.05);
-
-        lucide-icon {
-          color: $background-white;
-        }
-      }
+    // 處理已讀 ✔️ 標籤排版
+    span:not(.name):not(.time) {
+      font-size: 10px;
+      color: #b0b0b0;
+      margin-right: 4px;
     }
-  }
-
-  // 「上傳圖片」確認送出按鈕
-  .sendPic {
-    font-size: 13px;
-    font-weight: bold;
-    color: $primary-yellow-darker;
-    background-color: $primary-yellow-light;
-    padding: 8px 16px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    outline: none;
-    border: none;
-
-    &:hover {
-      background-color: $primary-yellow;
-      color: $accent-brown;
-    }
-  }
-
-  .error-msg {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    font-size: 0.8rem;
-    font-weight: 500;
-    padding: 4px 12px;
-    border-radius: 6px;
-    background-color: #fef2f2;
-    color: #ef4444;
-    margin-top: 2px;
-    border: 1px solid rgba(#ef4444, 0.1);
   }
 }
 
@@ -404,221 +403,210 @@
 .input-group-box {
   display: flex;
   align-items: center;
-  padding: 16px 24px;
-  background-color: $background-white;
-  border-top: 1px solid $neutral-300;
-  gap: 14px;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-top: 1px solid $border-color;
+  gap: 12px;
+  flex-shrink: 0;
 
-  // 相機上傳按鈕
   .upload {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: $neutral-ice;
+    border-radius: 9999px;
+    @include centered;
 
     .icon {
-      color: $neutral-700;
-      width: 22px;
-      height: 22px;
+      color: $text-gray;
     }
 
-    &:hover {
-      background-color: $neutral-100;
-
-      .icon {
-        color: $primary-yellow-darker;
-      }
+    &:hover{
+      cursor: pointer;
+      background-color: $neutral-hover-blue;
     }
   }
 
   .enter-input {
     flex: 1;
-    height: 42px;
-    padding: 0 18px;
-    border: 1px solid $neutral-300;
-    border-radius: 21px;
-    outline: none;
-    font-size: 14.5px;
-    background-color: $neutral-100;
-    transition: all 0.2s ease;
+    height: 2.5rem;
+    padding: 0 16px;
+    border: none;
+    border-radius: 20px;
+    background-color: #F5F5F5;
+    font-size: 14px;
 
     &:focus {
-      border-color: $primary-yellow-dark;
-      background-color: $background-white;
-      box-shadow: 0 0 0 3px rgba($primary-yellow, 0.15);
-    }
-
-    &::placeholder {
-      color: $neutral-500;
+      background-color: #F5F5F5;
+      box-shadow: none;
+      border-color: transparent;
     }
   }
 
   .send-btn {
-    height: 42px;
-    padding: 0 22px;
-    background-color: $primary-yellow-light;
-    color: $accent-brown;
+    height: 36px;
+    padding: 0 20px;
+    background-color: $primary-yellow;
+    color: $text-price;
     border: none;
-    border-radius: 21px;
-    font-size: 14.5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba($primary-yellow-dark, 0.08);
+    border-radius: 18px;
+    font-size: .8rem;
+    font-weight: 600;
+    box-shadow: none;
 
     &:hover {
-      background-color: $primary-yellow;
-      color: $accent-brown;
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: translateY(0);
+      background-color: $primary-yellow-dark;
+      transform: none;
     }
   }
 }
 
-// -----------------------------------------
-// 全螢幕圖片放大
-// -----------------------------------------
+
+//==========
+
+.chat-shared-img{
+  height: 30vh;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+}
+
 .lightbox-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.75); // 時尚半透明黑底
-  backdrop-filter: blur(4px); // 微毛玻璃效果，讓質感大加分
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: zoom-out; // 點擊外面任何地方可以縮小關閉
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(1rem); // 毛玻璃
+  z-index: 999999;
+
+  @include centered;
 
   .lightbox-content {
     position: relative;
-    max-width: 85%;
-    max-height: 85%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: default;
+    width: 80%;
+    height: 80%;
+    @include centered;
+    padding: 0;
   }
 
   .lightbox-img {
-    max-width: 100%;
-    max-height: 100vh;
-    object-fit: contain; // 保持比例縮放，絕不變形
-    border-radius: 8px;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
-  // 右上角極簡關閉按鈕
+  // close button
   .lightbox-close-btn {
     position: absolute;
-    top: -40px;
-    right: -40px;
-    background: none;
+    top: 1rem;
+    right: 2rem;
+    background: rgba(0, 0, 0, 0.4);
     border: none;
-    color: rgba(#fff, 0.7);
-    font-size: 28px;
+    color: #ffffff;
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s, transform 0.2s;
+    z-index: 10;
 
     &:hover {
-      color: #fff;
-      transform: scale(1.1);
+      background: rgba(0, 0, 0, 0.7);
     }
   }
 }
+//===========
 
-// 商品資訊小卡
-.product {
-  width: 20%;
-  padding: 16px 24px 8px 24px;
-  background-color: $background-white;
-  box-sizing: border-box;
-  z-index: 10;
-}
-
-.ask {
-  font-size: 13px;
-  font-weight: 500;
-  color: $neutral-500;
-  margin: 0 0 8px 4px;
-}
-
-.product-summary-card {
+// 預覽banner
+.preview-list {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
-  background-color: $background-yellow;
-  border: 1px solid $primary-yellow-light;
+  gap: .8rem;
+  padding: .5rem 1.5rem;
+  background-color: #fafafa;
   border-radius: $border-radius-lg;
-  padding: 12px 16px;
+  margin-bottom: 8px;
+}
 
-  // 商品縮圖
-  .product-thumb {
-    width: 56px;
-    height: 56px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba($accent-brown, 0.1);
-    background-color: $background-white;
-    flex-shrink: 0;
+.preview-item {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+  background-color: #f5f5f5;
+
+  padding: 0;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; // 複習前端老師教的
+  display: block;
+}
+
+.btn-action.report {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6); // 半透明黑底，確保在任何圖片上都清晰可見
+  color: white;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+  @include centered;
+
+  lucide-icon {
+    width: .8rem;
+    height: .8rem;
+    @include centered;
   }
 
-  // 右側文字區
-  .product-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-
-    h4 {
-      font-size: 15px;
-      font-weight: 600;
-      color: $accent-brown;
-      margin: 0;
-      display: -webkit-box;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      line-clamp: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .price {
-      font-size: 14px;
-      font-weight: 700;
-      color: $primary-yellow-darker;
-      margin: 0;
-    }
+  &:hover {
+    background-color: $Communist-red;
+    transform: scale(1.1);
   }
 }
 
-// 空白狀態提示 (No Message State)
-.no-message {
-  flex: 1;
+
+// 送出圖片的UI
+.sendPic {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  font-size: 14px;
-  font-weight: 500;
-  color: $neutral-500;
-  text-align: center;
-  gap: 8px;
-  padding: 40px 0;
-  opacity: 0.8;
+  gap: 6px;
+  height: 40px;
+  padding: 0 16px;
+  background-color: $neutral-ice;
+  color: $text-black;
+  border: none;
+  border-radius: 20px; // 膠囊外觀，呼叫底部的文字送出鈕
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 
-  &:before {
-    content: "💬";
-    font-size: 32px;
-    margin-bottom: 4px;
-    filter: grayscale(0.2);
+  &:hover {
+    color: $text-gray;
+    background-color: $neutral-snow;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }

@@ -48,8 +48,6 @@ export const routes: Routes = [
       { path: 'wish', component: WishComponent }, //許願池
       { path: 'seller', component: SellerComponent}, //尋找賣家
       { path: 'front_report', component: FrontReportComponent, canActivate: [authGuard] }, //檢舉頁
-
-      // TODO: school-community/:universityName
       {
         path: 'school-community/:id',
         component: SchoolCommunityLayoutComponent,
@@ -63,11 +61,11 @@ export const routes: Routes = [
         ]
       }, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'chat', component: ChatComponent, canActivate: [authGuard] }, //聊天室
+      { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] }, //聊天室(從商品||交易...)點選(需要帶參數時用)
     ],
   },
   { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
-  { path: 'chat', component: ChatComponent, canActivate: [authGuard] }, //聊天室
-  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] }, //聊天室(從商品||交易...)點選(需要帶參數時用)
 
   //後台
   {
