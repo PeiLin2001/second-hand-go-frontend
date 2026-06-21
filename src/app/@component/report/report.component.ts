@@ -159,37 +159,6 @@ export class ReportComponent {
     });
   }
 
-  // reject(dispute: Dispute) {
-  //   const confirmRef = this.dialog.open(AnnounDialogComponent);
-  //   confirmRef.afterClosed().subscribe(confirmed => {
-  //     if (!confirmed) return;
-
-  //     const idx = this.allDisputes.findIndex(d => d.reportId === dispute.reportId);
-  //     if (idx !== -1) this.allDisputes.splice(idx, 1);
-
-  //     this.allDoneDisputes.unshift({ ...dispute, status: '已駁回', note: null });
-
-  //     this.pagination.init(this.source.length, this.pageSize);
-  //     this.loadDisputes();
-  //   });
-  // }
-
-  // approve(dispute: Dispute) {
-  //   const confirmRef = this.dialog.open(AnnounDialogComponent);
-  //   confirmRef.afterClosed().subscribe(confirmed => {
-  //     if (!confirmed) return;
-
-  //     const idx = this.allDisputes.findIndex(d => d.reportId === dispute.reportId);
-  //     if (idx !== -1) this.allDisputes.splice(idx, 1);
-
-  //     const finalStatus = dispute.type === '商品' ? '已下架' : '已停權';
-  //     this.allDoneDisputes.unshift({ ...dispute, status: finalStatus, note: null });
-
-  //     this.pagination.init(this.source.length, this.pageSize);
-  //     this.loadDisputes();
-  //   });
-  // }
-
   prevPage()  { if (this.pagination.prevPage())           this.loadDisputes(); }
   nextPage()  { if (this.pagination.nextPage())           this.loadDisputes(); }
   goToPage(page: number) { if (this.pagination.goToPage(page)) this.loadDisputes(); }

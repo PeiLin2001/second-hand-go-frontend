@@ -15,16 +15,6 @@ div[mat-dialog-title] {
     font-weight: 600;
     color: #1a1814;
   }
-
-  span:last-child {
-    font-size: $font-size-base;
-    font-weight: 500;
-    color: #ffffff;
-    background: #c49a3a !important;
-    padding: 4px 10px;
-    border-radius: 20px;
-    border: 1px solid #e2ded5;
-  }
 }
 
 mat-dialog-content {
@@ -47,6 +37,13 @@ mat-dialog-content {
     border-radius: 8px;
     border: 1px solid #e2ded5;
     margin-top: 4px;
+  }
+}
+
+.chat{
+  cursor: pointer;
+  &:hover{
+    color: #3958e2;
   }
 }
 
