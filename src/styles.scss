@@ -68,6 +68,6 @@ lucide-icon.collected svg {
 }
 
 .cdk-overlay-pane.custom-announ-dialog .mdc-dialog__surface {
-  border-radius: 0 !important;
+  border-radius: $border-radius-sm !important;
   overflow: hidden !important;
 }
