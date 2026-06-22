@@ -318,7 +318,6 @@ onDocumentClick(event: MouseEvent) {
       this.userService.updateProfile(updateData).subscribe({
         next: (res) => {
           if (res.statusCode === 200) {
-            // 後端說存檔成功了！
             Swal.fire({ title: '儲存成功！', icon: 'success', confirmButtonColor: '#FB831D' });
 
             // 確定成功後，才一鍵集體鎖定表單並關閉編輯模式
@@ -332,6 +331,14 @@ onDocumentClick(event: MouseEvent) {
             this.phone = updateData.phone  ?? '';
             this.profile = updateData.msg  ?? '';
             this.selectedAvatarFile = null;
+
+            this.userService.updateCurrentUser({
+              userName: updateData.name,
+              department: updateData.department,
+              phone: updateData.phone,
+              msg: updateData.msg,
+              imgPath: this.avatarUrl,
+            });
 
           } else {
             // 存檔失敗 (例如名字格式錯誤)，維持編輯狀態讓使用者改

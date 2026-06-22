@@ -362,7 +362,7 @@ export class ProductPageComponent {
     if (!this.ensureLogin('無法發送購買請求！', '請先登入，才能向同學發送購買請求喔！')) return;
     // 防呆：如果已經發送過了，就不讓使用者再點擊
     if (this.isRequested) return;
-    if (!this.ifMyStore('無法發送請求喔！', '這是妳自己上架的商品，沒辦法對自己發送請求喔！')) return;
+    if (!this.ifMyStore('無法發送請求喔！', '這是您自己上架的商品，沒辦法對自己發送請求喔！')) return;
     Swal.fire({
       title: '確定要發送購買請求嗎？',
       text: `系統將會發送「${this.product.productName}」的購買意願給賣家。`,
