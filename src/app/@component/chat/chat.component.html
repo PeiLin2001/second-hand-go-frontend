@@ -2,8 +2,8 @@
   <div class="chat-box">
     <!-- logo -->
     <section class="chat-left">
-      <section class="chat-head">
-        <lucide-icon name="ArrowLeft" class="icon" type="button" title="回上一頁"></lucide-icon>
+      <section class="chat-head" (click)="goBack()">
+        <lucide-icon name="ArrowLeft" class="last-page" type="button" title="回上一頁" size="21"></lucide-icon>
         <p>聊天室</p>
       </section>
 
@@ -36,6 +36,9 @@
 
     <!-- 聊天區塊 -->
     <section class="chat-right">
+      <section class="chat-header">
+        <p class="partner-name">{{currentPartnerName || '請選擇聊天對象'}}</p>
+      </section>
       <!-- 商品資訊 -->
       @if (product) {
       <div class="product">
@@ -91,7 +94,16 @@
 
         </div>
         } @empty {
-        <div class="no-message">開始發送聊天訊息。</div>
+        <div class="no-message-empty-state">
+          <div class="empty-icon-circle">
+            <lucide-icon name="MessageCircleMore" class="empty-icon" size="36"></lucide-icon>
+          </div>
+
+          <h3>還沒有聊天內容</h3>
+          <p>從左側選擇聊天室後，就可以開始傳送訊息。</p>
+
+          <button type="button" class="btn-select-partner">請選擇聊天對象</button>
+        </div>
         }
 
         <!-- 已上傳圖片的預覽 -->

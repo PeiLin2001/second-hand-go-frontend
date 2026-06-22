@@ -10,7 +10,7 @@ $text-muted: #999999;
 
 .chat-container {
   width: 100dvw;
-  height: calc(100dvh - 72px);;
+  height: 100dvh;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -40,15 +40,15 @@ lucide-icon {
   display: flex;
   gap: 1rem;
   flex-direction: column;
-  padding: 1rem;
+  padding: 0 1rem;
   box-sizing: border-box;
 
   .chat-head {
     display: flex;
     gap: .5rem;
     align-items: center;
-    padding: .2rem 0;
-    border-bottom: none; // 移除過粗的底線
+    border-bottom: none;
+    height:3.5rem;
 
     p {
       margin: 0;
@@ -57,9 +57,19 @@ lucide-icon {
       color: #1a1a1a;
     }
 
-    lucide-icon {
-      display: none; // 如果設計圖不需要回上一頁，可先隱藏或弱化
+    .last-page{
+      color: $text-muted;
+      background-color: $neutral-snow;
+      padding: .3rem;
+      border-radius: $border-radius-sm;
+      @include centered;
+
+      &:hover{
+        color: $text-gray;
+        background-color: $neutral-ice;
+      }
     }
+
   }
 
   // 1.2 搜尋列
@@ -139,7 +149,6 @@ lucide-icon {
     background-color: #FAFAFA;
   }
 
-  // 🔥 契合設計圖：當前選中的對話（帶有淺橘黃細線外框）
   &.isChatting {
     background-color: #FFFDF9;
     border-color: rgba($theme-orange, 0.4);
@@ -220,18 +229,28 @@ lucide-icon {
   position: relative;  // 穩定佈局
 
   // 🚀 利用 CSS hack 幫你在 .product 上方憑空生出一個「假頂欄」來對齊設計圖
-  &::before {
-    content: "林柏宇";
+  .chat-header {
     display: flex;
     align-items: center;
-    height: 55px;
-    padding: 0 24px;
+
+    height: 3.5rem;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+
     background: #ffffff;
     border-bottom: 1px solid $border-color;
     font-size: 15px;
     font-weight: bold;
     color: $text-black;
     flex-shrink: 0;
+
+    .partner-name {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: $text-black;
+      line-height: 1;
+    }
   }
 }
 
@@ -608,5 +627,69 @@ lucide-icon {
 
   &:active {
     transform: translateY(0);
+  }
+}
+
+
+// -----------------------------------------
+// Empty State
+// -----------------------------------------
+
+.no-message-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  text-align: center;
+  background-color: #ffffff;
+
+  .empty-icon-circle {
+    width: 80px;
+    height: 80px;
+    background-color: #F5F5F5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    .empty-icon {
+      width: 36px;
+      height: 36px;
+      color: #888888;
+    }
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin: 0 0 12px 0;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #888888;
+    margin: 0 0 24px 0;
+  }
+
+  .btn-select-partner {
+    height: 40px;
+    padding: 0 24px;
+    background-color: #ffffff;
+    border: 1px solid #D9D9D9;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #555555;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: none;
+
   }
 }
