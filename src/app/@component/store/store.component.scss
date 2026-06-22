@@ -83,7 +83,7 @@
   transition: transform 0.3s;
   cursor: default;
   user-select: none;
-  white-space: nowrap;  // 信譽評分不換行
+  white-space: nowrap;  // 信用評分不換行
   flex-shrink: 0;       // 不被壓縮
 
   &:hover {
