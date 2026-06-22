@@ -25,7 +25,12 @@
             [src]="selectedImage || 'assets/images/default-placeholder.png'"
             [alt]="product.productName"
             class="main-image"
+            (click)="openLightBox(selectedImage)"
           />
+            <div class="zoom-hint">
+              <lucide-icon [img]="ZoomIn" size="14"></lucide-icon>
+              點擊放大
+            </div>
         </div>
 
         @if (validImages.length > 1) {
@@ -185,7 +190,7 @@
         </span>
           <span class="seller-meta">
             上架 {{ sellerProductCount ?? '--' }} 件 ・
-            信譽評分 : {{ product.seller.goodLevel | number:'1.0-1' }} ★
+            信用評分 : {{ product.seller.goodLevel | number:'1.0-1' }} ★
           </span>
       </div>
       <div class="seller-actions">
@@ -224,6 +229,38 @@
     <div class="loading-wrapper" style="text-align: center; padding: 100px 0; color: #999;">
       <div class="spinner" style="margin-bottom: 15px;">⏳</div>
       <p>二手商品詳細資訊載入中...</p>
+    </div>
+  }
+
+  @if (activeImageUrl) {
+    <div class="lightbox-overlay" (click)="closeLightBox()">
+      <button class="lightbox-close-btn" (click)="closeLightBox()">✕</button>
+      <div class="lightbox-content" (click)="$event.stopPropagation()">
+
+        <!-- 縮放按鈕 -->
+        <div class="zoom-controls">
+          <button (click)="zoomOut()">−</button>
+          <span>{{ zoomLevel }}%</span>
+          <button (click)="zoomIn()">+</button>
+          <button (click)="resetZoom()">重置</button>
+        </div>
+
+        <div class="zoom-wrapper"
+          (wheel)="onWheel($event)"
+          (mousedown)="onDragStart($event)"
+          (mousemove)="onDragMove($event)"
+          (mouseup)="onDragEnd()"
+          (mouseleave)="onDragEnd()">
+          <img
+            [src]="activeImageUrl"
+            alt="放大圖片"
+            class="lightbox-img"
+            [style.transform]="'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + zoomLevel / 100 + ')'"
+            [style.transform-origin]="'center center'"
+          />
+        </div>
+
+      </div>
     </div>
   }
 

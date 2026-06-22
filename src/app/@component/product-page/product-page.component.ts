@@ -1,6 +1,6 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { LucideAngularModule, Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp, MoreVertical, Copy, ShieldCheck } from 'lucide-angular';
+import { LucideAngularModule, Home, MessageCircleMore, HeartIcon, Send, ChevronLeft, ChevronRight, Flag, Heart, Check, Store, ChevronDown, ChevronUp, MoreVertical, Copy, ShieldCheck, ZoomIn } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../@Services/user.service';
@@ -47,6 +47,7 @@ export class ProductPageComponent {
   readonly MoreVertical = MoreVertical;
   readonly Copy = Copy;
   readonly ShieldCheckIcon = ShieldCheck;
+  readonly ZoomIn = ZoomIn;
 
   // 抓取 HTML 中的滾動區域
   @ViewChild('thumbViewport') thumbViewport!: ElementRef<HTMLDivElement>;
@@ -71,6 +72,7 @@ export class ProductPageComponent {
   isCollected = false; // 是否已收藏
   isRequested = false; // 是否已發送請求
   isMenuOpen = false; //檢舉分享選單
+  activeImageUrl: string | null = null;
 
   // 自動偵測目前瀏覽的商品是不是登入者自己的
   get isOwnProduct(): boolean {
@@ -483,6 +485,93 @@ export class ProductPageComponent {
     this.router.navigate(['/store', this.product.userId]);
   }
 
+   /** 圖片放大方法 */
+
+    zoomLevel: number = 100;
+    offsetX: number = 0;
+    offsetY: number = 0;
+    private isDragging = false;
+    private dragStartX = 0;
+    private dragStartY = 0;
+    private boundMouseMove = this.onDragMove.bind(this);
+    private boundMouseUp = this.onDragEnd.bind(this);
+
+    openLightBox(url: string) {
+      this.activeImageUrl = url;
+      this.resetZoom();
+      window.addEventListener('mousemove', this.boundMouseMove);
+      window.addEventListener('mouseup', this.boundMouseUp);
+    }
+
+    zoomIn() {
+      this.zoomLevel = Math.min(this.zoomLevel + 25, 300);
+     }
+
+    zoomOut() {
+      this.zoomLevel = Math.max(this.zoomLevel - 25, 50);
+
+      if (this.zoomLevel <= 100) {
+        // 縮回正常大小時直接歸零置中
+        this.offsetX = 0;
+        this.offsetY = 0;
+      } else {
+        const scale = this.zoomLevel / 100;
+        const imgW = window.innerWidth * 0.8;
+        const imgH = window.innerHeight * 0.8;
+        const maxX = (imgW * (scale - 1)) / 2;
+        const maxY = (imgH * (scale - 1)) / 2;
+        this.offsetX = Math.min(maxX, Math.max(-maxX, this.offsetX));
+        this.offsetY = Math.min(maxY, Math.max(-maxY, this.offsetY));
+      }
+    }
+
+    resetZoom() {
+      this.zoomLevel = 100;
+      this.offsetX = 0;
+      this.offsetY = 0;
+    }
+
+    onWheel(e: WheelEvent) {
+      e.preventDefault();
+      e.deltaY < 0 ? this.zoomIn() : this.zoomOut();
+    }
+
+    onDragStart(e: MouseEvent) {
+      if (this.zoomLevel <= 100) return;
+      this.isDragging = true;
+      this.dragStartX = e.clientX - this.offsetX;
+      this.dragStartY = e.clientY - this.offsetY;
+    }
+
+    onDragMove(e: MouseEvent) {
+      if (!this.isDragging) return;
+
+      const scale = this.zoomLevel / 100;
+      const imgW = window.innerWidth * 0.8;   // 對應 lightbox-content 的 80% 寬
+      const imgH = window.innerHeight * 0.8;  // 對應 lightbox-content 的 80% 高
+
+      const maxX = (imgW * (scale - 1)) / 2;
+      const maxY = (imgH * (scale - 1)) / 2;
+
+      const newX = e.clientX - this.dragStartX;
+      const newY = e.clientY - this.dragStartY;
+
+      this.offsetX = Math.min(maxX, Math.max(-maxX, newX));
+      this.offsetY = Math.min(maxY, Math.max(-maxY, newY));
+    }
+
+    onDragEnd() {
+      this.isDragging = false;
+    }
+
+
+  //關閉放大圖片
+  closeLightBox() {
+  this.activeImageUrl = null;
+  window.removeEventListener('mousemove', this.boundMouseMove);
+  window.removeEventListener('mouseup', this.boundMouseUp);
+  }
+
   /**共用方法: 未登入 */
   ensureLogin(title: string, text: string): boolean {
     const currentUser = this.userService.currentUser();
@@ -520,5 +609,7 @@ export class ProductPageComponent {
     }
     return true;
   }
+
+
 
 }
