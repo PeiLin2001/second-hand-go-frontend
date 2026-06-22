@@ -108,19 +108,20 @@
 }
 
 .confirm-btn {
-  min-width: 96px;
-  height: 42px;
+  min-width: 6rem;
+  height: 2.5rem;
 
   border: none;
   border-radius: 4px;
-  background: #3367d6;
-  color: #fff;
+  background: $primary-yellow;
+  color: $text-black;
 
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background: #2855b8;
+    color: $text-gray;
+    background: $primary-yellow-light;
   }
 }
