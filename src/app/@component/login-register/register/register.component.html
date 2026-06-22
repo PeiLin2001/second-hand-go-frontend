@@ -222,15 +222,19 @@
 
                   <div class="input-group">
                     <div class="custom-outside-label">
-                      手機號碼  <span class="optional-text">(選填 作為聯絡方式之一)</span>
+                      手機號碼
+                      <!-- <span class="optional-text">(選填 作為聯絡方式之一)</span> -->
                     </div>
                     <div class="phone-box">
                       <input matInput type="tel" placeholder="09-xxxxxxxx" class="custom-input" formControlName="phone" maxlength="11" (input)="onPhoneInput($event)"/>
                       <mat-icon class="suffix-icon">phone</mat-icon>
                     </div>
+                      @if (registerForm.get('phone')?.touched && registerForm.get('phone')?.errors?.['required']) {
+                        <p class="field-hint error-text">✘ 手機號碼為必填欄位</p>
+                      }
                     @if (registerForm.get('phone')?.touched && registerForm.get('phone')?.errors?.['pattern']) {
                       <p class="field-hint error-text">
-                        手機格式錯誤，請輸入正確的格式（如：09-12345678）
+                        ✘ 手機格式錯誤，請輸入正確的格式（如：09-12345678）
                       </p>
                     }
                   </div>
