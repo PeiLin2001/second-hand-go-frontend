@@ -9,7 +9,7 @@
   <div class="info-row">
     <span class="label">檢舉人:</span>
     <span>{{ data.compName }}</span>
-    <span (click)="openChat()">聯絡當事人</span>
+    <span class="chat" (click)="openChat()">聯繫相關使用者</span>
   </div>
 
   <!-- 相關資料 -->
@@ -18,13 +18,13 @@
   <div class="info-row">
     <span class="label">相關商品:</span>
     <span>{{ data.productName }}（ID: {{ data.productId }}）</span>
-    <span (click)="openChat()">連絡賣家</span>
+    <span class="chat" (click)="openChat()">聯繫相關使用者</span>
   </div>
 } @else {
   <div class="info-row">
     <span class="label">被檢舉人:</span>
     <span>{{ data.accusedName }}（ID: {{ data.accusedId }}）</span>
-    <span (click)="openChat()">聯絡當事人</span>
+    <span class="chat" (click)="openChat()">聯繫相關使用者</span>
   </div>
 }
 
