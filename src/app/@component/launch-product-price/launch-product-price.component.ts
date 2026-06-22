@@ -79,6 +79,8 @@ export class LaunchProductPriceComponent implements OnInit {
         },
         error: (err) => console.error('取得商品資訊失敗:', err)
       })
+    } else {
+      this.formService.setUpdateStatus(false);
     }
     // 初始化時，如果 Service 內本來就有暫存文字，可以同步觸發驗證
     this.updateNextButtonStatus();
@@ -356,7 +358,10 @@ export class LaunchProductPriceComponent implements OnInit {
     } else {
       // add
       this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
-        next: (res) => { this.showToast('✓ 草稿已新增'); },
+        next: (res) => {
+          this.formService.markAsCreated(res.productId);
+          this.showToast('✓ 草稿已新增');
+        },
         error: (err) => console.error('新增草稿失敗:', err)
       })
     }
