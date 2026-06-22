@@ -1,76 +1,76 @@
-<div class="page-wrapper">
-  <p class="page-title">商品上架</p>
+<main class="page-wrapper">
+  <h1 class="page-title">商品上架</h1>
 
   <!-- 操作步驟 -->
-  <div class="stepper">
-    <div class="step active">
-      <div class="step-badge">1</div>
+  <ol class="stepper">
+    <li class="step active">
+      <span class="step-badge">1</span>
       <span class="step-label">資訊與價格</span>
-    </div>
-    <div class="step">
-      <div class="step-badge">2</div>
+    </li>
+    <li class="step">
+      <span class="step-badge">2</span>
       <span class="step-label">地點與分類</span>
-    </div>
-    <div class="step">
-      <div class="step-badge">3</div>
+    </li>
+    <li class="step">
+      <span class="step-badge">3</span>
       <span class="step-label">預覽與送出</span>
-    </div>
-  </div>
+    </li>
+  </ol>
 
   <div class="form-grid">
     <!-- 左欄：圖片、名稱、描述 -->
-    <div class="card">
+    <section class="card">
 
       <!-- 商品圖片上傳 -->
-      <div class="section-label">商品圖片 <span class="req">*</span></div>
-      <div class="image-grid" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+      <h2 class="section-label">商品圖片 <span class="req">*</span></h2>
+      <ul class="image-grid" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
         <!-- 主圖 -->
-        <div class="img-slot main" data-index="0" tabindex="0" [draggable]="!!imageSlotUrls[0]" (dragstart)="onDragStart($event, 0)"
-        (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onSortDrop($event, 0)"
-        [class.drag-over]="dragOverIndex === 0" [class.error]="touched.mainImage && !imageSlotUrls[0]" (click)="onSlotClick(0)">  <!--drag拖曳功能-->
-          <ng-container *ngIf="imageSlotUrls[0]; else mainPlaceholder">
-            <img [src]="imageSlotUrls[0]" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" />
-            <button class="img-delete" (click)="deleteImage($event, 0)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
-            </svg>
-            </button>
-          </ng-container>
-          <ng-template #mainPlaceholder>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4">
-              <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor"/>
-              <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor"/>
-              <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span class="slot-label">主圖</span>
-            <span class="slot-hint">(建議 800×800)</span>
-          </ng-template>
-        </div>
-
-        <!-- 副圖 1~6 -->
-        <div class="img-slot" tabindex="0" *ngFor="let i of subSlotIndices" [attr.data-index]="i" [draggable]="!!imageSlotUrls[i]"
-        (dragstart)="onDragStart($event, i)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-        (drop)="onSortDrop($event, i)" [class.drag-over]="dragOverIndex === i" (click)="onSlotClick(i)">
-          <ng-container *ngIf="imageSlotUrls[i]; else subPlaceholder">
-          <img [src]="imageSlotUrls[i]"
-            style="width:100%;height:100%;object-fit:cover;border-radius:5px;" />
-          <button class="img-delete" (click)="deleteImage($event, i)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/>
+        <li class="img-slot main" data-index="0" tabindex="0" [draggable]="!!imageSlotUrls[0]"
+          (dragstart)="onDragStart($event, 0)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onSortDrop($event, 0)" [class.drag-over]="dragOverIndex === 0"
+          [class.error]="touched.mainImage && !imageSlotUrls[0]" (click)="onSlotClick(0)">
+          @if (imageSlotUrls[0]) {
+          <img [src]="imageSlotUrls[0]" style="width:100%;height:100%;object-fit:cover;border-radius:8px;" alt="主圖" />
+          <button class="img-delete" type="button" (click)="deleteImage($event, 0)" aria-label="刪除主圖">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
             </svg>
           </button>
-          </ng-container>
-          <ng-template #subPlaceholder>
+          } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" />
+            <circle cx="8.5" cy="8.5" r="1.5" stroke="currentColor" />
+            <path d="M21 15l-5-5L5 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span class="slot-label">主圖</span>
+          <span class="slot-hint">(建議 800×800)</span>
+          }
+        </li>
+
+        <!-- 副圖 1~6 -->
+        @for (i of subSlotIndices; track i) {
+        <li class="img-slot" tabindex="0" [attr.data-index]="i" [draggable]="!!imageSlotUrls[i]"
+          (dragstart)="onDragStart($event, i)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+          (drop)="onSortDrop($event, i)" [class.drag-over]="dragOverIndex === i" (click)="onSlotClick(i)">
+          @if (imageSlotUrls[i]) {
+          <img [src]="imageSlotUrls[i]" style="width:100%;height:100%;object-fit:cover;border-radius:5px;" alt="商品副圖" />
+          <button class="img-delete" type="button" (click)="deleteImage($event, i)" aria-label="刪除圖片">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+            </svg>
+          </button>
+          } @else {
           <span class="plus">＋</span>
-          </ng-template>
-        </div>
-      </div>
+          }
+        </li>
+        }
+      </ul>
       <p class="img-hint">最多 7 張，支援 JPG/PNG，單張限 2MB</p>
       <input type="file" id="fileInput" accept="image/jpeg,image/png" multiple style="display:none"
-        (change)="onFileChange($event)"/>
+        (change)="onFileChange($event)" />
 
       <!-- 商品名稱 -->
       <div class="field">
@@ -78,10 +78,8 @@
           <label class="section-label" for="productName">商品名稱 <span class="req">*</span></label>
           <span class="char-count">{{ nameCount }}</span>
         </div>
-        <input type="text" id="productName" maxlength="60"
-          placeholder="例：Nike Air Max 90 US9 白灰配色"
-          [value]="state.name" [class.error]="touched.name && nameMissing"
-          (input)="onNameInput($event)"/>
+        <input type="text" id="productName" maxlength="60" placeholder="例：Nike Air Max 90 US9 白灰配色" [value]="state.name"
+          [class.error]="touched.name && nameMissing" (input)="onNameInput($event)" />
         <p class="field-hint">更精準的名稱：顏色・尺寸・型號</p>
       </div>
 
@@ -91,66 +89,62 @@
           <label class="section-label" for="productDesc">商品描述 <span class="req">*</span></label>
           <span class="char-count" [style.color]="descCountColor">{{ descCount }}</span>
         </div>
-        <textarea id="productDesc" maxlength="500"
-          placeholder="請詳細描述商品狀況、購入時間、附帶配件、不議價原因等…"
-          [value]="state.desc" [class.error]="touched.desc && descTooShort"
-          (input)="onDescInput($event)"></textarea>
+        <textarea id="productDesc" maxlength="500" placeholder="請詳細描述商品狀況、購入時間、附帶配件、不議價原因等…" [value]="state.desc"
+          [class.error]="touched.desc && descTooShort" (input)="onDescInput($event)"></textarea>
         <p class="field-hint">至少填寫 1 字</p>
       </div>
 
       <!-- 價格 -->
+      <div class="field price-field">
+        <div class="field-header">
+          <label class="section-label" for="productPrice">價格 <span class="req">*</span></label>
+        </div>
+        <input type="number" id="productPrice" min="0" placeholder="請輸入價格" [value]="state.price || ''"
+          [class.error]="touched.price && !(state.price > 0)" (input)="onPriceInput($event)" />
+        <p class="field-hint">單位：新台幣（元）</p>
+      </div>
 
-<div class="field price-field">
-  <div class="field-header">
-    <label class="section-label">價格 <span class="req">*</span></label>
-  </div>
-  <input type="number" min="0" placeholder="請輸入價格"
-    [value]="state.price || ''" [class.error]="touched.price && !(state.price > 0)"
-    (input)="onPriceInput($event)"/>
-  <p class="field-hint">單位：新台幣（元）</p>
-</div>
+      <!-- AI 推薦價格-->
+      <!-- <div class="field ai-vertical-field">
+        <div class="section-label">
+          AI 推薦價格 <span class="optional">（選填）</span>
+        </div>
+        <div class="ai-box" [class.has-content]="aiHasContent">{{ aiBoxText }}</div>
+        <button class="btn-ai" type="button" [disabled]="aiLoading" (click)="handleAIGenerate()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+          </svg>
+          <span>{{ aiLabel }}</span>
+          <div class="spinner" [style.display]="aiLoading ? 'block' : 'none'"></div>
+        </button>
+      </div> -->
 
-<!-- AI 推薦價格-->
-<!-- <div class="field ai-vertical-field">
-  <div class="section-label">
-    AI 推薦價格 <span class="optional">（選填）</span>
-  </div>
-  <div class="ai-box" [class.has-content]="aiHasContent">{{ aiBoxText }}</div>
-  <button class="btn-ai" type="button" [disabled]="aiLoading" (click)="handleAIGenerate()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
-    </svg>
-    <span>{{ aiLabel }}</span>
-    <div class="spinner" [style.display]="aiLoading ? 'block' : 'none'"></div>
-  </button>
-</div> -->
-
-    </div>
+    </section>
   </div>
 
   <!-- 頁尾 -->
-  <div class="form-footer">
-      <!-- 儲存草稿 -->
-      <button class="btn btn-draft" type="button" (click)="onSaveDraft()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        儲存草稿
-      </button>
+  <footer class="form-footer">
+    <!-- 儲存草稿 -->
+    <button class="btn btn-draft" type="button" (click)="onSaveDraft()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </svg>
+      儲存草稿
+    </button>
 
-      <!-- 下一步 -->
+    <!-- 下一步 -->
     <button class="btn btn-primary" type="button" [class.disabled]="isNextDisabled" (click)="onNextClick()">
       下一步：地點與分類
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-        <path d="M5 12h14M13 6l6 6-6 6"/>
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" />
       </svg>
     </button>
-  </div>
+  </footer>
+</main>
 
-</div>
-
-<div class="toast" [class.show]="toastVisible">{{ toastText }}</div>
+<p class="toast" [class.show]="toastVisible" role="status">{{ toastText }}</p>

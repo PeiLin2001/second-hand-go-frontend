@@ -1,137 +1,133 @@
-<div class="draft-wrapper">
-  <h2 class="page-title">商品管理</h2>
+<main class="draft-wrapper">
+  <h1 class="page-title">商品管理</h1>
+
+  <!-- 搜尋 -->
+  <div class="search-bar-wrapper">
+    <div class="text-search-wrapper">
+      <lucide-icon name="Search" class="icon"></lucide-icon>
+      <input type="text" placeholder="商品者名稱﹑ID..." [(ngModel)]="keyword" (ngModelChange)="onSearchChange()">
+    </div>
+  </div>
 
   <!-- tabs -->
-  <div class="tabs-header">
-    <nav class="tabs-container">
+  <header class="tabs-header">
+    <nav class="tabs-container" aria-label="商品狀態分類">
       <ul class="nav nav-tabs custom-tabs">
-        @for (tab of tabsColumns; track tab){
+        @for (tab of tabsColumns; track tab) {
         <li class="nav-item">
-          <button class="nav-link" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{tab}}</button>
+          <button class="nav-link" type="button" [class.active]="currentTab === tab" (click)="changeTab(tab)">{{ tab
+            }}</button>
         </li>
         }
       </ul>
     </nav>
-    <button class="btn-add-product" (click)="goAddProduct()">
+    <button class="btn-add-product" type="button" (click)="goAddProduct()">
       <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="none" viewBox="0 0 24 24"
-        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
       </svg>
       上架新商品
     </button>
-  </div>
+  </header>
 
-  <!-- 全部商品 空狀態 -->
-  <div *ngIf="isAllTab && pagedPublished.length === 0 && pagedDrafts.length === 0" class="empty">
+  @if (filteredOrders().length === 0) {
+  <p class="empty">
     <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#d1d5db"
-      stroke-width="1.2">
+      stroke-width="1.2" aria-hidden="true">
       <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
       <path d="M16 3H8v4h8V3z" />
     </svg>
-    <p>目前沒有任何商品</p>
-  </div>
+    @if (isAllTab) {
+    目前沒有任何商品
+    } @else if (isPublishedTab) {
+    目前沒有已上架商品
+    } @else {
+    目前沒有任何草稿
+    }
+  </p>
+  }
 
-  <!-- 上架商品顯示 -->
-  <div *ngIf="isPublishedTab || isAllTab">
-    <div *ngIf="pagedPublished.length === 0 && isPublishedTab" class="empty">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#d1d5db"
-        stroke-width="1.2">
-        <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z" />
-        <path d="M16 3H8v4h8V3z" />
-      </svg>
-      <p>目前沒有已上架商品</p>
-    </div>
-    <div class="draft-list">
-      <div class="draft-card" *ngFor="let product of pagedPublished">
-        <div class="draft-thumb">
-          <img *ngIf="product.image" [src]="product.image" alt="商品圖" />
-          <svg *ngIf="!product.image" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none"
-            viewBox="0 0 24 24" stroke="#cbd5e1" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2" />
-            <circle cx="8.5" cy="8.5" r="1.5" />
-            <path d="M21 15l-5-5L5 21" />
-          </svg>
-        </div>
-        <div class="draft-info">
-          <p class="draft-title">{{ product.name }}</p>
-          <p class="draft-meta">{{ product.category }} ・ NT$ {{ product.price }}</p>
-        </div>
-        <div class="draft-actions">
-          <button class="btn-del" (click)="onUnpublish(product.id)">下架</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  @if (filteredOrders().length > 0) {
+  <ul class="draft-list">
+    @for (product of filteredOrders(); track product.productId) {
+    <li class="draft-card">
 
-  <!-- 草稿顯示 -->
-  <div *ngIf="isDraftTab || isAllTab" [class.section-gap]="isAllTab">
-    <div *ngIf="pagedDrafts.length === 0 && isDraftTab" class="empty">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="#d1d5db"
-        stroke-width="1.2">
-        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
-        <polyline points="17 21 17 13 7 13 7 21" />
-        <polyline points="7 3 7 8 15 8" />
-      </svg>
-      <p>目前沒有任何草稿</p>
-    </div>
-    <div class="draft-list">
-      <div class="draft-card" *ngFor="let draft of pagedDrafts">
-        <div class="draft-thumb">
-          <img *ngIf="getThumb(draft)" [src]="getThumb(draft)" alt="草稿縮圖" />
-          <svg *ngIf="!getThumb(draft)" xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none"
-            viewBox="0 0 24 24" stroke="#cbd5e1" stroke-width="1.2">
-            <rect x="3" y="3" width="18" height="18" rx="2" />
-            <circle cx="8.5" cy="8.5" r="1.5" />
-            <path d="M21 15l-5-5L5 21" />
-          </svg>
-        </div>
-        <div class="draft-info">
-          <p class="draft-title">{{ getTitle(draft) }}</p>
-          <p class="draft-meta">
-            {{ draft.state.catMain || '未分類' }}
-            <span *ngIf="draft.state.price > 0"> ・ NT$ {{ draft.state.price }}</span>
-          </p>
-        </div>
-        <div class="draft-actions">
-          <button class="btn-load" (click)="onLoad(draft.id)">繼續編輯</button>
-          <button class="btn-del" (click)="onDelete(draft.id)">刪除</button>
-        </div>
+      <!-- 縮圖 -->
+      <div class="draft-thumb">
+        @if (product.imgPath) {
+        <img [src]="product.imgPath[0]" alt="{{ product.productName }} 商品圖" />
+        } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#cbd5e1"
+          stroke-width="1.2" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <path d="M21 15l-5-5L5 21" />
+        </svg>
+        }
       </div>
-    </div>
-  </div>
+
+      <!-- 基本資訊 -->
+      <div class="draft-info">
+        <p class="draft-title">{{ product.productName || '（未命名草稿）' }}</p>
+        <p class="draft-meta">{{ product.type || '未分類' }} ・ NT$ {{ product.price }}</p>
+        <p class="draft-status" [style.color]="getStatusColor(product.status)">{{ product.status }}</p>
+      </div>
+
+      <!-- 依商品狀態顯示對應操作按鈕 -->
+      <div class="draft-actions">
+        @switch (product.status) {
+        @case ('未上架') {
+        <button class="btn-load" type="button" (click)="onLoad(product.productId)">繼續編輯</button>
+        <button class="btn-del" type="button" (click)="onDelete(product.productId)">刪除</button>
+        }
+        @case ('販售中') {
+        <button class="btn-del" type="button" (click)="onUnpublish(product.productId)">下架</button>
+        }
+        @case ('已下架') {
+        <button class="btn-load" type="button" (click)="onRepublish(product.productId)">重新上架</button>
+        }
+        @case ('交易中') {
+        <button class="btn-load" type="button" (click)="goToOrders(product.productName)">查看交易</button>
+        }
+        }
+      </div>
+
+    </li>
+    }
+  </ul>
+  }
 
   <!-- 防呆 -->
-  <div class="confirm-overlay" *ngIf="showConfirm">
+  @if (showConfirm) {
+  <div class="confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-msg">
     <div class="confirm-box">
-      <p class="confirm-msg">確定要刪除這個草稿嗎？</p>
+      <p class="confirm-msg" id="confirm-msg">確定要刪除這個草稿嗎？</p>
       <div class="confirm-actions">
-        <button class="btn-confirm-yes" (click)="confirmDelete()">是，刪除</button>
-        <button class="btn-confirm-no" (click)="cancelDelete()">否，取消</button>
+        <button class="btn-confirm-yes" type="button" (click)="confirmDelete()">是，刪除</button>
+        <button class="btn-confirm-no" type="button" (click)="cancelDelete()">否，取消</button>
       </div>
     </div>
   </div>
+  }
 
-  <!-- 分頁（移到最外層，所有 tab 都看得到） -->
-  <nav aria-label="Page navigation example">
-    <ul class="pagination">
-      <span>共{{totalElements}}筆資料</span>
-      <li class="page-item" [class.disabled]="currentPage === 1">
-        <a class="page-link" aria-label="Previous" (click)="goToPage(currentPage - 1)">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-      @for (p of pages; track p) {
-      <li class="page-item" [class.active]="currentPage === p">
-        <a class="page-link" (click)="goToPage(p)">{{ p }}</a>
-      </li>
-      }
-      <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <a class="page-link" aria-label="Next" (click)="goToPage(currentPage + 1)">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
+  <!-- 分頁 -->
+  <nav class="pagination" aria-label="分頁">
+    <span>共{{ filteredTotalCount }}筆資料</span>
+    <button class="page-btn" type="button" [disabled]="pagination.currentPage === 1" (click)="prevPage()"
+      aria-label="上一頁">
+      <lucide-icon name="ChevronLeft"></lucide-icon>
+    </button>
+    @for (page of pagination.pageNumbers; track page) {
+    <button class="page-btn" type="button" [class.active]="page === pagination.currentPage" (click)="goToPage(page)">
+      {{ page }}
+    </button>
+    }
+    <button class="page-btn" type="button" [disabled]="pagination.currentPage === pagination.totalPages"
+      (click)="nextPage()" aria-label="下一頁">
+      <lucide-icon name="ChevronRight"></lucide-icon>
+    </button>
   </nav>
+</main>
 
-</div>
+<p class="toast" [class.show]="toastVisible" role="status">{{ toastText }}</p>

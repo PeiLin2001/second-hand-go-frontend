@@ -163,7 +163,7 @@ export class ChatComponent {
 
   readAllRoomMessages(roomId: number, userId: number) {
     this.apiTestService.readAllRoomMessages(roomId, userId).subscribe({
-      next: (res) => {},
+      next: (res) => { },
       error: (err) => console.error('readMessages 失敗:', err),
     });
   }
@@ -335,6 +335,10 @@ export class ChatComponent {
           error: (err) => console.error('更新房間商品失敗:', err),
         });
     }
+  }
+
+  goProduct(productId: number) {
+    this.router.navigate(['/product_page', productId]);
   }
 
   readonly IMAGE_EXTENSIONS = [

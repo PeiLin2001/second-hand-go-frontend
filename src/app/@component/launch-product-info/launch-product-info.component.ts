@@ -1,15 +1,15 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LaunchProductFormService } from '../../@Services/launch-product-form.service';
 import { UserService } from '../../@Services/user.service';
+import Swal from 'sweetalert2';
 
 
 
 @Component({
   selector: 'app-launch-product-info',
-  imports: [NgFor, NgIf, FormsModule],
+  imports: [FormsModule],
   templateUrl: './launch-product-info.component.html',
   styleUrl: './launch-product-info.component.scss'
 })
@@ -20,6 +20,11 @@ export class LaunchProductInfoComponent implements OnInit {
   regionOptions = ['基隆市', '台北市', '新北市', '桃園縣', '新竹市', '新竹縣', '苗栗縣',
     '台中市', '彰化縣', '南投縣', '雲林縣', '嘉義市', '嘉義縣', '台南市',
     '高雄市', '屏東縣', '台東縣', '花蓮縣', '宜蘭縣', '澎湖縣', '金門縣', '連江縣'];
+
+  // ── 適用學群選項
+  deptGroupOptions: string[] = ['資訊學群', '工程學群', '數理化學群', '醫藥衛生學群', '生命科學學群', '生物資源學群',
+    '地球與環境學群', '建築與設計學群', '藝術學群', '社會與心理學群', '大眾傳播學群', '外語學群', '文史哲學群', '教育學群',
+    '法政學群', '管理學群', '財經學群', '遊憩與運動學群'];
 
   // 年級清單
   gradeList: string[] = ['大一', '大二', '大三', '大四以上', '碩士', '博士', '不分年級'];
@@ -39,11 +44,13 @@ export class LaunchProductInfoComponent implements OnInit {
   };
 
   dialogVisible = false;
+  isUpdate: boolean = false;
 
   // 透過 Getter 取得 Service 中的共用資料狀態
   get state() {
     return this.formService.state;
   }
+
 
   get imageSlotUrls(): string[] {
     return this.state.imageSlotUrls;
@@ -57,7 +64,8 @@ export class LaunchProductInfoComponent implements OnInit {
   constructor(
     private router: Router,
     private formService: LaunchProductFormService,
-    private userService: UserService
+    private userService: UserService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -153,6 +161,16 @@ export class LaunchProductInfoComponent implements OnInit {
     this.updateNextButton();
   }
 
+  // 學群
+  onDeptGroupChange(event: Event, dept: string): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    if (checked) {
+      this.state.deptGroup = [...this.state.deptGroup, dept];
+    } else {
+      this.state.deptGroup = this.state.deptGroup.filter(d => d !== dept);
+    }
+  }
+
 
   onConditionChange(event: Event): void {
     this.state.condition = (event.target as HTMLSelectElement).value;
@@ -167,10 +185,18 @@ export class LaunchProductInfoComponent implements OnInit {
   }
 
   // 儲存草稿
-  async onSaveDraft(): Promise<void> {
-    const userId = Number(this.userService.currentUser().userId);
-    await this.formService.saveDraft();
-    this.showToast('✓ 草稿已儲存');
+  onSaveDraft() {
+    if (this.formService.isUpdate()) {
+      this.formService.updateProduct(this.formService.toProductReq(this.state)).subscribe({
+        next: (res) => { this.showToast('✓ 草稿已儲存'); },
+        error: (err) => console.error('儲存草稿失敗:', err)
+      })
+    } else {
+      this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
+        next: (res) => { this.showToast('✓ 草稿已新增'); },
+        error: (err) => console.error('新增草稿失敗:', err)
+      })
+    }
   }
 
   onNewProduct(): void {
@@ -209,9 +235,19 @@ export class LaunchProductInfoComponent implements OnInit {
   async onDialogConfirm(): Promise<void> {
     this.dialogVisible = false;
     const userId = Number(this.userService.currentUser().userId);
-    await this.formService.publishProduct();  //  上架 API
-    this.formService.resetState();
-    this.router.navigate(['/store', userId]);
+    this.formService.publishProduct(this.state.productId).subscribe({
+      next: (res) => {
+        Swal.fire({
+          title: '商品已上架！',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        this.formService.resetState();
+        this.router.navigate(['/store', userId]);
+      },
+      error: (err) => console.error('上架商品失敗:', err)
+    });
   }
 
   //dialog 填入的圖片清單

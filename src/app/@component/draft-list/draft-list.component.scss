@@ -1,9 +1,47 @@
 @use '../../styles/variables' as *;
+
 .draft-wrapper {
   max-width: 1400px;
   margin: 0 auto;
   padding: 28px 32px;
-   min-height: calc(100vh - 270px);
+  min-height: calc(100vh - 270px);
+}
+
+// 搜尋列
+.search-bar-wrapper {
+  height: 2.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 0 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.005);
+  margin-bottom: 8px;
+
+  .text-search-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+
+    .icon {
+      color: $text-gray;
+      display: flex;
+      align-items: center;
+    }
+
+    input {
+      border: none;
+      outline: none;
+      width: 100%;
+      padding: 0 0.5rem;
+      font-size: 0.9rem;
+      background-color: transparent;
+    }
+  }
 }
 
 // tabs 列 + 按鈕同排
@@ -74,17 +112,21 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
-  box-shadow: 0 2px 8px rgba(201,168,76,.3);
+  box-shadow: 0 2px 8px rgba(201, 168, 76, .3);
   margin-bottom: 8px;
 
   &:hover {
-    box-shadow: 0 4px 14px rgba(201,168,76,.4);
+    box-shadow: 0 4px 14px rgba(201, 168, 76, .4);
     transform: translateY(-1px);
   }
 
-  &:active { transform: translateY(0); }
+  &:active {
+    transform: translateY(0);
+  }
 
-  svg { flex-shrink: 0; }
+  svg {
+    flex-shrink: 0;
+  }
 }
 
 .page-title {
@@ -119,12 +161,14 @@
   border: 1px solid #e2e8f0;
   border-radius: 10px;
   padding: 18px 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
   transition: box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+
   &:hover {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     border-color: #fadf3c;
-    background: #fffef5; }
+    background: #fffef5;
+  }
 }
 
 .draft-thumb {
@@ -147,15 +191,18 @@
 }
 
 .draft-info {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   min-width: 0;
+  gap: 4px;
 }
 
 .draft-title {
   font-size: 14px;
   font-weight: 600;
   color: #1e293b;
-  margin-bottom: 4px;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -164,7 +211,13 @@
 .draft-meta {
   font-size: 12px;
   color: #6b7280;
-  margin-bottom: 4px;
+  margin: 0;
+}
+
+.draft-status {
+  font-size: 13px;
+  font-weight: 400;
+  margin: 0;
 }
 
 .draft-time {
@@ -190,7 +243,9 @@
   cursor: pointer;
   color: #1e293b;
 
-  &:hover { background: #f5d400; }
+  &:hover {
+    background: #f5d400;
+  }
 }
 
 .btn-del {
@@ -204,7 +259,10 @@
   cursor: pointer;
   color: #ef4444;
 
-  &:hover { background: #fff5f5; border-color: #fca5a5; }
+  &:hover {
+    background: #fff5f5;
+    border-color: #fca5a5;
+  }
 }
 
 .section-gap {
@@ -252,7 +310,10 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  &:hover { background: #dc2626; }
+
+  &:hover {
+    background: #dc2626;
+  }
 }
 
 .btn-confirm-no {
@@ -264,15 +325,19 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  &:hover { background: #e2e8f0; }
+
+  &:hover {
+    background: #e2e8f0;
+  }
 }
 
 // 頁碼
 .pagination {
+  display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin: 10px 0;
+  gap: 6px;
+  margin: 20px 0;
   color: $text-gray;
   font-size: 14px;
 
@@ -282,27 +347,68 @@
   }
 }
 
-.page-item {
-  &.active .page-link {
-    background-color: $primary-yellow;
-    border-color: $primary-yellow;
-    color: $background-white;
-  }
-}
-
-.page-link {
+.page-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1.5px solid $neutral-300;
+  background: $background-white;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
   color: $text-gray;
-  border-radius: $border-radius-sm;
-  border: 1px solid $neutral-300;
   cursor: pointer;
-  user-select: none;
-  &:hover {
-    background-color: $background-yellow;
-    color: $primary-yellow;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: $background-yellow;
+  }
+
+  &:disabled {
+    color: #c9c6c0;
+    cursor: default;
+  }
+
+  &.active {
+    background: $background-yellow-hover;
+    color: $text-gray;
+    border-color: $background-yellow-hover;
   }
 }
 
-.disabled .page-link {
-  color: $neutral-300;
-  background-color: $neutral-100;
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background: #fcfcfc;
+  color: #1E1E1E;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* 響應式佈局：當螢幕太小時，自動切換回單欄上下排列 */
+@media (max-width: 640px) {
+  .form-vertical-container {
+    padding: 20px;
+    gap: 16px;
+  }
 }

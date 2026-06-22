@@ -1,74 +1,87 @@
-<div class="page-wrapper">
-  <p class="page-title">商品上架</p>
+<main class="page-wrapper">
+  <h1 class="page-title">商品上架</h1>
 
-  <div class="stepper">
-    <div class="step done">
-      <div class="step-badge">✓</div>
+  <ol class="stepper">
+    <li class="step done">
+      <span class="step-badge">✓</span>
       <span class="step-label">資訊與價格</span>
-    </div>
-    <div class="step active">
-      <div class="step-badge">2</div>
+    </li>
+    <li class="step active">
+      <span class="step-badge">2</span>
       <span class="step-label">地點與分類</span>
-    </div>
-    <div class="step">
-      <div class="step-badge">3</div>
+    </li>
+    <li class="step">
+      <span class="step-badge">3</span>
       <span class="step-label">預覽與送出</span>
-    </div>
-  </div>
+    </li>
+  </ol>
 
   <div class="form-vertical-container">
-    <div class="field">
-      <div class="section-label">可面交地區 <span class="req">*</span></div>
-        <div class="checkbox-group location-checkbox-group"
-          [class.error]="touched.locationRegions && state.locationRegions.length === 0">
-          <label class="checkbox-label" *ngFor="let region of regionOptions">
-          <input type="checkbox"
-           [checked]="state.locationRegions.includes(region)"
-           (change)="onLocationRegionChange($event, region)" />
+    <fieldset class="field">
+      <legend class="section-label">可面交地區 <span class="req">*</span></legend>
+      <div class="checkbox-group location-checkbox-group"
+        [class.error]="touched.locationRegions && state.locationRegions.length === 0">
+        @for (region of regionOptions; track region) {
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="state.locationRegions.includes(region)"
+            (change)="onLocationRegionChange($event, region)" />
           <span>{{ region }}</span>
-          </label>
-        </div>
-    </div>
+        </label>
+        }
+      </div>
+    </fieldset>
 
-    <div class="field">
-      <div class="section-label">建議面交年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></div>
+    <fieldset class="field">
+      <legend class="section-label">建議面交年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
       <div class="checkbox-group" [class.error]="touched.grades && state.grades.length === 0">
-        <label class="checkbox-label" *ngFor="let grade of gradeList">
-          <input type="checkbox"
-                 [checked]="state.grades.includes(grade)"
-                 (change)="onGradeChange($event, grade)" />
+        @for (grade of gradeList; track grade) {
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="state.grades.includes(grade)" (change)="onGradeChange($event, grade)" />
           <span>{{ grade }}</span>
         </label>
+        }
       </div>
-    </div>
+    </fieldset>
 
-    <div class="field">
-      <div class="section-label">分類 <span class="req">*</span></div>
-        <div class="checkbox-group cat-checkbox-group" [class.error]="touched.catMain && state.catMain.length === 0">
-          <label class="checkbox-label" *ngFor="let cat of catOptions">
-          <input type="checkbox"
-            [checked]="state.catMain.includes(cat)"
-            (change)="onCatChange($event, cat)" />
+    <fieldset class="field">
+      <legend class="section-label">分類 <span class="req">*</span></legend>
+      <div class="checkbox-group cat-checkbox-group" [class.error]="touched.catMain && state.catMain.length === 0">
+        @for (cat of catOptions; track cat) {
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="state.catMain.includes(cat)" (change)="onCatChange($event, cat)" />
           <span>{{ cat }}</span>
-          </label>
+        </label>
+        }
 
+        <!-- 新增類別 -->
+        <label class="checkbox-label custom-cat-label">
+          <input type="checkbox" [checked]="customCatChecked" (change)="onCustomCatCheckChange($event)" />
+          <span>新增類別</span>
+          @if (customCatChecked) {
+          <input class="cat-custom-input" type="text" placeholder="輸入類別" [(ngModel)]="customCatInput"
+            (ngModelChange)="onCustomCatInput()" (click)="$event.stopPropagation()" />
+          }
+        </label>
+      </div>
+    </fieldset>
 
-      <!-- 新增類別 -->
-          <label class="checkbox-label custom-cat-label">
-            <input type="checkbox"  [checked]="customCatChecked"  (change)="onCustomCatCheckChange($event)" />
-            <span>新增類別</span>
-            <input *ngIf="customCatChecked"  class="cat-custom-input"  type="text"
-              placeholder="輸入類別"  [(ngModel)]="customCatInput"
-              (ngModelChange)="onCustomCatInput()"  (click)="$event.stopPropagation()" />
-          </label>
-        </div>
-    </div>
+    <fieldset class="field">
+      <legend class="section-label">適用學群 <span class="hint-text">（可複選、選填）</span></legend>
+      <div class="checkbox-group">
+        @for (dept of deptGroupOptions; track dept) {
+        <label class="checkbox-label">
+          <input type="checkbox" [checked]="state.deptGroup.includes(dept)"
+            (change)="onDeptGroupChange($event, dept)" />
+          <span>{{ dept }}</span>
+        </label>
+        }
+      </div>
+    </fieldset>
 
     <div class="field">
-      <div class="section-label">商品狀況 <span class="req">*</span></div>
-      <select (change)="onConditionChange($event)" [value]="state.condition"
-        [class.selected]="state.condition !== ''"
-        [class.error]="touched.condition && state.condition === ''">
+      <label class="section-label" for="productCondition">商品狀況 <span class="req">*</span></label>
+      <select id="productCondition" (change)="onConditionChange($event)" [value]="state.condition"
+        [class.selected]="state.condition !== ''" [class.error]="touched.condition && state.condition === ''">
         <option value="" disabled selected>請選擇商品狀況</option>
         <option>全新</option>
         <option>近全新</option>
@@ -80,115 +93,123 @@
   </div>
 
   <!-- 頁尾 -->
-  <div class="form-footer">
+  <footer class="form-footer">
     <div class="footer-left">
       <!-- 上一步 -->
       <button class="btn btn-outline" type="button" (click)="onPrevClick()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 12H5M11 6l-6 6 6 6"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M11 6l-6 6 6 6" />
         </svg>
         上一步
       </button>
 
-  <!-- 儲存草稿 -->
-  <button class="btn btn-draft" type="button" (click)="onSaveDraft()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-      <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-      <polyline points="17 21 17 13 7 13 7 21"/>
-      <polyline points="7 3 7 8 15 8"/>
-    </svg>
-    儲存草稿
-  </button>
-  </div>
-
-  <!-- 下一步：地點與分類 -->
-      <button class="btn btn-primary" type="button"
-        [class.disabled]="isNextDisabled" (click)="onNextClick()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M5 12h14M13 6l6 6-6 6"/>
+      <!-- 儲存草稿 -->
+      <button class="btn btn-draft" type="button" (click)="onSaveDraft()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+          <polyline points="17 21 17 13 7 13 7 21" />
+          <polyline points="7 3 7 8 15 8" />
         </svg>
-        下一步：上架
+        儲存草稿
       </button>
-  </div>
-
-<!-- ── 預覽 Dialog ── -->
-<div class="dialog-backdrop" [class.show]="dialogVisible" (click)="onBackdropClick($event)">
-  <div class="dialog" role="dialog" aria-modal="true">
-
-    <div class="dialog-header">
-      <span class="dialog-title">📋 商品上架預覽</span>
-      <button class="dialog-close" (click)="onDialogCancel()">✕</button>
     </div>
 
-    <div class="dialog-body">
+    <!-- 下一步：地點與分類 -->
+    <button class="btn btn-primary" type="button" [class.disabled]="isNextDisabled" (click)="onNextClick()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+      下一步：上架
+    </button>
+  </footer>
 
-      <!-- 圖片列 -->
-      <div class="preview-images">
-        <img *ngFor="let url of filledImages"
-             [src]="url" class="preview-thumb"
-             [class.main-thumb]="filledImages.indexOf(url) === 0" />
+  <!-- ── 預覽 Dialog ── -->
+  @if (dialogVisible) {
+  <div class="dialog-backdrop show" (click)="onBackdropClick($event)">
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="preview-dialog-title">
+
+      <header class="dialog-header">
+        <span class="dialog-title" id="preview-dialog-title">📋 商品上架預覽</span>
+        <button class="dialog-close" type="button" (click)="onDialogCancel()" aria-label="關閉預覽">✕</button>
+      </header>
+
+      <div class="dialog-body">
+
+        <!-- 圖片列 -->
+        <ul class="preview-images">
+          @for (url of filledImages; track url) {
+          <li>
+            <img [src]="url" class="preview-thumb" [class.main-thumb]="$index === 0" alt="商品預覽圖" />
+          </li>
+          }
+        </ul>
+
+        <!-- 資訊表格 -->
+        <table class="preview-table">
+          <tbody>
+            @if (state.locationRegions.length > 0) {
+            <tr>
+              <th scope="row">額外面交地區</th>
+              <td>{{ state.locationRegions.join('、') }}</td>
+            </tr>
+            }
+            <tr>
+              <th scope="row">建議面交年級</th>
+              <td>{{ state.grades.join('、') }}</td>
+            </tr>
+            <tr>
+              <th scope="row">分類</th>
+              <td>{{ state.catMain }}</td>
+            </tr>
+            @if (state.deptGroup.length > 0) {
+            <tr>
+              <th scope="row">適用學群</th>
+              <td>{{ state.deptGroup.join('、') }}</td>
+            </tr>
+            }
+            <tr>
+              <th scope="row">商品狀況</th>
+              <td>{{ state.condition }}</td>
+            </tr>
+            <tr>
+              <th scope="row">商品名稱</th>
+              <td>{{ state.name }}</td>
+            </tr>
+            <tr>
+              <th scope="row">商品描述</th>
+              <td class="desc-cell">{{ state.desc }}</td>
+            </tr>
+            <tr>
+              <th scope="row">售價</th>
+              <td><span class="price-tag">NT$ {{ state.price }}</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- 資訊表格 -->
-      <table class="preview-table">
-        <tbody>
-          <tr *ngIf="state.locationRegions.length > 0">
-            <th>額外面交地區</th>
-            <td>{{ state.locationRegions.join('、') }}</td>
-          </tr>
-          <tr>
-            <th>建議面交年級</th>
-            <td>{{ state.grades.join('、') }}</td>
-          </tr>
-          <tr>
-            <th>分類</th>
-            <td>{{ state.catMain }}</td>
-          </tr>
-          <tr>
-            <th>商品狀況</th>
-            <td>{{ state.condition }}</td>
-          </tr>
-          <tr>
-            <th>商品名稱</th>
-            <td>{{ state.name }}</td>
-          </tr>
-          <tr>
-            <th>商品描述</th>
-            <td class="desc-cell">{{ state.desc }}</td>
-          </tr>
-          <tr>
-            <th>售價</th>
-            <td><span class="price-tag">NT$ {{ state.price }}</span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <footer class="dialog-footer">
+        <button class="btn btn-outline" type="button" (click)="onDialogCancel()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M19 12H5M11 6l-6 6 6 6" />
+          </svg>
+          返回修改
+        </button>
+        <button class="btn btn-primary" type="button" (click)="onDialogConfirm()">
+          確認上架
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </footer>
 
-    <div class="dialog-footer">
-      <button class="btn btn-outline" type="button" (click)="onDialogCancel()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path d="M19 12H5M11 6l-6 6 6 6"/>
-        </svg>
-        返回修改
-      </button>
-      <button class="btn btn-primary" type="button" (click)="onDialogConfirm()">
-        確認上架
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none"
-          viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <path d="M5 12h14M13 6l6 6-6 6"/>
-        </svg>
-      </button>
     </div>
-
   </div>
-</div>
+  }
+</main>
 
-</div>
-
-<div class="toast" [class.show]="toastVisible">{{ toastText }}</div>
+<p class="toast" [class.show]="toastVisible" role="status">{{ toastText }}</p>

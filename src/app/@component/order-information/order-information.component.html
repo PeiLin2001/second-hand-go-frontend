@@ -24,7 +24,8 @@
 
   <!-- 資料頁 -->
   @for (order of filteredOrders(); track order.orderId) {
-  <section class="order-card" [class.card-buyer]="order.myRole === '買家'" [class.card-seller]="order.myRole === '賣家'">
+  <section class="order-card" [class.card-buyer]="order.myRole === '買家'" [class.card-seller]="order.myRole === '賣家'"
+    [class.highlight-active]="order.isHighlighted">
     <header class="order-header">
       <div class="order-info">
         <span class="order-no">訂單編號：{{ order.orderId }}</span>

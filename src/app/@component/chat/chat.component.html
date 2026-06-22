@@ -48,11 +48,11 @@
             <p class="price">${{ product.price }}</p>
           </div>
 
-          <button type="button" class="btn-view-product">查看商品</button>
+          <button type="button" class="btn-view-product" (click)="goProduct(product.productId)">查看商品</button>
 
         </div>
       </div>
-    }
+      }
 
       <!-- 訊息 -->
       <div #scrollContainer class="message-list">
