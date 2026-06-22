@@ -260,6 +260,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
     priceValue:     0,
     priceHighValue: 5000,
     sellerGrade:    1,
+    sellerHighestGrade:    5,
     condition: "",
     type: "",
   } as const;
@@ -291,7 +292,7 @@ export class ProductListingComponent implements OnInit, OnDestroy {
       { value: 3 },
       { value: 4 },
       { value: 5 }
-    ]
+    ],
   };
 
   // =========================================================
@@ -399,6 +400,7 @@ get sortLabel(): string {
     'newest':     '最新上架',
     'price-asc':  '價格由低到高',
     'price-desc': '價格由高到低',
+    'credit-score': '信用評分由高到低'
   };
   return map[this.sortOption];
 }
@@ -529,6 +531,15 @@ get sortedProducts(): ProductCard[] {
     );
   }
 
+  protected matchCreditScore(product: ProductCard): boolean{
+    if (this.sellerGrade === this.DEFAULT_FILTERS.sellerGrade) {
+      return true;
+    }
+
+    const goodLevel = Number(product.user?.goodLevel ?? 0);
+    return goodLevel >= this.sellerGrade;
+  }
+
 
   get filteredProducts(): ProductCard[] {
     return this.products.filter(product =>
@@ -537,7 +548,8 @@ get sortedProducts(): ProductCard[] {
       this.matchCity(product) &&
       this.matchSchool(product) &&
       this.matchType(product) &&
-      this.matchCondition(product)
+      this.matchCondition(product)&&
+      this.matchCreditScore(product)
     );
   }
 
@@ -561,6 +573,7 @@ get sortedProducts(): ProductCard[] {
   get cities(): any[]{
     return this.ctgService.cities;
   }
+
 
 
 }

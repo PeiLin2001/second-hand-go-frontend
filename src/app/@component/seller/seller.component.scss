@@ -1,0 +1,281 @@
+@use "../../styles/mixins" as *;
+@use "../../styles/variables" as *;
+
+// 針對手機版最佳化
+@media (max-width: 768px) {
+  .sub-list {
+    gap: 1.2rem;
+  }
+  .sub-link {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.1rem;
+  }
+}
+
+// =========================================================
+// 基礎
+// =========================================================
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  @include common-layout;
+}
+
+a {
+  @include reset-link;
+}
+
+lucide-icon {
+  @include centered;
+}
+
+.filter-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// =========================================================
+// 麵包屑
+// =========================================================
+
+.breadcrumb {
+  margin-top: 1.5rem;
+  @include breadcrumb-style;
+}
+
+// =========================================================
+// 標題列
+// =========================================================
+
+.list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.category-name {
+  @include main-title-style;
+}
+
+// =========================================================
+// 排序下拉
+// =========================================================
+
+.sort-container {
+  @include sort-style;
+  .sort-button.has-value {
+    @include orange-active-tag;
+  }
+}
+
+.dropdown-content {
+  @include dropdown-style;
+}
+
+// =========================================================
+// 搜尋
+// =========================================================
+
+.search-container {
+  width: 100%;
+  max-width: 700px; // 限制搜尋框最大寬度，避免在桌機版過寬
+  margin: 1rem 0;
+}
+
+.search {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: 1px solid $neutral-300;
+  border-radius: 999px; // 膠囊狀設計，呼應你的 sort-button 風格
+  background-color: $background-white;
+  color: $text-black;
+  outline: none;
+
+  &::placeholder {
+    color: $neutral-500;
+  }
+
+  &:focus {
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba($neutral-ice, 0.5);
+  }
+}
+
+// ============================================================================================
+// 找不到同學時的友善提示狀態 (No Result State)
+// ============================================================================================
+.empty-state {
+  @include empty-state;
+}
+
+.filter-row {
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  justify-content: space-between;
+  @include filter-btn-style;
+
+  .filter-left {
+    @include centered;
+    gap: 0.5rem;
+  }
+
+  .filter-chip {
+    @include centered;
+    @include white-pill;
+
+    background-color: rgba($neutral-ice, 0.5);
+    color: $text-gray;
+
+    .material-symbols-outlined {
+      font-variation-settings: "wght" 300; /* Sets weight to 300 */
+    }
+
+    transition: ease .2s;
+
+    &:not(:disabled):not(.active):hover {
+      background-color: rgba($neutral-ice, 0.8);
+      border-color: rgba($text-black, 0.3);
+      color: $text-black;
+    }
+
+    &.active {
+      @include orange-active-tag;
+    }
+
+    &:disabled {
+      cursor: no-drop;
+      background-color: $neutral-300;
+      color: $neutral-500;
+    }
+  }
+
+
+}
+
+.location-status {
+  @include centered;
+
+  gap: 0.35rem;
+  padding: 0.4rem 0.75rem;
+
+  border-radius: 999px;
+  background-color: rgba($neutral-ice, 0.45);
+  color: $text-gray;
+
+  font-size: 0.85rem;
+  white-space: nowrap;
+
+  .material-symbols-outlined {
+    font-size: 1.1rem;
+    font-variation-settings: "wght" 300;
+  }
+
+  .location-label {
+    color: $text-gray;
+  }
+
+  strong {
+    font-weight: 600;
+    color: $text-black;
+  }
+
+  &.ready {
+    background-color: rgba($background-yellow, 0.8);
+    color: $semantic-orange;
+
+    .material-symbols-outlined,
+    strong {
+      color: $semantic-orange;
+    }
+  }
+
+  &.pending {
+    opacity: 0.75;
+  }
+
+  &.error {
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+
+    .material-symbols-outlined,
+    strong {
+      color: #dc2626;
+    }
+  }
+}
+
+
+//====================
+// GPS controller
+//====================
+
+.gps-control {
+  @include centered;
+  gap: 0.45rem;
+}
+
+.gps-switch {
+  position: relative;
+
+  width: 48px;
+  height: 26px;
+  padding: 0;
+
+  border: 2px solid $primary-yellow-dark;
+  border-radius: 999px;
+  background-color: #ffffff;
+
+  cursor: pointer;
+  transition:
+    background-color 0.5s ease,
+    border-color 0.5s ease;
+
+  .gps-switch-thumb {
+    position: absolute;
+    top: 50%;
+    left: 3px;
+
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+    background-color: $primary-yellow-dark;
+
+    transform: translateY(-50%);
+    transition:
+      left 0.5s ease,
+      background-color 0.2s ease;
+  }
+
+  &.on {
+    background-color: $primary-yellow;
+    border-color: $primary-yellow;
+
+    .gps-switch-thumb {
+      left: 23px;
+      background-color: #ffffff;
+    }
+  }
+
+  // &:hover {
+  //   box-shadow: 0 0 0 3px rgba($neutral-c9, 0.14);
+  // }
+}
+
+.gps-switch-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $text-gray;
+  white-space: nowrap;
+}

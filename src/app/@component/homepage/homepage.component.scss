@@ -1,12 +1,14 @@
-@use '../../styles/mixins' as *;
-@use '../../styles/variables' as *;
+@use "../../styles/mixins" as *;
+@use "../../styles/variables" as *;
 
 .content {
   @include common-layout;
 }
 
-lucide-icon { display: flex; align-items: center; }
-
+lucide-icon {
+  display: flex;
+  align-items: center;
+}
 
 // 建議包裹一個父層容器，方便管理間距
 .Carousel-Notification {
@@ -38,15 +40,18 @@ lucide-icon { display: flex; align-items: center; }
         object-position: center;
       }
     }
+    .carousel-content{
+      cursor: pointer;
+    }
   }
 }
 
-.subtitle{
+.subtitle {
   display: flex;
   justify-content: space-around;
   margin: 3rem 0 1.5rem 0;
 
-  h5{
+  h5 {
     font-size: 2rem;
     font-weight: 700;
     color: $text-gray;
@@ -59,17 +64,15 @@ lucide-icon { display: flex; align-items: center; }
       background-color: $primary-yellow-light;
     }
   }
-
 }
-
 
 .category-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%;        // ← 加這個
-  min-width: 0;      // ← flex 子元素必加，防止撐破父層
-  overflow: hidden;   // ← 防止子元素溢出
+  width: 100%; // ← 加這個
+  min-width: 0; // ← flex 子元素必加，防止撐破父層
+  overflow: hidden; // ← 防止子元素溢出
 }
 
 .nav-btn {
@@ -80,7 +83,7 @@ lucide-icon { display: flex; align-items: center; }
   height: 40px;
   border-radius: 50%;
 
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
   z-index: 10;
 
@@ -89,23 +92,23 @@ lucide-icon { display: flex; align-items: center; }
 
 .popular-categories {
   display: flex;
-  overflow-x: auto;      // 開啟水平捲動
-  gap: 1.5rem;           // 項目間距
+  overflow-x: auto; // 開啟水平捲動
+  gap: 1.5rem; // 項目間距
   padding: 1.5rem 0.5rem;
-  flex: 1;           // ← 加這個，讓它填滿兩個按鈕之間的空間
-  min-width: 0;      // ← 同上
+  flex: 1; // ← 加這個，讓它填滿兩個按鈕之間的空間
+  min-width: 0; // ← 同上
 
   scrollbar-width: none; // 隱藏 Firefox 捲軸
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
-    display: none;       // 隱藏 Chrome/Safari 捲軸
+    display: none; // 隱藏 Chrome/Safari 捲軸
   }
 
   // 每個分類項目的容器
   .category-item {
-    flex: 0 0 auto;      // 防止項目被壓縮
+    flex: 0 0 auto; // 防止項目被壓縮
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -124,13 +127,13 @@ lucide-icon { display: flex; align-items: center; }
       border-radius: 50%;
 
       ::ng-deep svg {
-        fill: $primary-yellow !important;   // 強制填滿
+        fill: $primary-yellow !important; // 強制填滿
         stroke: white !important; // 框線也同步顏色，避免出現黑色邊框
         stroke-width: 1px;
       }
 
-      &:hover{
-        background-color:#f8f9fa;
+      &:hover {
+        background-color: #f8f9fa;
       }
     }
 
@@ -144,56 +147,53 @@ lucide-icon { display: flex; align-items: center; }
   }
 }
 
-.view-more-wrapper{
+.view-more-wrapper {
   display: flex;
   justify-content: space-around;
   margin-top: 1rem;
 
   .view-more {
-      margin: 1rem;
-      padding: 0.8rem 1.8rem;
+    margin: 1rem;
+    padding: 0.8rem 1.8rem;
 
-      border: none;
-      border-radius: 999px;
+    border: none;
+    border-radius: 999px;
 
-      background: $primary-yellow-light;
-      color: $text-gray;
+    background: $primary-yellow-light;
+    color: $text-gray;
 
-      font-size: 0.95rem;
-      font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 600;
 
-      transition: all 0.25s ease;
+    transition: all 0.25s ease;
 
-      &:hover {
-        background: $background-yellow-hover;
-        box-shadow: 0 1px 10px rgba($text-black, 0.15);
-        transform: translateY(-1px);
-        cursor: pointer;
-      }
+    &:hover {
+      background: $background-yellow-hover;
+      box-shadow: 0 1px 10px rgba($text-black, 0.15);
+      transform: translateY(-1px);
+      cursor: pointer;
+    }
 
-      &:active {
-        color: $text-black;
-        background-color: $background-yellow-active;
-        transform: translateY(0px);
-      }
+    &:active {
+      color: $text-black;
+      background-color: $background-yellow-active;
+      transform: translateY(0px);
+    }
   }
 }
 
 .background-color-box {
-  width: 100vw;          // 寬度設為螢幕寬度
+  width: 100vw; // 寬度設為螢幕寬度
   position: relative;
 
-  left: 50%;             // 移至畫面中點
+  left: 50%; // 移至畫面中點
   right: 50%;
-  margin-left: -50vw;    // 往左拉回螢幕一半的寬度
+  margin-left: -50vw; // 往左拉回螢幕一半的寬度
   margin-right: -50vw;
 
   height: 30vh;
   background-color: $background-yellow;
-
-
 }
-
 
 // --- RWD 響應式優化 ---
 @media (max-width: 768px) {
@@ -203,7 +203,8 @@ lucide-icon { display: flex; align-items: center; }
     gap: 1rem;
     padding: 1rem 0;
 
-    .applied-filters, .sorting-dropdown {
+    .applied-filters,
+    .sorting-dropdown {
       width: 100%;
     }
 
@@ -212,5 +213,3 @@ lucide-icon { display: flex; align-items: center; }
     }
   }
 }
-
-

@@ -1,26 +1,35 @@
 <main class="content">
 
+  <!-- 麵包屑 -->
+  <nav class="breadcrumb">
+    <a routerLink="/home" class="breadcrumb-link">
+      <lucide-icon name="House" size="16"></lucide-icon>
+      首頁
+    </a>
+    <span class="sep">></span>
+    <span class="current">商品許願池</span>
+  </nav>
 
 
-<section class="wish-page">
-  <div class="wish-header">
-    <div class="wish-title-group">
-      <h4>許願池 ! </h4>
-      <p>歡迎向同學們提出你的需求，讓大家一起幫你找到想要的商品。</p>
+  <section class="wish-page">
+    <div class="wish-header">
+      <div class="wish-title-group">
+        <h4>商品許願池 ! </h4>
+        <p>提出你的需求，讓大家一起幫你找到想要的商品吧</p>
+      </div>
+
+      <button (click)="switchPanel()">
+        <lucide-icon name="Plus"></lucide-icon>
+        向全站許願
+      </button>
     </div>
 
-    <button (click)="switchPanel()">
-      <lucide-icon name="Plus"></lucide-icon>
-      我要許願
-    </button>
-  </div>
-
-  <app-wish-card [wishList]="wishList"></app-wish-card>
-</section>
+    <app-wish-card [wishList]="wishList"></app-wish-card>
+  </section>
 
 
 
-@if (showPanel) {
+  @if (showPanel) {
   <div class="panel-overlay" [class.active]="showPanel" (click)="closePanel()">
 
     <section class="wish-panel" (click)="$event.stopPropagation()">
@@ -35,58 +44,41 @@
       <div class="panel-body">
         <div class="form-group">
           <label>許願標題 <span class="required">*</span></label>
-          <input
-            type="text"
-            [(ngModel)]="wishForm.title"
-            placeholder="例：找一本線性代數課本"
-            maxlength="50"
-          />
+          <input type="text" [(ngModel)]="wishForm.title" placeholder="例：找一本線性代數課本" maxlength="50" />
         </div>
 
         <div class="form-group">
           <label>詳細說明<span class="required">*</span></label>
-          <textarea
-            [(ngModel)]="wishForm.description"
-            placeholder="補充版本、狀況需求或其他細節…"
-            rows="3"
-          ></textarea>
+          <textarea [(ngModel)]="wishForm.description" placeholder="補充版本、狀況需求或其他細節…" rows="3"></textarea>
         </div>
 
         <div class="form-group">
           <label>偏好交易地點<span class="required">*</span></label>
           <div class="chip-group">
             @for (city of cities; track city.id) {
-              <button
-                class="chip"
-                [class.selected]="isSelected(wishForm.location, city.name)"
-                (click)="toggleSelection(wishForm.location, city.name)"
-                type="button"
-              >{{ city.name }}</button>
+            <button class="chip" [class.selected]="isSelected(wishForm.location, city.name)"
+              (click)="toggleSelection(wishForm.location, city.name)" type="button">{{ city.name }}</button>
             }
           </div>
         </div>
 
         <div class="form-group">
           <label>預算範圍（元）<span class="required">*</span></label>
+
           <div class="budget-row">
-            <input
-              type="number"
-              [(ngModel)]="wishForm.budgetMin"
-              placeholder="最低"
-              min="0"
-            />
+            <input type="number" [(ngModel)]="wishForm.budgetMin" placeholder="最低" min="0" [disabled]="isNegotiable" />
             <span class="budget-sep">—</span>
-            <input
-              type="number"
-              [(ngModel)]="wishForm.budgetMax"
-              placeholder="最高"
-              min="0"
-            />
+            <input type="number" [(ngModel)]="wishForm.budgetMax" placeholder="最高" min="0" [disabled]="isNegotiable"/>
           </div>
+
+          <label class="checkbox-item" style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+            <input type="checkbox" (change)="toggleNegotiable($event)">
+            <span>預算面議 / 無上限</span>
+          </label>
         </div>
 
         @if (submitError) {
-          <p class="submit-error"> {{ submitError }}</p>
+        <p class="submit-error"> {{ submitError }}</p>
         }
       </div>
 
@@ -100,6 +92,6 @@
     </section>
 
   </div>
-}
+  }
 
 </main>

@@ -36,10 +36,16 @@ import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({ Plus, X }),
     },
-  ]
+  ],
 })
 export class SchoolCommunitySeekingComponent {
   wishList: Wish[] = [];
+
+  // ── 1. 定義成 Component 內部的全域變數（成員變數） ──
+  currentUser: any = null;
+  currentUserSchool = '';
+  currentUserId: number | undefined = undefined;
+  currentBoardSchool = '';
 
   showPanel = false;
   isSubmitting = false;
@@ -58,6 +64,11 @@ export class SchoolCommunitySeekingComponent {
   ) {}
 
   ngOnInit(): void {
+    // ── 2. 在初始化時，先將使用者變數撈出來存好 ──
+    this.currentUser = this.userService.currentUser();
+    this.currentUserSchool = this.currentUser?.school ?? '';
+    this.currentUserId = this.currentUser?.userId;
+
     this.loadWishesByCurrentSchool();
   }
 
@@ -68,6 +79,7 @@ export class SchoolCommunitySeekingComponent {
 
     if (!schoolId) return;
 
+
     this.eduApiGovService
       .getSchools()
       .pipe(
@@ -75,6 +87,8 @@ export class SchoolCommunitySeekingComponent {
           const school = schools.find((s) => Number(s['代碼']) === schoolId);
 
           if (!school) return EMPTY;
+
+          this.currentBoardSchool = school['學校名稱'];
 
           return this.wishServiceService.getWishesBySchool(school['學校名稱']);
         }),
@@ -84,7 +98,18 @@ export class SchoolCommunitySeekingComponent {
         }),
       )
       .subscribe((res) => {
-        this.wishList = res.wishesList ?? [];
+        const allWishes = res.wishesList ?? [];
+
+        // 2. 在這裡進行過濾，只有符合以下任一條件的願望才會被留下來：
+        //    - 條件 A：狀態不是 'school-only'（所有人都能看）
+        //    - 條件 B：狀態是 'school-only'，且許願者的學校與當前登入者相同
+        this.wishList = allWishes.filter((item) => {
+          if (item.status !== 'school-only') {
+            return true;
+          }
+          return item.wisher.school === this.currentUserSchool;
+        });
+
       });
   }
 
@@ -165,6 +190,10 @@ export class SchoolCommunitySeekingComponent {
 
     const { budgetMin, budgetMax } = this.wishForm;
 
+    if (budgetMin === 0 && budgetMax === 0) {
+      return true;
+    }
+
     if (budgetMin !== null && budgetMax !== null && budgetMin > budgetMax) {
       Swal.fire({
         title: '預算範圍錯誤！',
@@ -179,6 +208,23 @@ export class SchoolCommunitySeekingComponent {
     return true;
   }
 
+  // 用來記錄畫面上是否勾選了面議
+  get isNegotiable(): boolean {
+    return this.wishForm.budgetMin === 0 && this.wishForm.budgetMax === 0;
+  }
+
+  // 用來記錄畫面上是否勾選了面議
+  toggleNegotiable(event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      this.wishForm.budgetMin = 0;
+      this.wishForm.budgetMax = 0;
+    } else {
+      this.wishForm.budgetMin = null;
+      this.wishForm.budgetMax = null;
+    }
+  }
+
   private getMissingFields(): string[] {
     const missing: string[] = [];
 
@@ -187,6 +233,7 @@ export class SchoolCommunitySeekingComponent {
     if (this.wishForm.location.length === 0) missing.push('偏好交易地點');
     if (this.wishForm.budgetMin === null) missing.push('預算最低');
     if (this.wishForm.budgetMax === null) missing.push('預算最高');
+    if (!this.wishForm.status.trim()) missing.push('瀏覽權限');
 
     return missing;
   }
@@ -198,6 +245,7 @@ export class SchoolCommunitySeekingComponent {
       location: [...this.wishForm.location],
       budgetMin: this.wishForm.budgetMin ?? 0,
       budgetMax: this.wishForm.budgetMax ?? 0,
+      status: this.wishForm.status,
     };
   }
 
@@ -258,7 +306,7 @@ export class SchoolCommunitySeekingComponent {
       location: [...payload.location],
       budgetMin: payload.budgetMin,
       budgetMax: payload.budgetMax,
-      status: 'active',
+      status: payload.status,
       createdAt: new Date().toISOString(),
       expiredAt: this.wishForm.expiredAt,
       wisher: {
@@ -339,6 +387,7 @@ export class SchoolCommunitySeekingComponent {
       budgetMin: null,
       budgetMax: null,
       expiredAt: '',
+      status: 'active',
     };
   }
 

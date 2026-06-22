@@ -21,5 +21,6 @@ export interface ProductCard {
     userImg: string;
     university: string;
     department: string;
+    goodLevel: number;
   };
 }

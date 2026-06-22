@@ -1,4 +1,4 @@
-@use 'variables' as *; // 因為在同一層，直接寫 'variables' 即可
+@use "variables" as *; // 因為在同一層，直接寫 'variables' 即可
 
 // ============================================================================================
 // BASIC
@@ -10,7 +10,9 @@
     padding: 0.5rem 1rem;
     overflow-x: hidden;
   }
-  * { outline: none; }
+  * {
+    outline: none;
+  }
 }
 
 @mixin reset-link {
@@ -18,7 +20,9 @@
   text-decoration: none;
   display: inherit;
   gap: inherit;
-  &:visited { color: inherit; }
+  &:visited {
+    color: inherit;
+  }
 }
 
 @mixin reset-ul {
@@ -27,7 +31,10 @@
   padding: 0;
 }
 
-@mixin breadcrumb-style($link-color: $text-gray, $hover-color: $semantic-orange){
+@mixin breadcrumb-style(
+  $link-color: $text-gray,
+  $hover-color: $semantic-orange
+) {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -45,11 +52,18 @@
     text-decoration: none;
     transition: color 0.2s ease;
 
-    &:hover { color: $semantic-orange; }
+    &:hover {
+      color: $semantic-orange;
+    }
   }
 
-  .sep { color: $text-gray; }
-  .current { color: $primary-yellow-dark; font-weight: 500; }
+  .sep {
+    color: $text-gray;
+  }
+  .current {
+    color: $primary-yellow-dark;
+    font-weight: 500;
+  }
 }
 
 @mixin main-title-style {
@@ -62,7 +76,7 @@
   margin: 0;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: -0.45rem;
@@ -80,6 +94,11 @@
   z-index: 299;
 }
 
+@mixin centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 // ============================================================================================
 // PRODUCT DISPLAY
 // ============================================================================================
@@ -88,30 +107,16 @@
   position: relative;
 
   .sort-button {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    @include centered;
+    @include white-pill;
 
-    padding: 0.45rem 1rem;
-
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 999px;
-
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
-
-    font-size: 0.9rem;
     font-weight: 600;
-    color: $text-black;
-
-    gap: 0.4rem;
-
     cursor: pointer;
     transition: all 0.25s ease;
 
     box-shadow:
-      0 0.25rem 0.5rem rgba(0,0,0,0.04),
-      inset 0 1px 0 rgba(255,255,255,0.7);
+      0 0.25rem 0.5rem rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
     .material-symbols-outlined {
       font-size: 25px;
@@ -127,7 +132,7 @@
       }
     }
 
-    .text{
+    .text {
       font-size: 16px;
     }
   }
@@ -172,7 +177,9 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.05); // 極淺底線
   overflow-x: auto;
   scrollbar-width: none;
-  &::-webkit-scrollbar { display: none; }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .sub-list {
     display: flex;
@@ -199,7 +206,7 @@
       transition: all 0.25s ease;
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: 0; // 貼齊最下方
         left: 0;
@@ -232,9 +239,7 @@
         }
       }
     }
-
   }
-
 }
 
 @mixin filter-btn-style {
@@ -242,7 +247,6 @@
   flex-wrap: wrap;
   align-items: center;
   height: fit-content;
-
 
   .fab-filter {
     display: inline-flex;
@@ -259,23 +263,24 @@
     transition: background 0.2s;
     color: $primary-yellow-darker;
 
-    &.active{
+    &.active {
       color: $semantic-orange;
       border: 1px solid $semantic-orange;
       background-color: $background-yellow;
     }
 
-    &:hover { background-color: $background-yellow; }
+    &:hover {
+      background-color: $background-yellow;
+    }
 
     .material-symbols-outlined {
       font-size: 25px;
     }
 
-    .text{
+    .text {
       font-size: 16px;
     }
   }
-
 }
 
 @mixin active-tag {
@@ -309,9 +314,10 @@
   text-decoration: underline;
   padding: 0;
 
-  &:hover { color: $semantic-orange; }
+  &:hover {
+    color: $semantic-orange;
+  }
 }
-
 
 @mixin filter-sidebar {
   position: fixed;
@@ -326,7 +332,9 @@
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
   transition: right 0.3s ease;
 
-  &.open { right: 0; }
+  &.open {
+    right: 0;
+  }
 
   .sidebar-header {
     display: flex;
@@ -347,7 +355,9 @@
     padding: 0.2rem;
     border-radius: 6px;
 
-    &:hover { background: #f3f3f3; }
+    &:hover {
+      background: #f3f3f3;
+    }
   }
 
   .sidebar-body {
@@ -387,12 +397,18 @@
     font-size: 0.9rem;
     cursor: pointer;
 
-    &:hover { border-color: #888; }
+    &:hover {
+      border-color: #888;
+    }
   }
 
-  .full-width { width: 100%; }
+  .full-width {
+    width: 100%;
+  }
 
-  select { outline: none; }
+  select {
+    outline: none;
+  }
 
   .checkbox-group {
     max-height: 300px;
@@ -408,7 +424,9 @@
       font-size: 0.9rem;
       cursor: pointer;
 
-      input[type="checkbox"] { cursor: pointer; }
+      input[type="checkbox"] {
+        cursor: pointer;
+      }
     }
   }
 
@@ -445,7 +463,6 @@
   }
 }
 
-
 @mixin pagination {
   display: flex;
   justify-content: center;
@@ -468,8 +485,13 @@
     justify-content: center;
     transition: 0.2s;
 
-    &:hover:not(:disabled) { background: $primary-yellow }
-    &:disabled { color: $neutral-c9; cursor: no-drop; }
+    &:hover:not(:disabled) {
+      background: $primary-yellow;
+    }
+    &:disabled {
+      color: $neutral-c9;
+      cursor: no-drop;
+    }
 
     &:active {
       background: $background-yellow-active;
@@ -492,6 +514,7 @@
   justify-content: center;
   text-align: center;
   padding: 2rem 1rem;
+
   // =========================================================
   // Icon 強調設計
   // =========================================================
@@ -504,15 +527,15 @@
     height: 20rem;
     border-radius: 50%;
     background-color: #f3f4f6; // 極淺灰底色襯托
-    color: #9ca3af;            // 柔和的 Icon 顏色
+    color: #9ca3af; // 柔和的 Icon 顏色
 
     margin-bottom: 1.8rem;
-
 
     .material-symbols-outlined {
       font-size: 8rem; // 放大 Icon
     }
   }
+
   // =========================================================
   // Content 簡潔文字
   // =========================================================
@@ -541,6 +564,7 @@
   // =========================================================
   // Actions 極簡化按鈕 (文字連結風格)
   // =========================================================
+
   .empty-actions {
     display: flex;
     align-items: center;
@@ -566,7 +590,7 @@
 
     // 加上簡約的底線 hover 效果
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       bottom: 0;
       left: 0;
@@ -605,4 +629,31 @@
       color: #4b5563;
     }
   }
+}
+
+// =========================================================
+// 橘色小UI
+// =========================================================
+
+@mixin orange-active-tag {
+  background-color: $background-yellow;
+  border: 1px solid $semantic-orange;
+  color: $semantic-orange;
+}
+
+
+@mixin white-pill {
+  padding: 0.45rem 1rem;
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+
+  font-size: 0.9rem;
+
+  color: $text-black;
+
+  gap: 0.4rem;
 }

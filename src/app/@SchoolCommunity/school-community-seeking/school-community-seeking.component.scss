@@ -1,4 +1,4 @@
-@use '../../styles/variables' as *;
+@use "../../styles/variables" as *;
 
 .wish-page {
   width: 100%;
@@ -13,6 +13,25 @@
   padding: 24px 28px;
   background: linear-gradient(135deg, #fffbf0 0%, #fff8e6 100%);
   border-radius: $border-radius-lg;
+
+  // ── 👇 新增：非同校訪客的專屬樣式 ──
+  &.is-visitor {
+    background: linear-gradient(
+      135deg,
+      #f4f6f9 0%,
+      #e9ecef 100%
+    );
+    border-left: 5px solid $neutral-c9; // 側邊加一條質感灰色提示線
+
+    h4 {
+      color: $text-black;
+    }
+
+    p {
+      color: $semantic-orange; // 讓「失去部分瀏覽權限」呈現警示紅
+      font-weight: 500;
+    }
+  }
 
   button {
     display: inline-flex;
@@ -81,7 +100,6 @@ lucide-icon {
   display: flex;
   align-items: center;
 }
-
 
 // ── Overlay ──────────────────────────────────────────────
 .panel-overlay {
@@ -194,9 +212,9 @@ lucide-icon {
     }
   }
 
-  input[type='text'],
-  input[type='number'],
-  input[type='date'],
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
   textarea {
     width: 100%;
     padding: 10px 12px;
@@ -258,6 +276,7 @@ lucide-icon {
 }
 
 // ── 預算 row ─────────────────────────────────────────────
+
 .budget-row {
   display: flex;
   align-items: center;
@@ -265,6 +284,10 @@ lucide-icon {
 
   input {
     flex: 1;
+
+    &:disabled {
+      cursor: no-drop;
+    }
   }
 
   .budget-sep {
@@ -337,7 +360,6 @@ lucide-icon {
 //   }
 // }
 
-
 /*
 Source - https://stackoverflow.com/a/45064096
 Posted by Limon Monte, modified by community. See post 'Timeline' for change history
@@ -345,9 +367,8 @@ Retrieved 2026-06-18, License - CC BY-SA 4.0
 */
 
 ::ng-deep.swal2-container {
-    z-index: 10000;
+  z-index: 10000;
 }
-
 
 // ── 必填驗證樣式 ──────────────────────────────────────────
 .input-error {

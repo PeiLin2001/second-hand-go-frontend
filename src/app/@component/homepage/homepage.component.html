@@ -10,7 +10,7 @@
         <!-- @for抓取資料庫回傳資料，
          並將資料歸類在輪播內容的carousel-item中 -->
          @for (item of announ; track item.id) {
-          <div class="carousel-item">
+          <div class="carousel-item carousel-content">
             <img [src]="item.imgPath" [title]="item.title" (click)="openAnnou(item)">
           </div>
          }
