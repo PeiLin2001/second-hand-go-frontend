@@ -115,9 +115,15 @@ export class UserActionsComponent {
           icon: "success"
         });
         this.userService.logout().subscribe({
-          next: () => this.router.navigate(['/home']),
-          error: () => this.router.navigate(['/home'])
-        });;
+          next: () => {
+            this.socketService.disconnect();
+            this.router.navigate(['/home']);
+          },
+          error: () => {
+            this.socketService.disconnect();
+            this.router.navigate(['/home']);
+          }
+        });
       }
     });
 

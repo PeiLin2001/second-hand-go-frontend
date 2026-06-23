@@ -41,7 +41,9 @@ export class SocketService {
   //  登入註冊
   registerUser(userId: number) {
     this.registeredUserId = userId;
-    if (this.socket) {
+    if (!this.socket || !this.socket.connected) {
+      this.connectSocket();
+    } else {
       this.socket.emit('register_user', { userId: userId });
     }
   }
@@ -94,5 +96,11 @@ export class SocketService {
     if (this.socket) {
       this.socket.emit('leave_room', { roomId: roomId, userName: userName });
     }
+  }
+
+  // 斷線
+  disconnect() {
+    if (this.socket) { this.socket.disconnect(); }
+    this.registeredUserId = null;
   }
 }
