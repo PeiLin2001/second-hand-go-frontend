@@ -41,6 +41,7 @@ export class LaunchProductInfoComponent implements OnInit {
     grades: false,
     catMain: false,
     condition: false,
+    deptGroup: false,
   };
 
   dialogVisible = false;
@@ -85,7 +86,8 @@ export class LaunchProductInfoComponent implements OnInit {
       this.state.grades.length > 0 &&
       this.state.catMain.length > 0 &&
       !(this.customCatChecked && this.customCatInput.trim() === '') && // 勾了新增但沒填
-      this.state.condition !== ''
+      this.state.condition !== '' &&
+      this.state.deptGroup.length > 0
     );
   }
 
@@ -169,6 +171,8 @@ export class LaunchProductInfoComponent implements OnInit {
     } else {
       this.state.deptGroup = this.state.deptGroup.filter(d => d !== dept);
     }
+    this.touched.deptGroup = true;
+    this.updateNextButton();
   }
 
 
@@ -193,16 +197,20 @@ export class LaunchProductInfoComponent implements OnInit {
       })
     } else {
       this.formService.addProduct(this.formService.toProductReq(this.state)).subscribe({
-        next: (res) => { this.showToast('✓ 草稿已新增'); },
+        next: (res) => {
+          this.formService.markAsCreated(res.productId);
+          this.showToast('✓ 草稿已新增');
+        },
         error: (err) => console.error('新增草稿失敗:', err)
       })
     }
   }
 
-  onNewProduct(): void {
-    this.formService.resetState(); // 確保 currentDraftId 被清掉
-    this.router.navigate(['/launch_product_price']);
-  }
+  // 好像沒用到先註解掉 by.絲絨
+  // onNewProduct(): void {
+  //   this.formService.resetState(); // 確保 currentDraftId 被清掉
+  //   this.router.navigate(['/launch_product_price']);
+  // }
 
   // 下一步
   onNextClick(): void {
@@ -235,18 +243,36 @@ export class LaunchProductInfoComponent implements OnInit {
   async onDialogConfirm(): Promise<void> {
     this.dialogVisible = false;
     const userId = Number(this.userService.currentUser().userId);
-    this.formService.publishProduct(this.state.productId).subscribe({
+    const req = this.formService.toProductReq(this.state);
+
+    const saveObservable = this.formService.isUpdate()
+      ? this.formService.updateProduct(req)
+      : this.formService.addProduct(req);
+
+    saveObservable.subscribe({
       next: (res) => {
-        Swal.fire({
-          title: '商品已上架！',
-          icon: 'success',
-          timer: 2000,
-          showConfirmButton: false,
+        let productId: number;
+        if (this.formService.isUpdate()) {
+          productId = this.state.productId;
+        } else {
+          productId = res.productId;
+          this.formService.markAsCreated(res.productId);
+        }
+
+        this.formService.publishProduct(productId).subscribe({
+          next: (pubRes) => {
+            if (res.code !== 200) {
+              Swal.fire({ title: '上架失敗', text: '上架失敗，請稍後嘗試', icon: 'error' });
+              return;
+            }
+            Swal.fire({ title: '商品已上架！', icon: 'success', timer: 2000, showConfirmButton: false });
+            this.formService.resetState();
+            this.router.navigate(['/store', userId]);
+          },
+          error: (err) => console.error('上架商品失敗:', err)
         });
-        this.formService.resetState();
-        this.router.navigate(['/store', userId]);
       },
-      error: (err) => console.error('上架商品失敗:', err)
+      error: (err) => console.error('儲存商品失敗:', err)
     });
   }
 

@@ -155,6 +155,7 @@ export class DraftListComponent {
   get isDraftTab(): boolean { return this.currentTab === '未上架'; }
 
   goAddProduct(): void {
+    this.formService.resetState();
     this.router.navigate(['/launch_product_price']);
   }
 
