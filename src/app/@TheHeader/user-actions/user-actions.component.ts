@@ -1,10 +1,13 @@
-import { Component, computed, HostListener } from '@angular/core';
+import { ApiTestService } from './../../@Services/api-test.service';
+import { Component, computed, effect, HostListener } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 // 素材庫
 import { LucideAngularModule, MessageCircleMore, ChevronDownIcon } from 'lucide-angular';
 import { UserService } from '../../@Services/user.service';
 import Swal from 'sweetalert2';
+import { SocketService } from '../../@Services/socket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user-actions',
@@ -16,7 +19,21 @@ export class UserActionsComponent {
   constructor(
     private router: Router,
     private actRoute: ActivatedRoute,
-    private userService: UserService) { }
+    private userService: UserService,
+    private apiTestService: ApiTestService,
+    private socketService: SocketService,) {
+    effect(() => {
+      const user = this.userData();
+
+      if (user && user.userId) {
+        this.apiTestService.getTotalUnreadCount(user.userId).subscribe({
+          next: (res: any) => {
+            this.socketService.setTotalUnread(res.totalUnread);
+          }
+        });
+      }
+    });
+  }
 
   // Declare icon
   readonly MessageIcon = MessageCircleMore;
@@ -27,13 +44,26 @@ export class UserActionsComponent {
 
   // Show menu
   isDisplayed = false;
+  private sub?: Subscription;
+
+  get totalUnread(): number {
+    return this.socketService.totalUnread();
+  }
+
+  ngOnInit(): void {
+    this.sub = this.socketService.getUnreadUpdate().subscribe(() => {
+      this.socketService.incrementUnread(1);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
+  }
 
   // 獲取使用者資料.絲絨
   get userData() {
     return this.userService.currentUser;
   }
-
-
 
   showMenu(event: Event) {
     event.stopPropagation();

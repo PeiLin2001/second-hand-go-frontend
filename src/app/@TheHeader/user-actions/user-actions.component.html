@@ -1,5 +1,8 @@
 <div class="user-actions-wrapper">
-  <lucide-icon [img]="MessageIcon" class="msg" (click)="goToChat()"></lucide-icon>
+  <div class="msg-wrapper">
+    <lucide-icon [img]="MessageIcon" class="msg" (click)="goToChat()"></lucide-icon>
+    @if (totalUnread > 0 ) { <div class="unread"> {{ totalUnread }} </div> }
+  </div>
 
   <div class="profile" (click)="showMenu($event)" [class.active]="isDisplayed">
     <div class="picture"><img [src]=userData()?.imgPath alt="頭像"></div>
