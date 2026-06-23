@@ -118,7 +118,6 @@ export class FrontReportComponent {
         nameLable: '檢舉用戶名稱',
         idLabel: '檢舉用戶ID',
         reportColumns: [
-          '面交未依約定時間到指定地點',
           '惡意刷評價（假好評/惡意差評）',
           '惡意取消訂單',
           '詐騙（釣魚連結、假客服）',

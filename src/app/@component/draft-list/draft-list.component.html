@@ -85,6 +85,7 @@
         <button class="btn-del" type="button" (click)="onUnpublish(product.productId)">下架</button>
         }
         @case ('已下架') {
+        <button class="btn-load" type="button" (click)="onLoad(product.productId)">編輯資訊</button>
         <button class="btn-load" type="button" (click)="onRepublish(product.productId)">重新上架</button>
         }
         @case ('交易中') {
