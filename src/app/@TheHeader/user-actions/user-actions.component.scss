@@ -7,6 +7,10 @@
   flex-shrink: 0; // 確保在縮放時這一區塊不會被壓扁
   user-select: none;
 
+  .msg-wrapper {
+    position: relative;
+  }
+
   .msg {
     cursor: pointer;
     color: $text-gray;
@@ -20,6 +24,24 @@
       color: $neutral-700;
       background-color: $neutral-100;
     }
+  }
+
+  .unread {
+    position: absolute;
+    right: 0;
+    top: 4px;
+    background-color: $Communist-red;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1
   }
 
   .profile {

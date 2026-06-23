@@ -130,6 +130,11 @@ export class ApiTestService {
     return this.http.post(`${this.chatApiUrl}/update-productId?productId=${productId}&roomId=${roomId}`, {});
   }
 
+  // 取得單一使用者的未讀訊息總數
+  getTotalUnreadCount(userId: number) {
+    return this.http.get(`${this.chatApiUrl}/total-unread-count?userId=${userId}`);
+  }
+
   // === product ===
   // 取得單一帳號內的商品資訊
   searchBySellerId(userId: number): Observable<any> {
