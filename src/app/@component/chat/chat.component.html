@@ -2,7 +2,10 @@
   <div class="chat-box">
     <!-- logo -->
     <section class="chat-left">
-      <img src="img/logo改版.png" alt="logo" class="logo" title="首頁" (click)="goToHome()">
+      <section class="chat-head">
+        <lucide-icon name="ArrowLeft" class="icon" type="button" title="回上一頁"></lucide-icon>
+        <p>聊天室</p>
+      </section>
 
       <!-- 搜尋 -->
       <div class="search-bar-wrapper">
@@ -34,18 +37,22 @@
     <!-- 聊天區塊 -->
     <section class="chat-right">
       <!-- 商品資訊 -->
+      @if (product) {
       <div class="product">
-        @if (product) {
         <p class="ask">目前正在詢問：</p>
         <div class="product-summary-card">
+
           <img [src]="product.imgPath[0]" alt="商品圖片" class="product-thumb" />
           <div class="product-info">
             <h4>{{ product.productName }}</h4>
             <p class="price">${{ product.price }}</p>
           </div>
+
+          <button type="button" class="btn-view-product" (click)="goProduct(product.productId)">查看商品</button>
+
         </div>
-        }
       </div>
+      }
 
       <!-- 訊息 -->
       <div #scrollContainer class="message-list">
@@ -58,10 +65,7 @@
             <span class="name">{{ msg.senderName }}</span>
             <div class="bubble">
               <!-- 圖片訊息 -->
-              @if (msg.messageContent.includes('http')&&
-              (msg.messageContent.toLowerCase().endsWith('.jpg') ||
-              msg.messageContent.toLowerCase().endsWith('.png') ||
-              msg.messageContent.toLowerCase().endsWith('.gif'))) {
+              @if (isImageMessage(msg.messageContent)) {
               <div class="chat-image-gallery">
                 @for (url of msg.messageContent.split(','); track url) {
                 <img [src]="url" class="chat-shared-img" alt="圖片訊息" (click)="openLightBox(url)" />
@@ -70,9 +74,9 @@
               <!-- 點擊圖片放大 -->
               @if (activeImageUrl) {
               <div class="lightbox-overlay" (click)="closeLightBox()">
+                <button class="lightbox-close-btn" (click)="closeLightBox()">✕</button>
                 <div class="lightbox-content" (click)="$event.stopPropagation()">
                   <img [src]="activeImageUrl" alt="放大圖片" class="lightbox-img" />
-                  <button class="lightbox-close-btn" (click)="closeLightBox()">✕</button>
                 </div>
               </div>
               }
@@ -101,7 +105,7 @@
             </button>
           </div>
           }
-          <button class="sendPic" (click)="sendPic()">上傳圖片</button>
+          <button class="sendPic" (click)="sendPic()">送出圖片</button>
         </div>
         }
         @if (errorMessage) { <small class=" error-msg">{{ errorMessage }}</small> }
@@ -112,7 +116,7 @@
         <!-- 圖片上傳 -->
         <div class="upload" (click)="fileInput.click()">
           <input type="file" #fileInput accept="image/*" style="display: none" (change)="uploadPicture($event)" />
-          <lucide-icon name="Camera" class="icon"></lucide-icon>
+          <lucide-icon name="Paperclip" class="icon"></lucide-icon>
         </div>
 
         <input type="text" [(ngModel)]="enter" (keyup.enter)="sendMsg()" class="enter-input" placeholder="請輸入訊息...">

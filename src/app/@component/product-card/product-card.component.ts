@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 // 素材庫
 import { LucideAngularModule, MapPin } from 'lucide-angular';
@@ -9,7 +10,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
-  imports: [LucideAngularModule, RouterLink],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   templateUrl: './product-card.component.html',
   styleUrl: './product-card.component.scss'
 })

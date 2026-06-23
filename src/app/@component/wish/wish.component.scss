@@ -18,11 +18,20 @@
 
 
 .content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   @include common-layout;
 }
 
 a {
+  cursor: pointer;
   @include reset-link;
+}
+
+.breadcrumb {
+  margin-top: 1.5rem;
+  @include breadcrumb-style;
 }
 
 lucide-icon { display: flex; align-items: center; }
@@ -37,9 +46,7 @@ lucide-icon { display: flex; align-items: center; }
   gap: 1.5rem;
 }
 
-.breadcrumb {
-  @include breadcrumb-style;
-}
+
 
 // 標題列
 .list-header {
@@ -329,6 +336,10 @@ lucide-icon {
 
   input {
     flex: 1;
+
+    &:disabled{
+      cursor: no-drop;
+    }
   }
 
   .budget-sep {

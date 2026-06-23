@@ -3,7 +3,7 @@ export interface User {
   userId: number;
   userEmail: string;
   userName: string;
-  password?: string;      // ⚠️ 備註：實戰中密碼通常不會傳給前端
+  password?: string;
   phone: string | null;
   location: string;
   school: string;

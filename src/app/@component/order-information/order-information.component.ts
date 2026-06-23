@@ -8,7 +8,7 @@ import {
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
 import { PaginationService } from '../../@Services/pageination.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../../@Services/report.service';
 
 @Component({
@@ -33,6 +33,7 @@ export class OrderInformationComponent {
     private reportService: ReportService,
     private userService: UserService,
     private apiTestService: ApiTestService,
+    private route: ActivatedRoute,
   ) {
     effect(() => {
       const user = this.userService.currentUser();
@@ -85,6 +86,17 @@ export class OrderInformationComponent {
           }
         });
         this.allOrders.sort((a, b) => b.orderId - a.orderId);
+
+        // 商品管理頁點過來插隊在第一個顯示用(因為後端沒回傳productId，先用name頂著)
+        const targetName = this.route.snapshot.queryParamMap.get('targetProductName');
+        if (targetName) {
+          const targetIdx = this.allOrders.findIndex(o => o.productName === targetName);
+          if (targetIdx !== -1) {
+            const [targetOrder] = this.allOrders.splice(targetIdx, 1);
+            targetOrder.isHighlighted = true;
+            this.allOrders.unshift(targetOrder);
+          }
+        }
         this.updatePaginationTotal(); // 初始化分頁器
 
       },

@@ -7,7 +7,7 @@ import {
 } from './../../@Services/wish-service.service';
 
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EduApiGovService } from '../../@Services/edu-api-gov.service';
 import { UserService } from '../../@Services/user.service';
 import { Wish } from './../../@Services/wish-service.service';
@@ -19,6 +19,7 @@ import {
   LucideIconProvider,
   Plus,
   X,
+  House,
 } from 'lucide-angular';
 
 import { WishCardComponent } from '../../@component/wish-card/wish-card.component';
@@ -26,21 +27,19 @@ import { CategoriesService } from '../../@Services/categories.service';
 import Swal from 'sweetalert2';
 import { catchError, EMPTY, finalize, switchMap } from 'rxjs';
 
-
 @Component({
   selector: 'app-wish',
-  imports: [LucideAngularModule, WishCardComponent, FormsModule],
+  imports: [LucideAngularModule, WishCardComponent, FormsModule,  RouterLink],
   templateUrl: './wish.component.html',
   styleUrl: './wish.component.scss',
   providers: [
     {
       provide: LUCIDE_ICONS,
-      useValue: new LucideIconProvider({ Plus, X }),
+      useValue: new LucideIconProvider({ Plus, X, House }),
     },
-  ]
+  ],
 })
 export class WishComponent {
-
   wishList: Wish[] = [];
 
   showPanel = false;
@@ -67,8 +66,10 @@ export class WishComponent {
 
   private loadAllWishes(): void {
     this.wishServiceService.getAllWishes().subscribe({
-      next:(res) => {this.wishList = res.wishesList},
-    })
+      next: (res) => {
+        this.wishList = res.wishesList;
+      },
+    });
   }
 
   // ── 面板操作 ─────────────────────────────────────
@@ -148,6 +149,10 @@ export class WishComponent {
 
     const { budgetMin, budgetMax } = this.wishForm;
 
+    if (budgetMin === 0 && budgetMax === 0) {
+      return true;
+    }
+
     if (budgetMin !== null && budgetMax !== null && budgetMin > budgetMax) {
       Swal.fire({
         title: '預算範圍錯誤！',
@@ -181,6 +186,7 @@ export class WishComponent {
       location: [...this.wishForm.location],
       budgetMin: this.wishForm.budgetMin ?? 0,
       budgetMax: this.wishForm.budgetMax ?? 0,
+      status: 'active',
     };
   }
 
@@ -322,10 +328,27 @@ export class WishComponent {
       budgetMin: null,
       budgetMax: null,
       expiredAt: '',
+      status: 'active',
     };
   }
 
   get cities(): any[] {
     return this.ctgService.cities;
+  }
+
+  // 用來記錄畫面上是否勾選了面議
+  get isNegotiable(): boolean {
+    return this.wishForm.budgetMin === 0 && this.wishForm.budgetMax === 0;
+  }
+
+  toggleNegotiable(event: any): void {
+    const checked = event.target.checked;
+    if (checked) {
+      this.wishForm.budgetMin = 0;
+      this.wishForm.budgetMax = 0;
+    } else {
+      this.wishForm.budgetMin = null;
+      this.wishForm.budgetMax = null;
+    }
   }
 }

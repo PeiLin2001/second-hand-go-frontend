@@ -146,7 +146,7 @@ export class RegisterComponent {
       ]),
       confirmPassword: new FormControl('', [Validators.required]),
       phone: new FormControl('', {
-        validators: [Validators.pattern(/^09-\d{8}$/)],
+        validators: [Validators.required,Validators.pattern(/^09-\d{8}$/)],
         updateOn: 'blur'
       }),
       agreeTerms: new FormControl(false, [Validators.requiredTrue])

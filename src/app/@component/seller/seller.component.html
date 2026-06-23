@@ -3,107 +3,169 @@
   <nav class="filter-panel">
 
     <!-- 麵包屑 -->
-    <nav class="breadcrumb" >
+    <nav class="breadcrumb">
       <a routerLink="/home" class="breadcrumb-link">
         <lucide-icon name="Home" size="16"></lucide-icon>
-          首頁
+        首頁
       </a>
       <span class="sep">></span>
-      <span class="current">尋找賣家</span>
+      <span class="current">尋找同學</span>
     </nav>
 
     <!-- 標題列 + 排序 -->
     <header class="list-header">
-      <h1 class="category-name">尋找賣家</h1>
+      <h1 class="category-name">尋找同學</h1>
 
-      <div class="sort-container">
-        <button class="sort-button"
-        (click)="togglePanel($event, 'sort')"
-        [class.active]="panelState.sort">
-          <span>排序依據</span>
-          <span class="material-symbols-outlined">sort</span>
-        </button>
-
-        @if (panelState.sort) {
-           <ul class="dropdown-content" (click)="$event.stopPropagation()">
-            <li [class.selected]="sortOption === 'newest'"
-                (click)="setSort('newest', $event)">最新加入</li>
-            <li [class.selected]="sortOption === 'credit-score'"
-                (click)="setSort('credit-score', $event)">信用評分</li>
-            <li [class.selected]="sortOption === 'transaction-count'"
-                (click)="setSort('transaction-count', $event)">交易筆數</li>
-          </ul>
-        }
+      <div class="search-container">
+        <input type="text" class="search" [(ngModel)]="searchText" (ngModelChange)="onSearchChange($event)"
+          placeholder="搜尋姓名、科系或使用者 id ...">
       </div>
+
     </header>
 
     <!-- 篩選列：篩選按鈕 + 已選 tags 同一行 -->
     <div class="filter-row">
+      <section class="filter-left">
 
-      <p>您所在的位置 |  </p>
-      <p>緯度：{{ lat }}</p>
-      <p>經度：{{ lng }}</p>
-      <p>所在縣市：{{ cityName }}</p>
+        <!-- 去除@if @else, 改成  {{ showGoodSellerOnly ? 'check' : 'thumb_up' }} -->
+        <button type="button" class="filter-chip" [class.active]="showGoodSellerOnly"
+          (click)="toggleGoodSellerFilter($event)">
+          <span class="material-symbols-outlined">
+            {{ showGoodSellerOnly ? 'check' : 'thumb_up' }}
+          </span>
+          <span>只看 4★ 以上同學</span>
+        </button>
 
-      <button class="fab-filter">
-        只看附近賣家
-      </button>
+        <button class="filter-chip" [class.active]="showNearbyOnly" [disabled]="!isGPSOpen || !isValidCurrentCity"
+          (click)="toggleNearbyFilter($event)">
+          <span class="material-symbols-outlined">
+            {{ showNearbyOnly ? 'check' : 'location_on' }}
+          </span>
+          <span>只看附近同學</span>
+        </button>
+
+        <!-- @if(!isGPSOpen){
+        <button (click)="gpsSwitch()">開啟定位</button>
+        }
+        @else {
+        <button (click)="gpsSwitch()">關閉定位</button>
+        <span class="location-status" [class.ready]="isValidCurrentCity"
+          [class.pending]="cityName === '尚未定位' || cityName === '定位中...'"
+          [class.error]="cityName === '定位失敗' || cityName === '裝置不支援定位' || cityName === '無法辨識城市'">
+
+          <span class="material-symbols-outlined">
+            {{ isValidCurrentCity ? 'my_location' : 'location_searching' }}
+          </span>
+
+          <span class="location-label">目前位置</span>
+          <strong>{{ cityName }}</strong>
+        </span>
+        } -->
+
+        <div class="gps-control">
+          <button type="button" class="gps-switch" role="switch" [class.on]="isGPSOpen" [attr.aria-checked]="isGPSOpen"
+            (click)="gpsSwitch($event)">
+            <span class="gps-switch-thumb"></span>
+          </button>
+
+          <span class="gps-switch-text">
+            <!-- {{ isGPSOpen ? '關閉定位' : '開啟定位' }} -->
+              使用目前位置
+          </span>
+        </div>
+
+        @if (isGPSOpen) {
+        <span class="location-status" [class.ready]="isValidCurrentCity"
+          [class.pending]="cityName === '尚未定位' || cityName === '定位中...'"
+          [class.error]="cityName === '定位失敗' || cityName === '裝置不支援定位' || cityName === '無法辨識城市'">
+          <span class="material-symbols-outlined">
+            {{ isValidCurrentCity ? 'my_location' : 'location_searching' }}
+          </span>
+
+          <span class="location-label">目前位置</span>
+          <strong>{{ cityName }}</strong>
+        </span>
+        }
+
+      </section>
 
 
-      <button class="fab-filter">
-        只看優良賣家
-      </button>
+
+
+      <div class="sort-container">
+        <button class="sort-button" (click)="togglePanel($event, 'sort')" [class.active]="panelState.sort"
+          [class.has-value]="!!sortOption">
+          @if (sortOption) {
+          <span class="sort-button-text">
+            <!-- <span class="sort-caption">排序方式</span> -->
+            <span class="sort-value">{{ sortLabel }}</span>
+          </span>
+          } @else {
+          <span class="sort-placeholder">排序依據</span>
+          }
+
+          <span class="material-symbols-outlined sort-icon">
+            sort
+          </span>
+        </button>
+
+        @if (panelState.sort) {
+        <ul class="dropdown-content" (click)="$event.stopPropagation()">
+          <li [class.selected]="sortOption === 'recommended'" (click)="setSort('recommended', $event)">
+            綜合推薦
+          </li>
+
+          <li [class.selected]="sortOption === 'same-location'" (click)="setSort('same-location', $event)">
+            同地區優先
+          </li>
+
+          <li [class.selected]="sortOption === 'credit-score'" (click)="setSort('credit-score', $event)">
+            信用評分最高
+          </li>
+
+          <li [class.selected]="sortOption === 'newest'" (click)="setSort('newest', $event)">
+            最新加入
+          </li>
+        </ul>
+        }
+      </div>
 
     </div>
 
   </nav>
 
-  <div class="search-container">
-    <input
-      type="text"
-      class="search"
-      [(ngModel)]="searchText"
-      (ngModelChange)="onSearchChange($event)"
-      placeholder="尋找同學（可輸入姓名或科系）..."
-    >
-  </div>
+
 
   <!-- 增加一個防呆與友善提示：找不到人時顯示提示 -->
   @if (filteredUsers.length > 0) {
-    <app-user-card [users]="filteredUsers"></app-user-card>
+  <app-user-card [users]="sortedUsers"></app-user-card>
   } @else {
-    <section class="empty-state">
+  <section class="empty-state">
 
-      <div class="empty-icon-wrapper">
-        <span class="material-symbols-outlined">search_off</span>
-      </div>
+    <div class="empty-icon-wrapper">
+      <span class="material-symbols-outlined">search_off</span>
+    </div>
 
-      <div class="empty-content">
-        <h2>找不到同學 !</h2>
-        <p class="empty-description">
-          我們找不到符合 <span>"{{ searchText }}"</span> 的同學，換個關鍵字試試看吧！
-        </p>
-      </div>
+    <div class="empty-content">
+      <h2>找不到同學 !</h2>
+      <p class="empty-description">
+        我們找不到符合 <span>"{{ searchText }}"</span> 的同學，換個關鍵字試試看吧！
+      </p>
+    </div>
 
-      <div class="empty-actions">
-        <button
-          class="text-btn secondary-link"
-          (click)="clearAllFilters($event)"
-        >
-          清除搜尋
-        </button>
+    <div class="empty-actions">
+      <button class="text-btn secondary-link" (click)="clearAllFilters($event)">
+        清除搜尋
+      </button>
 
-        <span class="divider">|</span>
+      <span class="divider">|</span>
 
-        <button
-          class="text-btn primary-link"
-          routerLink="/home"
-        >
-          返回首頁
-        </button>
-      </div>
+      <button class="text-btn primary-link" routerLink="/home">
+        返回首頁
+      </button>
+    </div>
 
-    </section>
+  </section>
 
   }
 </main>

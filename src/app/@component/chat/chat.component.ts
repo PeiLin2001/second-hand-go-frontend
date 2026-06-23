@@ -1,14 +1,24 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
-import { Component, effect, NgZone, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  NgZone,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { SocketService } from '../../@Services/socket.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DestroyRef, inject } from '@angular/core';
 import {
-  LucideAngularModule, LUCIDE_ICONS, LucideIconProvider, Search, Camera,
-  Trash2
+  LucideAngularModule,
+  LUCIDE_ICONS,
+  LucideIconProvider,
+  Search,
+  Paperclip,
+  Trash2,
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
 
@@ -20,12 +30,13 @@ import Swal from 'sweetalert2';
   providers: [
     {
       provide: LUCIDE_ICONS,
-      useValue: new LucideIconProvider({ Search, Camera, Trash2 })
-    }
-  ]
+      useValue: new LucideIconProvider({ Search, Paperclip, Trash2 }),
+    },
+  ],
 })
 export class ChatComponent {
-  constructor(private socketService: SocketService,
+  constructor(
+    private socketService: SocketService,
     private userService: UserService,
     private router: Router,
     private route: ActivatedRoute,
@@ -85,20 +96,22 @@ export class ChatComponent {
       this.fetchProduct(this.urlProductId);
     }
 
-    this.socketService.getMessage().pipe(
-      takeUntilDestroyed(this.destroyRef) // 元件死掉時自動退訂。
-    ).subscribe({
-      next: (data: any) => {
-        console.log('data:', data);
-        this.zone.run(() => {
-          this.message = [...this.message, data];
-          this.scrollToBottom();
-        })
-      },
-      error: (err) => console.error('Socket 接收失敗:', err)
-    });
+    this.socketService
+      .getMessage()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef), // 元件死掉時自動退訂。
+      )
+      .subscribe({
+        next: (data: any) => {
+          console.log('data:', data);
+          this.zone.run(() => {
+            this.message = [...this.message, data];
+            this.scrollToBottom();
+          });
+        },
+        error: (err) => console.error('Socket 接收失敗:', err),
+      });
   }
-
 
   private checkAndFetchRoom() {
     if (this.userId == null || this.partnerId == null) return;
@@ -117,12 +130,14 @@ export class ChatComponent {
           this.checkAndUpdateRoomProduct();
           this.getAllRoom(this.userId!);
 
-          if (this.roomProductId) { this.fetchProduct(this.roomProductId); }
+          if (this.roomProductId) {
+            this.fetchProduct(this.roomProductId);
+          }
         } else {
           console.error('得到的房號是 null，無法加入 Socket 房間！');
         }
       },
-      error: (err) => console.error('取得房間失敗:', err)
+      error: (err) => console.error('取得房間失敗:', err),
     });
   }
 
@@ -130,10 +145,10 @@ export class ChatComponent {
     this.apiTestService.history(roomId).subscribe({
       next: (res) => {
         this.message = res.chatMessageVo || [];
-        this.scrollToBottom();// 滾輪捲到最底下
+        this.scrollToBottom(); // 滾輪捲到最底下
       },
-      error: (err) => console.error('history 接收失敗:', err)
-    })
+      error: (err) => console.error('history 接收失敗:', err),
+    });
   }
 
   private getAllRoom(userId: number) {
@@ -142,15 +157,15 @@ export class ChatComponent {
         console.log('roomList', room);
         this.roomList = room.chatRoomVo || [];
       },
-      error: (err) => console.error('roomList 接收失敗:', err)
-    })
+      error: (err) => console.error('roomList 接收失敗:', err),
+    });
   }
 
   readAllRoomMessages(roomId: number, userId: number) {
     this.apiTestService.readAllRoomMessages(roomId, userId).subscribe({
       next: (res) => { },
-      error: (err) => console.error('readMessages 失敗:', err)
-    })
+      error: (err) => console.error('readMessages 失敗:', err),
+    });
   }
 
   sendMsg() {
@@ -159,7 +174,7 @@ export class ChatComponent {
     let messageData = {
       roomId: this.roomId,
       senderId: this.userId,
-      messageContent: this.enter
+      messageContent: this.enter,
     };
     // 發送訊息給後端（注意：Socket 發送通常是直接 emit，不需要 .subscribe）
     this.socketService.sendMessage(messageData);
@@ -174,7 +189,8 @@ export class ChatComponent {
   scrollToBottom(): void {
     try {
       setTimeout(() => {
-        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+        this.scrollContainer.nativeElement.scrollTop =
+          this.scrollContainer.nativeElement.scrollHeight;
       }, 50);
     } catch (err) {
       console.error('滾動失敗：', err);
@@ -183,12 +199,14 @@ export class ChatComponent {
 
   // 側邊搜尋
   get filteredRoomList() {
-    if (!this.keyword.trim()) { return this.roomList; }
+    if (!this.keyword.trim()) {
+      return this.roomList;
+    }
 
     const keyword = this.keyword.toLowerCase().trim();
 
     // 名字或 ID 只要包含了關鍵字就留下來
-    return this.roomList.filter(room => {
+    return this.roomList.filter((room) => {
       const nameMatch = room.targetUserName?.toLowerCase().includes(keyword);
       const idMatch = room.targetUserId?.toString().includes(keyword);
 
@@ -247,7 +265,7 @@ export class ChatComponent {
     };
     reader.readAsDataURL(file);
     this.scrollToBottom();
-    element.value = '';    // 清空 input，讓同一張圖可以重複選
+    element.value = ''; // 清空 input，讓同一張圖可以重複選
   }
 
   // 刪除指定圖片
@@ -259,7 +277,11 @@ export class ChatComponent {
   // 圖片送出
   sendPic() {
     if (!this.pictures || this.pictures.length === 0) return;
-    Swal.fire({ title: '正在發送圖片', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    Swal.fire({
+      title: '正在發送圖片',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
 
     let body = { pictures: this.pictures };
 
@@ -270,7 +292,7 @@ export class ChatComponent {
         let messageData = {
           roomId: this.roomId,
           senderId: this.userId,
-          messageContent: joinedUrls
+          messageContent: joinedUrls,
         };
         this.socketService.sendMessage(messageData);
 
@@ -278,31 +300,64 @@ export class ChatComponent {
         this.pictures = [];
         this.scrollToBottom();
       },
-      error: (err) => console.error('圖片上傳失敗:', err)
-    })
+      error: (err) => console.error('圖片上傳失敗:', err),
+    });
   }
 
   // 放大圖片
-  openLightBox(url: string) { this.activeImageUrl = url; }
+  openLightBox(url: string) {
+    this.activeImageUrl = url;
+  }
 
   // 關閉放大圖片
-  closeLightBox() { this.activeImageUrl = null; }
+  closeLightBox() {
+    this.activeImageUrl = null;
+  }
 
   // 商品資訊
   private fetchProduct(productId: number) {
     this.apiTestService.searchByProductId(productId).subscribe({
-      next: (product) => { this.product = product.productList[0]; },
-      error: (err) => console.error('撈取商品資訊失敗:', err)
-    })
+      next: (product) => {
+        this.product = product.productList[0];
+      },
+      error: (err) => console.error('撈取商品資訊失敗:', err),
+    });
   }
 
   private checkAndUpdateRoomProduct() {
     if (this.urlProductId && this.urlProductId !== this.roomProductId) {
-      this.apiTestService.updateProductId(this.urlProductId, this.roomId!).subscribe({
-        next: () => { this.roomProductId = this.urlProductId!; },
-        error: (err) => console.error('更新房間商品失敗:', err)
-      });
+      this.apiTestService
+        .updateProductId(this.urlProductId, this.roomId!)
+        .subscribe({
+          next: () => {
+            this.roomProductId = this.urlProductId!;
+          },
+          error: (err) => console.error('更新房間商品失敗:', err),
+        });
     }
+  }
+
+  goProduct(productId: number) {
+    this.router.navigate(['/product_page', productId]);
+  }
+
+  readonly IMAGE_EXTENSIONS = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.svg',
+    '.webp',
+  ]; // 支援的圖片格式
+
+  // 圖片格式檢查方法
+  isImageMessage(messageContent: string): boolean {
+    if (!messageContent || !messageContent.includes('http')) {
+      return false;
+    }
+    const lowerContent = messageContent.toLowerCase();
+
+    return this.IMAGE_EXTENSIONS.some((ext) => lowerContent.endsWith(ext));
   }
 
   // 關閉聊天室
