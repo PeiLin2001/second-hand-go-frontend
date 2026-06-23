@@ -1,7 +1,7 @@
 <main class="content">
   <header class="favorites-header">
     <h3 class="favorites-title">收藏的商品 ({{productAmount}})</h3>
-    <div class ="btn-clear-wrapper">
+    <div class="btn-clear-wrapper">
 
       <button class="btn-clear-all" type="button" (click)="deleteList()">
         <lucide-icon [img]="Trash2Icon" size="18"></lucide-icon>
@@ -9,9 +9,9 @@
       </button>
       @if(alert != '')
       {
-        <p class="alert-msg">
-          {{alert}}
-        </p>
+      <p class="alert-msg">
+        {{alert}}
+      </p>
       }
     </div>
   </header>
@@ -23,21 +23,16 @@
         <input type="checkbox" class="item-checkbox" [(ngModel)]="item.selected">
       </div>
 
-      <div class="item-img" >
-        <a class="card-link" [routerLink]="['/product_page', item.productId]"></a>
-        <img [src]="item.imgUrl"
-          alt="商品照片"
-          class="product-thumbnail">
+      <div class="item-img">
+        <img [src]="item.imgUrl" alt="商品照片" class="product-thumbnail" [routerLink]="['/product_page', item.productId]">
       </div>
 
-      <div class="product-info"  >
+      <div class="product-info">
         <div class="product-header">
 
           <div class="title-wrapper">
 
-            <h5
-              class="item-title"
-              [title]="item.title">
+            <h5 class="item-title" [title]="item.title" [routerLink]="['/product_page', item.productId]">
 
               {{ item.title }}
 
@@ -49,7 +44,7 @@
             <span class="item-condition">{{item.condition}}</span>
             <div class="item-price">
               <span class="price-currency">$</span>
-              <span class="price-amount">{{item.price}}</span>
+              <span class="price-amount">{{item.price | number:'1.0-0' }}</span>
             </div>
           </div>
         </div>
@@ -60,41 +55,35 @@
             商品描述
           </p>
 
-          <div
-            class="description-content-wrapper"
-            [class.expanded]="isDescriptionExpanded(item.productId)"
-            [class.has-overflow]="item.description.length > 80"
-          >
+          <div class="description-content-wrapper" [class.expanded]="isDescriptionExpanded(item.productId)"
+            [class.has-overflow]="item.description.length > 80">
 
             <p class="item-description">
               {{ item.description }}
             </p>
 
             @if(item.description.length > 80 && !isDescriptionExpanded(item.productId)){
-              <div class="fade-overlay"></div>
+            <div class="fade-overlay"></div>
             }
 
           </div>
 
           @if(item.description.length > 80) {
 
-            <div class="toggle-btn-container">
+          <div class="toggle-btn-container">
 
-              <button
-                class="toggle-btn"
-                type="button"
-                (click)="toggleDescription(item.productId)"
-                 [class.expanded]="isDescriptionExpanded(item.productId)">
+            <button class="toggle-btn" type="button" (click)="toggleDescription(item.productId)"
+              [class.expanded]="isDescriptionExpanded(item.productId)">
 
-                {{
-                  isDescriptionExpanded(item.productId)
-                    ? '收合'
-                    : '查看更多'
-                }}
+              {{
+              isDescriptionExpanded(item.productId)
+              ? '收合'
+              : '查看更多'
+              }}
 
-              </button>
+            </button>
 
-            </div>
+          </div>
 
           }
 
@@ -102,12 +91,11 @@
 
       </div> <!-- the end of item description wrapper -->
 
-      <div class="item-content"  >
+      <div class="item-content">
 
         <div class="seller-info">
           <div class="seller-header">
-            <img [src]="item.sellerImg"
-             class="seller-avatar" alt="賣家頭像">
+            <img [src]="item.sellerImg" class="seller-avatar" alt="賣家頭像">
             <span class="seller-name">{{item.sellerName}}</span>
           </div>
 
@@ -124,11 +112,7 @@
           <lucide-icon [img]="MapPinIcon" size="14"></lucide-icon>
           <span>{{item.location}}</span>
         </div>
-
       </div>
-
-
-
     </li>
     }
   </ul>

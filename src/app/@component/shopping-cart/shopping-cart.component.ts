@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms'; // 1. Import FormsModule
+import { FormsModule } from '@angular/forms';
+import { DecimalPipe } from '@angular/common'
 
 
 import { LucideAngularModule, MessageCircleMore, Trash2, HeartIcon, MapPin, GraduationCap } from 'lucide-angular';
@@ -11,7 +12,7 @@ import { ProductVo } from '../../@Interface/product-vo';
 
 @Component({
   selector: 'app-shopping-cart',
-  imports: [LucideAngularModule, FormsModule, RouterLink],
+  imports: [LucideAngularModule, FormsModule, RouterLink, DecimalPipe],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.scss'
 })
@@ -62,13 +63,13 @@ export class ShoppingCartComponent {
             imgUrl: item.imgPath || 'assets/bag.jpg',
             sellerName: item.sellerName,
             sellerImg: item.sellerImg || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR54AYQT76piHk4cPNEzhiwKO9cqRr0nk2JSg&s',
-            selected: false,                 // 複選框專用狀態，預設不勾選
-            condition: item.condition || '狀況未知',
-            description: item.decription || '同學很懶，這個商品沒有寫下任何描述。不過既然點了收藏，就趕快按右邊對話框跟同學聊聊確認吧！',
-            university: item.school || '未知學校'
+            selected: false,
+            condition: item.condition || '未填寫',
+            description: item.decription || '此商品沒有描述',
+            university: item.school || '未提供學校'
           }));
 
-          this.productAmount = this.products.length; // 更新總收藏數量
+          this.productAmount = this.products.length;
         }
       },
       error: (err) => {
@@ -76,7 +77,6 @@ export class ShoppingCartComponent {
       }
     });
   }
-
 
   toggleDescription(productId: number) {
     if (this.expandedDescriptions.has(productId)) {
@@ -86,35 +86,26 @@ export class ShoppingCartComponent {
     }
   }
 
-
   isDescriptionExpanded(productId: number): boolean {
     return this.expandedDescriptions.has(productId);
   }
-
-
 
   deleteList() {
     const selectedItems = this.products.filter(p => p.selected);
 
     if (selectedItems.length > 0) {
-      this.alert = ""; // 清空警告訊息
+      this.alert = "";
 
       Swal.fire({
         title: `確定要刪除這 ${selectedItems.length} 筆商品嗎？`,
-        text: "移除後如果想再加入，需要回到商品詳細頁重新點擊愛心喔！",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#EDA900", // 對齊妳們的暖黃主題色
-        cancelButtonColor: "#d33",
         confirmButtonText: "確定刪除",
         cancelButtonText: "取消"
       }).then((result) => {
         if (result.isConfirmed) {
 
-          // 2. 提取所有被勾選商品的後端 collectId，做成陣列 [1, 2, 3...]
           const idsToDelete = selectedItems.map(item => item.collectId);
-
-          // 3. 呼叫我們剛剛跟後端大復活的「掛肉粽」批量刪除 API
           this.apiTestService.deleteCollect(idsToDelete).subscribe({
             next: (res) => {
               if (res.statusCode === 200) {
@@ -124,7 +115,6 @@ export class ShoppingCartComponent {
                   confirmButtonColor: "#EDA900"
                 });
 
-                // 4. 刪除成功後，重新呼叫加載，網頁卡片就會啪一聲瞬間消失，超級流暢！
                 this.loadUserFavorites();
               } else {
                 Swal.fire('刪除失敗', res.message, 'error');
@@ -132,14 +122,12 @@ export class ShoppingCartComponent {
             },
             error: (err) => {
               console.error('批量刪除失敗：', err);
-              Swal.fire('連線失敗', '後端水管似乎斷了，請稍後再試', 'error');
+              Swal.fire('連線失敗', '伺服器連線錯誤，請稍後再試', 'error');
             }
           });
         }
       });
-
     } else {
-      // 5. 如果使用者什麼都沒勾就按刪除，亮起妳設計的經典提示
       this.alert = "請選擇您要刪除的商品！";
     }
   }
@@ -150,7 +138,6 @@ export class ShoppingCartComponent {
         title: '無法開啟聊天',
         text: '暫時找不到該同學的資訊',
         icon: 'warning',
-        confirmButtonColor: '#EDA900'
       });
       return;
     }

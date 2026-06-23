@@ -1,0 +1,45 @@
+<div class="profile-list">
+  @for (item of users; track item.userId) {
+    <div class="profile-card" [routerLink]="['/store', item.userId]">
+
+      <div class="card-header">
+        <div class="avatar-container">
+          <img [src]="item.imgPath" alt="使用者頭像" class="avatar">
+        </div>
+
+        <div class="user-meta">
+          <h3 class="username" [title]="item.userName">
+            {{ item.userName }}
+          </h3>
+          <p class="user-id">使用者 ID: {{ item.userId }}</p>
+        </div>
+      </div>
+
+      <hr class="divider-solid">
+
+      <div class="card-body">
+        <p class="info-item school" [title]="item.department">
+          <i class="icon i-school"></i>
+          <span>{{ item.school }}</span>
+        </p>
+        <p class="info-item location">
+          <i class="icon i-location"></i>
+          <span>{{ item.location }}</span>
+        </p>
+      </div>
+
+      <hr class="divider-dashed">
+
+      <div class="reputation">
+        <i class="icon i-star"></i>
+        <span>信用評分: {{ item.goodLevel }}★</span>
+      </div>
+
+      <button class="action-btn" type="button">
+        <span>查看個人檔案</span>
+        <span class="arrow">→</span>
+      </button>
+
+    </div>
+  }
+</div>

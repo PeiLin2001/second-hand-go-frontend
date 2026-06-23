@@ -18,7 +18,7 @@
 
       <div class="search-container">
         <input type="text" class="search" [(ngModel)]="searchText" (ngModelChange)="onSearchChange($event)"
-          placeholder="搜尋姓名、科系或使用者 id ...">
+          placeholder="搜尋姓名、科系、地區或使用者 id ...">
       </div>
 
     </header>
@@ -41,26 +41,8 @@
           <span class="material-symbols-outlined">
             {{ showNearbyOnly ? 'check' : 'location_on' }}
           </span>
-          <span>只看附近同學</span>
+          <span>尋找常出沒於目前地區的同學</span>
         </button>
-
-        <!-- @if(!isGPSOpen){
-        <button (click)="gpsSwitch()">開啟定位</button>
-        }
-        @else {
-        <button (click)="gpsSwitch()">關閉定位</button>
-        <span class="location-status" [class.ready]="isValidCurrentCity"
-          [class.pending]="cityName === '尚未定位' || cityName === '定位中...'"
-          [class.error]="cityName === '定位失敗' || cityName === '裝置不支援定位' || cityName === '無法辨識城市'">
-
-          <span class="material-symbols-outlined">
-            {{ isValidCurrentCity ? 'my_location' : 'location_searching' }}
-          </span>
-
-          <span class="location-label">目前位置</span>
-          <strong>{{ cityName }}</strong>
-        </span>
-        } -->
 
         <div class="gps-control">
           <button type="button" class="gps-switch" role="switch" [class.on]="isGPSOpen" [attr.aria-checked]="isGPSOpen"
@@ -70,7 +52,7 @@
 
           <span class="gps-switch-text">
             <!-- {{ isGPSOpen ? '關閉定位' : '開啟定位' }} -->
-              使用目前位置
+            使用目前位置
           </span>
         </div>
 
@@ -97,7 +79,6 @@
           [class.has-value]="!!sortOption">
           @if (sortOption) {
           <span class="sort-button-text">
-            <!-- <span class="sort-caption">排序方式</span> -->
             <span class="sort-value">{{ sortLabel }}</span>
           </span>
           } @else {
@@ -138,7 +119,8 @@
 
   <!-- 增加一個防呆與友善提示：找不到人時顯示提示 -->
   @if (filteredUsers.length > 0) {
-  <app-user-card [users]="sortedUsers"></app-user-card>
+  <app-user-card-plus [users]="sortedUsers"></app-user-card-plus>
+  <!-- <app-user-card [users]="sortedUsers"></app-user-card> -->
   } @else {
   <section class="empty-state">
 

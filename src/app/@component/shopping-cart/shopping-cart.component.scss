@@ -95,7 +95,7 @@ lucide-icon { display: flex; align-items: center; }
    Favorite Item
 ========================= */
 .favorite-item {
-  position: relative;//定位基準
+
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
@@ -111,16 +111,6 @@ lucide-icon { display: flex; align-items: center; }
 
   transition: all 0.3s ease;
 
-  &:hover {
-    transform: scale(1.02); // 滑鼠懸停時微微放大 2%
-  }
-}
-
-.card-link {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: 16px;  // 跟 .favorite-item 的圓角一致
 }
 
 /* =========================
@@ -132,12 +122,12 @@ lucide-icon { display: flex; align-items: center; }
 }
 
 // 這些元素浮在連結上面
-.item-prefix,
-.btn-chat,
-.toggle-btn-container {
-  position: relative;
-  z-index: 2;
-}
+// .item-prefix,
+// .btn-chat,
+// .toggle-btn-container {
+//   position: relative;
+//   z-index: 2;
+// }
 
 .item-checkbox {
   appearance: none;
@@ -182,7 +172,7 @@ lucide-icon { display: flex; align-items: center; }
 
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
-  cursor: pointer;
+  // cursor: pointer;
 
   background: linear-gradient(
     135deg,
@@ -196,6 +186,7 @@ lucide-icon { display: flex; align-items: center; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  cursor: pointer;
 }
 
 /* =========================
@@ -209,7 +200,6 @@ lucide-icon { display: flex; align-items: center; }
   flex-direction: column;
   gap: 0.5rem;
   justify-content: center;
-  cursor: pointer;
 
   .product-header {
     display: flex;
@@ -229,14 +219,16 @@ lucide-icon { display: flex; align-items: center; }
 .item-title {
   margin: 0;
 
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 700;
 
   color: $text-black;
 
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis
+  text-overflow: ellipsis;
+
+  cursor: pointer;
 }
 
     // 🔴 右側容器：狀態與價格併排
@@ -280,7 +272,7 @@ lucide-icon { display: flex; align-items: center; }
 
   .item-description-title {
     margin: 0 0 .5rem;
-    font-size: .85rem;
+    font-size: 1rem;
     font-weight: 600;
     color: $neutral-500;
   }
@@ -302,7 +294,7 @@ lucide-icon { display: flex; align-items: center; }
       .item-description {
         margin: 0;
 
-        font-size: .85rem;
+        font-size: 1rem;
         line-height: 1.6;
 
         color: $text-gray;
@@ -357,8 +349,7 @@ lucide-icon { display: flex; align-items: center; }
 
   padding-left: 1rem;
   border-left: 1px solid #f1f5f9;
-  cursor: pointer;
-
+  // cursor: pointer;
 
   .seller-info {
     display: flex;

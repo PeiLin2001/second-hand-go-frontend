@@ -50,7 +50,6 @@ export class ProductCardComponent {
   }
 
 
-  // Gemini優化版
   formatDate(date: string): string {
     const diffMs = Date.now() - new Date(date).getTime();
 
