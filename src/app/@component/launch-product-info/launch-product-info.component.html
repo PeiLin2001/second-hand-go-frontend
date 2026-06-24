@@ -19,8 +19,7 @@
   <div class="form-vertical-container">
     <fieldset class="field">
       <legend class="section-label">可面交地區 <span class="req">*</span></legend>
-      <div class="checkbox-group location-checkbox-group"
-        [class.error]="touched.locationRegions && state.locationRegions.length === 0">
+      <div class="checkbox-group location-checkbox-group">
         @for (region of regionOptions; track region) {
         <label class="checkbox-label">
           <input type="checkbox" [checked]="state.locationRegions.includes(region)"
@@ -29,11 +28,14 @@
         </label>
         }
       </div>
+      @if (touched.locationRegions && state.locationRegions.length === 0) {
+      <p class="field-hint error-text">✘ 請至少選擇一個可面交地區</p>
+      }
     </fieldset>
 
     <fieldset class="field">
-      <legend class="section-label">建議面交年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
-      <div class="checkbox-group" [class.error]="touched.grades && state.grades.length === 0">
+      <legend class="section-label">適用年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
+      <div class="checkbox-group">
         @for (grade of gradeList; track grade) {
         <label class="checkbox-label">
           <input type="checkbox" [checked]="state.grades.includes(grade)" (change)="onGradeChange($event, grade)" />
@@ -41,11 +43,14 @@
         </label>
         }
       </div>
+      @if (touched.grades && state.grades.length === 0) {
+      <p class="field-hint error-text">✘ 請至少選擇一個適用年級</p>
+      }
     </fieldset>
 
     <fieldset class="field">
       <legend class="section-label">分類 <span class="req">*</span></legend>
-      <div class="checkbox-group cat-checkbox-group" [class.error]="touched.catMain && state.catMain.length === 0">
+      <div class="checkbox-group cat-checkbox-group">
         @for (cat of catOptions; track cat) {
         <label class="checkbox-label">
           <input type="checkbox" [checked]="state.catMain.includes(cat)" (change)="onCatChange($event, cat)" />
@@ -63,10 +68,13 @@
           }
         </label>
       </div>
+      @if (touched.catMain && state.catMain.length === 0) {
+      <p class="field-hint error-text">✘ 請至少選擇一個分類</p>
+      }
     </fieldset>
 
     <fieldset class="field">
-      <legend class="section-label">適用學群 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
+      <legend class="section-label">適用學群 <span class="hint-text">（可複選、選填）</span></legend>
       <div class="checkbox-group">
         @for (dept of deptGroupOptions; track dept) {
         <label class="checkbox-label">
