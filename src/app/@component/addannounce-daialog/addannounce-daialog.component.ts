@@ -168,14 +168,14 @@ export class AddannounceDaialogComponent {
     };
 
     // 發布才需要確認 dialog
-    if (isPublished) {
-      const confirmRef = this.diao.open(AnnounDialogComponent);
-      confirmRef.afterClosed().subscribe((confirmed) => {
-        if (confirmed === true) callApi();
-      });
-    } else {
+    // if (isPublished) {
+    //   const confirmRef = this.diao.open(AnnounDialogComponent);
+    //   confirmRef.afterClosed().subscribe((confirmed) => {
+    //     if (confirmed === true) callApi();
+    //   });
+    // } else {
       callApi();
-    }
+    // }
   }
 
   getFirstError() {
