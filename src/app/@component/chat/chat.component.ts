@@ -176,7 +176,11 @@ export class ChatComponent {
 
   readAllRoomMessages(roomId: number, userId: number) {
     this.apiTestService.readAllRoomMessages(roomId, userId).subscribe({
-      next: (res) => {},
+      next: (res) => {
+        if (this.previousUnread > 0) {
+          this.socketService.decrementUnread(this.previousUnread);
+        }
+      },
       error: (err) => console.error('readMessages 失敗:', err),
     });
   }
@@ -227,12 +231,15 @@ export class ChatComponent {
     });
   }
 
+  previousUnread: number = 0;
   changePartner(partner: any) {
     if (!partner || !partner.roomId) return;
     console.log(partner);
 
     this.product = null;
     this.roomId = partner.roomId;
+
+    this.previousUnread = partner.unreadCount;
     partner.unreadCount = 0;
 
     // this.router.navigate(['/chat', partner.targetUserId]); // 同步更新網址
