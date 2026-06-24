@@ -200,6 +200,41 @@ export class StoreComponent {
     }
   }
 
+  // 手機打碼
+  get maskedPhone(): string {
+    const phone = this.shopOwnerData()?.phone;
+    if (!phone) return '未填寫';
+
+    if (phone.includes('-') && phone.length >= 11) {
+      const prefix = phone.substring(0, 3);
+      const suffix = phone.substring(phone.length - 3);
+
+      return `${prefix}*****${suffix}`;
+    }
+
+    if (phone.length >= 10) {
+      return `${phone.substring(0, 2)}*****${phone.substring(phone.length - 3)}`;
+    }
+    return phone; // 長度怪怪的就直接回傳原樣
+  }
+
+  // Email 打碼
+  get maskedEmail(): string {
+    const email = this.shopOwnerData()?.userEmail;
+    if (!email) return '未填寫';
+
+    const [name, domain] = email.split('@');
+    if (!domain) return email; // 預防格式錯誤
+
+    if (name.length <= 2) {
+      return `*@${domain}`; // 名字太短直接變 *@domain
+    } else if (name.length <= 5) {
+      return `${name.substring(0, 1)}***@${domain}`;
+    } else {
+      return `${name.substring(0, 2)}***${name.substring(name.length - 2)}@${domain}`;
+    }
+  }
+
   // 前往商品詳情頁
   goProductPage(item: any) { this.router.navigate(['/product_page', item.productId]); }
 
