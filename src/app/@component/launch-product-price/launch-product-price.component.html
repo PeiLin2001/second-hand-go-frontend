@@ -99,8 +99,9 @@
         <div class="field-header">
           <label class="section-label" for="productPrice">價格 <span class="req">*</span></label>
         </div>
-        <input type="number" id="productPrice" min="0" placeholder="請輸入價格" [value]="state.price || ''"
-          [class.error]="touched.price && !(state.price > 0)" (input)="onPriceInput($event)" />
+        <input type="number" id="productPrice" min="1" placeholder="請輸入價格" [value]="state.price || ''"
+          [class.error]="touched.price && !(state.price > 0)"
+          (keydown)="onPriceKeydown($event)" (input)="onPriceInput($event)" />
         <p class="field-hint">單位：新台幣（元）</p>
       </div>
 
