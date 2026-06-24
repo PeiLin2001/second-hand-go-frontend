@@ -56,9 +56,9 @@
         <!-- 新增類別 -->
         <label class="checkbox-label custom-cat-label">
           <input type="checkbox" [checked]="customCatChecked" (change)="onCustomCatCheckChange($event)" />
-          <span>新增類別</span>
+          <span class="tag-label">商品標籤 (選填) <span class="info-icon">ⓘ </span> </span>
           @if (customCatChecked) {
-          <input class="cat-custom-input" type="text" placeholder="輸入類別" [(ngModel)]="customCatInput"
+          <input class="cat-custom-input" type="text" maxlength="10" placeholder="輸入標籤" [(ngModel)]="customCatInput"
             (ngModelChange)="onCustomCatInput()" (click)="$event.stopPropagation()" />
           }
         </label>
