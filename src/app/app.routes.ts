@@ -61,10 +61,10 @@ export const routes: Routes = [
         ]
       }, //校版layout
       { path: '', redirectTo: 'home', pathMatch: 'full' },
-      { path: 'chat', component: ChatComponent, canActivate: [authGuard] }, //聊天室
-      { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] }, //聊天室(從商品||交易...)點選(需要帶參數時用)
     ],
   },
+  { path: 'chat', component: ChatComponent, canActivate: [authGuard] }, //聊天室
+  { path: 'chat/:id', component: ChatComponent, canActivate: [authGuard] }, //聊天室(從商品||交易...)點選(需要帶參數時用)
   { path: 'login_register', component: LoginRegisterComponent }, //登入註冊頁面
 
   //後台

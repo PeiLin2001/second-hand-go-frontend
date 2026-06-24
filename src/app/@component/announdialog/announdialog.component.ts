@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import {  LucideAngularModule, X } from 'lucide-angular';
 
@@ -13,6 +13,7 @@ export class AnnoundialogComponent {
 
  data = inject(MAT_DIALOG_DATA);
   readonly closeIcon = X;
+
 }
 
 export interface AnnouncementDetail {
