@@ -70,7 +70,7 @@
     color: $neutral-500;
     padding: 12px 24px;
     background: transparent;
-    font-size: 15px;
+    font-size: 1rem;
     transition: all 0.2s;
     position: relative;
 
@@ -79,7 +79,7 @@
     }
 
     &.active {
-      color: $primary-yellow;
+      color: $text-black;
       font-weight: bold;
 
       &::after {
