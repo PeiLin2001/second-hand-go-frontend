@@ -371,7 +371,7 @@ export class ProductPageComponent {
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: '確定發送',
-      cancelButtonText: '我在想想',
+      cancelButtonText: '我再想想',
       confirmButtonColor: '#EDA900',
       cancelButtonColor: '#999999',
       reverseButtons: true
