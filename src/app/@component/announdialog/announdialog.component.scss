@@ -1,137 +1,127 @@
+@use "../../styles/mixins" as *;
 @use "../../styles/variables" as *;
 
-.dialog-wrapper {
+.dialog-box {
+  width: 100%;
+  height: 100%;
+  max-height: 90vh;
+
   display: flex;
   flex-direction: column;
-  min-width: 480px;
-  max-width: 600px;
+
+  background: #fff;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
-// 檢舉Dialog
-::ng-deep.cdk-overlay-container {
-  z-index: 10000 !important;
-}
-
-// ===== 標題區 =====
+// ===== 上方標題列 =====
 .dialog-header {
-  padding: 24px 24px 16px;
-  border-bottom: 1px solid #e2ded5;
-}
+  flex: 0 0 auto;
 
-.dialog-title {
-  font-size: $font-size-h1;
-  font-weight: 700;
-  color: #1a1814;
-  margin: 0 0 10px;
-  line-height: 1.4;
-}
-
-.dialog-period {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  justify-content: space-between;
+
+  padding: 1.2rem 1.5rem;
+  background-color: #fff;
+  border-bottom: 1px solid #f1f1f1;
 }
 
-.period-icon {
-  color: #c49a3a;
-  display: flex;
-  flex-shrink: 0;
+.dialog-header h2 {
+  margin: 0;
+
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 5%;
+  color: $text-black;
 }
 
-.period-label {
-  font-weight: 600;
-  color: #c49a3a;
-}
+.close-btn {
+  width: 2rem;
+  height: 2rem;
 
-.period-value {
-  color: #6b6760;
-}
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
 
-// ===== 內容區 =====
-mat-dialog-content {
-  padding: 0 !important;
-  margin: 0 !important;
-  max-height: 60vh;
-  overflow-y: auto;
-}
+  font-size: 1.2rem;
+  color: $neutral-300;
+  line-height: 1;
 
-.section {
-  padding: 20px 24px;
-  border-bottom: 1px solid #f0ede8;
+  @include centered;
 
-  &:last-child {
-    border-bottom: none;
+  &:hover {
+    background: #f5f5f5;
+    color: $neutral-500;
   }
 }
 
-.section-label {
-  font-size: 14px;
-  font-weight: 700;
-  color: #1a1814;
-  margin: 0 0 12px;
+// ===== 中間可滾動內容 =====
+.announcement-content {
+  flex: 1 1 auto;
+  min-height: 0;
+
+  overflow-y: auto;
+  padding: 1.5rem;
 }
 
-// ===== 圖片 =====
-.img-wrap {
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #e2ded5;
-}
-
-.announce-img {
+.dialog-image {
   width: 100%;
+  aspect-ratio: 21 / 9;
+
+  overflow: hidden;
+  background: #f1f3f4;
+}
+
+.dialog-image img {
+  width: 100%;
+  height: 100%;
+
   display: block;
   object-fit: cover;
-  max-height: 280px;
 }
 
-// ===== 內容文字 =====
-.content-box {
-  background: #faf9f5;
-  border: 1px solid #e2ded5;
-  border-radius: 8px;
-  padding: 14px 16px;
+.dialog-body {
+  padding: 1.25rem 0 0;
 }
 
-.content-text {
-  font-size: 14px;
-  color: #4a4744;
-  line-height: 1.8;
+.dialog-body p {
   margin: 0;
-  white-space: pre-wrap; // 保留換行
+
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #333;
+  white-space: pre-wrap;
 }
 
-// ===== 按鈕區 =====
-mat-dialog-actions {
+// ===== 下方按鈕列 =====
+.dialog-actions {
+  flex: 0 0 auto;
+
   display: flex;
-  gap: 12px;
-  padding: 16px 24px !important;
-  margin: 0 !important;
-  border-top: 1px solid #e2ded5;
   justify-content: flex-end;
+
+  padding: 1rem 1.5rem 1.5rem;
+  background-color: #fff;
+  border-top: 1px solid #f1f1f1;
 }
 
-.btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 14px;
+.confirm-btn {
+  min-width: 6rem;
+  height: 2.5rem;
+
+  border: none;
+  border-radius: 4px;
+  background: $primary-yellow;
+  color: $text-black;
+
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  border: 1.5px solid transparent;
-  transition: opacity 0.15s;
-  line-height: 1;
 
-  &:hover { opacity: 0.85; }
+  &:hover {
+    color: $text-gray;
+    background: $primary-yellow-light;
+  }
 }
-
-.btn-cancel {
-  background: #ffffff;
-  color: #1a1814;
-  border-color: #e2ded5;
-}
-

@@ -1,4 +1,4 @@
-@use './app/styles/variables' as *;
+@use "./app/styles/variables" as *;
 
 /* You can add global styles to this file, and also import other style files */
 /* 請確認這段是在 src/styles.scss 裡 */
@@ -28,7 +28,6 @@ body {
   overflow-x: hidden;
 }
 
-
 // NGX-SLIDER 主色覆寫
 .ngx-slider {
   .ngx-slider-selection {
@@ -48,7 +47,6 @@ body {
   }
 }
 
-
 //裁切照片
 .cdk-overlay-container {
   z-index: 10000 !important;
@@ -56,4 +54,20 @@ body {
 
 lucide-icon.collected svg {
   fill: currentColor;
+}
+
+// 首頁公告dialog
+.cdk-overlay-pane.custom-announ-dialog {
+  width: 50vw !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
+.cdk-overlay-pane.custom-announ-dialog .mat-mdc-dialog-container {
+  padding: 0 !important;
+}
+
+.cdk-overlay-pane.custom-announ-dialog .mdc-dialog__surface {
+  border-radius: $border-radius-sm !important;
+  overflow: hidden !important;
 }

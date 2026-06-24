@@ -67,7 +67,10 @@ export class HomepageComponent {
           this.dialog.open(AnnoundialogComponent, {
             disableClose: true,
             data: res.data,
-            width: '600px',
+            width: '50vw',
+            maxWidth: '90vw',
+            maxHeight: '90vh',
+            panelClass: 'custom-announ-dialog',
           });
         }
       });

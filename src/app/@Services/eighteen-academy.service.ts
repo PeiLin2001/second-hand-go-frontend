@@ -26,7 +26,7 @@ export class EighteenAcademyService {
     { id: 16, name: '管理學群',       value: 'management', selected: false },
     { id: 17, name: '財經學群',       value: 'finance', selected: false },
     { id: 18, name: '遊憩與運動學群', value: 'sports-leisure', selected: false },
-    // { id: 19, name: '不拘',           value: 'all', selected: false }
+    { id: 19, name: '不拘',           value: 'all', selected: false }
   ];
 
 
