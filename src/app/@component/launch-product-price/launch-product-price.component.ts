@@ -263,14 +263,37 @@ export class LaunchProductPriceComponent implements OnInit {
     this.isNextDisabled = !this.isStep2Valid();
   }
 
+  // 擋掉 預設( e, E, +, - ) 等不該出現在價格欄位的字元
+  onPriceKeydown(event: KeyboardEvent): void {
+    const blockedKeys = ['e', 'E', '+', '-', '.'];
+    if (blockedKeys.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
 
-  // AI
   onPriceInput(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.state.price = value ? Number(value) : 0;
+    const input = event.target as HTMLInputElement;
+    let value = input.value;
+
+    // 防止貼上或其他方式繞過 keydown 檢查：移除非數字字元
+    const cleaned = value.replace(/[^0-9]/g, '');
+
+    if (cleaned !== value) {
+      input.value = cleaned;
+    }
+
+    const numericValue = cleaned ? Number(cleaned) : 0;
+    this.state.price = numericValue;
     this.touched.price = true;
     this.updateNextButtonStatus();
+
+    // const value = (event.target as HTMLInputElement).value;
+    // this.state.price = value ? Number(value) : 0;
+    // this.touched.price = true;
+    // this.updateNextButtonStatus();
   }
+
+
 
   // private buildProductContext(): string {
   //   return `分類：${this.state.catMain || '未定'}\n狀況：${this.state.condition || '未定'}`;

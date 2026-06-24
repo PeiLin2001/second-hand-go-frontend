@@ -617,19 +617,43 @@ select option { color: #1e1e1e; }
   gap: 12px;
 }
 
-/* 紅框：點過但未填寫的必填欄位 */
-select.error,
-input.error {
-  border-color: #ef4444 !important;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+/* 套件提示：點過但未填寫的必填欄位 */
+/* 欄位提示（與註冊頁一致樣式） */
+.field-hint {
+  font-size: 13px;
+  color: $text-gray;
+  margin: 6px 0 0 0px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 14px;
+  border-radius: 50px !important;
+  align-self: flex-start !important;
+
+  &.error-text {
+    background-color: #ffebee;
+    color: #e53935;
+    font-weight: 500;
+  }
+
+  &.success-text {
+    background-color: rgba($semantic-green, 0.1);
+    color: $semantic-green;
+    font-weight: 500;
+  }
 }
 
-.checkbox-group.error {
-  outline: 1px solid #ef4444;
-  outline-offset: 4px;
-  border-radius: 1px;
-  padding: 4px 6px;
-}
+// select.error,
+// input.error {
+//   border-color: #ef4444 !important;
+//   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+// }
+
+// .checkbox-group.error {
+//   outline: 1px solid #ef4444;
+//   outline-offset: 4px;
+//   border-radius: 1px;
+//   padding: 4px 6px;
+// }
 
 /* ── Toast ── */
 .toast {

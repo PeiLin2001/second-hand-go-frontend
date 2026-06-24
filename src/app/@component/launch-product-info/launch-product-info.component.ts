@@ -265,7 +265,7 @@ export class LaunchProductInfoComponent implements OnInit {
               Swal.fire({ title: '上架失敗', text: '上架失敗，請稍後嘗試', icon: 'error' });
               return;
             }
-            Swal.fire({ title: '商品已上架！', icon: 'success', timer: 3000, showConfirmButton: false });
+            Swal.fire({ title: '商品已上架！', icon: 'success', timer: 500, showConfirmButton: false });
             this.formService.resetState();
             this.router.navigate(['/store', userId]);
           },
