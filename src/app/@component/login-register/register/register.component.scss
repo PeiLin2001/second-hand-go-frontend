@@ -583,3 +583,24 @@ mat-icon.suffix-icon {
     }
   }
 }
+
+
+.submit-btn {
+  width: 100%;
+  height: 2.8rem;
+  background-color: $primary-yellow;
+  color: $text-black;
+  font-size: 1rem;
+  font-weight: 600;
+  border: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  letter-spacing: 2px;
+
+  &:hover {
+    background-color: $primary-yellow-light;
+    color: $text-gray;
+  }
+}
