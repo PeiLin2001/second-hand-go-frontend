@@ -106,7 +106,7 @@
     <div class="form-row">
       <span class="form-label">公告狀態</span>
       <label class="checkbox-wrap">
-        <input type="checkbox" [disabled]="isExpired || (isEditMode && data?.isPublished === true)" [(ngModel)]="form.isPublished" />
+        <input type="checkbox" [disabled]="isExpired" [(ngModel)]="form.isPublished" />
         <span>發布公告</span>
       </label>
     </div>
