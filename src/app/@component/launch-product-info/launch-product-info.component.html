@@ -32,7 +32,7 @@
     </fieldset>
 
     <fieldset class="field">
-      <legend class="section-label">建議面交年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
+      <legend class="section-label">適用年級 <span class="req">*</span> <span class="hint-text">（可複選）</span></legend>
       <div class="checkbox-group" [class.error]="touched.grades && state.grades.length === 0">
         @for (grade of gradeList; track grade) {
         <label class="checkbox-label">
@@ -132,7 +132,7 @@
     <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="preview-dialog-title">
 
       <header class="dialog-header">
-        <span class="dialog-title" id="preview-dialog-title">📋 商品上架預覽</span>
+        <span class="dialog-title" id="preview-dialog-title">商品上架預覽</span>
         <button class="dialog-close" type="button" (click)="onDialogCancel()" aria-label="關閉預覽">✕</button>
       </header>
 
@@ -157,7 +157,7 @@
             </tr>
             }
             <tr>
-              <th scope="row">建議面交年級</th>
+              <th scope="row">適用年級</th>
               <td>{{ state.grades.join('、') }}</td>
             </tr>
             <tr>

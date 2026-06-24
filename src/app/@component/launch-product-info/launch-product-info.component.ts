@@ -217,7 +217,7 @@ export class LaunchProductInfoComponent implements OnInit {
     if (this.isNextDisabled) {
       const missing: string[] = [];
       if (this.state.locationRegions.length === 0) missing.push('可面交地區');
-      if (this.state.grades.length === 0) missing.push('建議面交年級');
+      if (this.state.grades.length === 0) missing.push('適用年級');
       if (this.state.catMain.length === 0) missing.push('分類');
       if (!this.state.condition) missing.push('商品狀況');
       this.showToast(`請檢查：${missing.join('、')}`);
@@ -261,11 +261,11 @@ export class LaunchProductInfoComponent implements OnInit {
 
         this.formService.publishProduct(productId).subscribe({
           next: (pubRes) => {
-            if (res.code !== 200) {
+            if (res.statusCode !== 200) {
               Swal.fire({ title: '上架失敗', text: '上架失敗，請稍後嘗試', icon: 'error' });
               return;
             }
-            Swal.fire({ title: '商品已上架！', icon: 'success', timer: 2000, showConfirmButton: false });
+            Swal.fire({ title: '商品已上架！', icon: 'success', timer: 3000, showConfirmButton: false });
             this.formService.resetState();
             this.router.navigate(['/store', userId]);
           },
