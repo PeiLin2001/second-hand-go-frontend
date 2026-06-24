@@ -261,7 +261,7 @@ export class LaunchProductInfoComponent implements OnInit {
 
         this.formService.publishProduct(productId).subscribe({
           next: (pubRes) => {
-            if (res.code !== 200) {
+            if (res.statusCode !== 200) {
               Swal.fire({ title: '上架失敗', text: '上架失敗，請稍後嘗試', icon: 'error' });
               return;
             }
