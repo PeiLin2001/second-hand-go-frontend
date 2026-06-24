@@ -1,12 +1,14 @@
 import { ApiTestService } from './../../@Services/api-test.service';
 import { UserService } from './../../@Services/user.service';
+
 import {
   Component,
   effect,
   NgZone,
   ElementRef,
-  ViewChild,
+  viewChild
 } from '@angular/core';
+
 import { SocketService } from '../../@Services/socket.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,8 +21,12 @@ import {
   Search,
   Paperclip,
   Trash2,
+  ArrowLeft,
+  MessageCircleMore
 } from 'lucide-angular';
 import Swal from 'sweetalert2';
+
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -30,7 +36,13 @@ import Swal from 'sweetalert2';
   providers: [
     {
       provide: LUCIDE_ICONS,
-      useValue: new LucideIconProvider({ Search, Paperclip, Trash2 }),
+      useValue: new LucideIconProvider({
+        Search,
+        Paperclip,
+        Trash2,
+        ArrowLeft,
+        MessageCircleMore
+      }),
     },
   ],
 })
@@ -41,6 +53,7 @@ export class ChatComponent {
     private router: Router,
     private route: ActivatedRoute,
     private apiTestService: ApiTestService,
+    private location: Location,
   ) {
     effect(() => {
       const user = this.userService.currentUser();
@@ -61,7 +74,7 @@ export class ChatComponent {
   }
   private destroyRef = inject(DestroyRef);
   private zone = inject(NgZone);
-  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+  private readonly scrollContainer = viewChild.required<ElementRef>('scrollContainer');
 
   enter: string = '';
   userId: number = 0;
@@ -163,7 +176,11 @@ export class ChatComponent {
 
   readAllRoomMessages(roomId: number, userId: number) {
     this.apiTestService.readAllRoomMessages(roomId, userId).subscribe({
-      next: (res) => { },
+      next: (res) => {
+        if (this.previousUnread > 0) {
+          this.socketService.decrementUnread(this.previousUnread);
+        }
+      },
       error: (err) => console.error('readMessages 失敗:', err),
     });
   }
@@ -189,8 +206,8 @@ export class ChatComponent {
   scrollToBottom(): void {
     try {
       setTimeout(() => {
-        this.scrollContainer.nativeElement.scrollTop =
-          this.scrollContainer.nativeElement.scrollHeight;
+        this.scrollContainer().nativeElement.scrollTop =
+          this.scrollContainer().nativeElement.scrollHeight;
       }, 50);
     } catch (err) {
       console.error('滾動失敗：', err);
@@ -214,14 +231,21 @@ export class ChatComponent {
     });
   }
 
+  previousUnread: number = 0;
   changePartner(partner: any) {
     if (!partner || !partner.roomId) return;
     console.log(partner);
 
     this.product = null;
     this.roomId = partner.roomId;
+
+    this.previousUnread = partner.unreadCount;
     partner.unreadCount = 0;
-    this.router.navigate(['/chat', partner.targetUserId]); // 同步更新網址
+
+    // this.router.navigate(['/chat', partner.targetUserId]); // 同步更新網址
+    // 佩霖寫的 : 回上一頁 (聊天室改變id不算)
+    this.router.navigate(['/chat', partner.targetUserId], { replaceUrl: true });
+
     this.socketService.joinRoom(partner.roomId, this.userName);
     this.readAllRoomMessages(partner.roomId, this.userId!);
     this.fetchHistory(partner.roomId);
@@ -358,6 +382,19 @@ export class ChatComponent {
     const lowerContent = messageContent.toLowerCase();
 
     return this.IMAGE_EXTENSIONS.some((ext) => lowerContent.endsWith(ext));
+  }
+
+  // 佩霖寫的 : 取得目前聊天對象的名字
+  get currentPartnerName(): string {
+    const currentRoom = this.roomList.find(
+      (room) => room.roomId === this.roomId,
+    );
+    return currentRoom?.targetUserName ?? '';
+  }
+
+  // 佩霖寫的 : 回上一頁
+  goBack() {
+    this.location.back();
   }
 
   // 關閉聊天室

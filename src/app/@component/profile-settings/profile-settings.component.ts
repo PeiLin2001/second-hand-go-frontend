@@ -99,7 +99,7 @@ readonly icons = { School, MapPin, Phone, Box, Mail, ChevronUp, PencilLine, Book
   // --- 表單控制項 (獨立的盒子) ---
   schoolControl = new FormControl(this.school, [Validators.required]);
   deptControl = new FormControl(this.department);
-  phoneControl = new FormControl('', [Validators.pattern(/^09-\d{8}$/)]);
+  phoneControl = new FormControl('', [Validators.required,Validators.pattern(/^09-\d{8}$/)]);
   profileControl = new FormControl(this.profile);
   allRegions = computed(() => this.schoolService.allRegions());
   selectedAreas: string[] = [];

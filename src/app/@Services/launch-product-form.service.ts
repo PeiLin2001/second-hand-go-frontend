@@ -173,6 +173,7 @@ export class LaunchProductFormService {
   resetState(): void {
     this.state = this.emptyState();
     this.currentDraftId = null;
+    this.setUpdateStatus(false);
   }
 
   // ========== 絲絨改動 ==========
@@ -210,6 +211,13 @@ export class LaunchProductFormService {
   //商品頁:單一商品詳情
   searchByProductId(productId: number): Observable<any> {
     return this.http.get(`${this.productApiUrl}/search/productId?productId=${productId}`);
+  }
+
+  // 新增成功後，把回傳的 productId 同步回 state，並切換成 update 模式
+  markAsCreated(productId: number): void {
+    this.state.productId = productId;
+    this.currentDraftId = String(productId);
+    this.setUpdateStatus(true);
   }
 
   // ── 撈資料：後端格式 → 表單暫存格式 ──

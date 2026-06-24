@@ -187,7 +187,7 @@
 
   <div class="grid-field-item phone_section">
     <p class="field-title"><lucide-icon [name]="icons.Phone"></lucide-icon>手機號碼
-      @if (isEditingBasic) {<span class="optional-text">(選填 作為聯絡方式之一)</span>}
+      <!-- @if (isEditingBasic) {<span class="optional-text">(選填 作為聯絡方式之一)</span>} -->
     </p>
 
     <div class="field-content-block">
@@ -201,7 +201,9 @@
             </mat-form-field>
           </form>
         </div>
-
+        @if (phoneControl.touched && phoneControl.hasError('required')) {
+          <p class="field-hint error-text">✘ 手機號碼為必填欄位</p>
+        }
         @if (phoneControl.touched && phoneControl.hasError('pattern')) {
           <p class="field-hint error-text">✘ 手機格式錯誤，請輸入正確的格式（如：09-12345678）</p>
         }

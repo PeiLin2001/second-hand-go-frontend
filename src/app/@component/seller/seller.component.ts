@@ -17,13 +17,20 @@ import { UiBehaviorService } from '../../@Services/ui-behavior.service';
 import { GPSLocationService } from '../../@Services/gps-location.service';
 
 import { User } from '../../@Interface/user';
-import { UserCardComponent } from '../user-card/user-card.component';
+import { UserCardPlusComponent } from '../user-card-plus/user-card-plus.component';
+
 
 type SortOption = 'newest' | 'credit-score' | 'same-location' | 'recommended';
 
 @Component({
   selector: 'app-seller',
-  imports: [FormsModule, LucideAngularModule, UserCardComponent, RouterLink],
+  imports: [
+    FormsModule,
+    LucideAngularModule,
+    UserCardPlusComponent,
+    RouterLink,
+    UserCardPlusComponent,
+  ],
   templateUrl: './seller.component.html',
   styleUrl: './seller.component.scss',
   providers: [
@@ -167,8 +174,9 @@ export class SellerComponent implements OnInit, OnDestroy {
         const nameMatch = user.userName?.toLowerCase().includes(cleanKeyword);
         const idMatch = user.userId?.toString().includes(cleanKeyword);
         const deptMatch = user.department?.toLowerCase().includes(cleanKeyword);
+        const locationMatch = user.location?.includes(cleanKeyword);
 
-        return nameMatch || idMatch || deptMatch;
+        return nameMatch || idMatch || deptMatch || locationMatch;
       });
     }
 
