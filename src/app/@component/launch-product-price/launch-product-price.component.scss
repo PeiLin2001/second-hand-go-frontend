@@ -63,9 +63,9 @@
 
 /* 當前步驟：藍色 */
 .step.active .step-badge {
-  background: #fadf3c;
-  color: #fefefe;
-  box-shadow: 0 0 0 5px #fffcb4;
+  background: $primary-yellow-dark;
+  color: white;
+  box-shadow: 0 0 0 5px rgba($primary-yellow, 0.5);
 }
 
 .step-label {
@@ -76,7 +76,7 @@
 }
 
 .step.active .step-label {
-  color: #fadf3c;
+  color: $text-price;
   font-weight: 600;
 }
 

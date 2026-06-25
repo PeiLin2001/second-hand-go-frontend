@@ -111,10 +111,7 @@
           <span class="price">{{ product.price | currency:'TWD':'symbol':'1.0-0' }}</span>
           <div class="purchase-actions">
 
-            <button class="btn-tolk" (click)="openChat()" title="聊聊">
-              <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
-              聊聊
-            </button>
+
 
             <button class="btn-cart" [class.active]="isCollected" (click)="toggleCollect()">
               <!-- <lucide-icon [img]="HeartIcon" size="18" [class.fill-icon]="isCollected"></lucide-icon> -->
@@ -127,6 +124,11 @@
               } @else {
                 <span title="加入收藏">加入收藏</span>
               }
+            </button>
+
+            <button class="btn-tolk" (click)="openChat()" title="聊聊">
+              <lucide-icon [img]="MessageCircleIcon" size="18"></lucide-icon>
+              聊聊
             </button>
 
             <button class="btn-buy" [disabled]="isRequested" (click)="sendRequest()">

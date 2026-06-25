@@ -58,36 +58,36 @@
   transition: 180ms ease;
   background: #f0f2f5;
   color: #6b7280;
-  border: 1px solid $neutral-ea;
+  // border: 1px solid $neutral-ea;
 }
 
 .step.active .step-badge {
-  background: #fadf3c;
-  color: #fefefe;
-  box-shadow: 0 0 0 5px #fffcb4;
+  background: $primary-yellow-dark;
+  color: white;
+  box-shadow: 0 0 0 5px rgba($primary-yellow, 0.5);
 }
 
 /* 已完成步驟：打勾綠色 */
 .step.done .step-badge {
-  background: #0eeea4;
+  background: $semantic-lightgreen;
   color: #fff;
-  border-color: #37eeb1;
+  border-color: $semantic-green;
 }
 
 .step-label {
   font-size: 16px;
   font-weight: 500;
-  color: $text-gray;
+  color: $text-price;
   white-space: nowrap;
 }
 
 .step.active .step-label {
-  color: #fadf3c;
+  color: $text-price;
   font-weight: 600;
 }
 
 .step.done .step-label {
-  color: #0eeea4;
+  color: $semantic-green-b;
 }
 
 /* ── Layout ── */

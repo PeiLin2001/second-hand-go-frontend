@@ -299,7 +299,7 @@ mat-icon.suffix-icon {
   margin: 6px 0 0 4px;
   display: inline-flex ; // 讓底色寬度剛好包裹住文字，不會變成滿版大長條
   align-items: center;
-  padding: 2px 14px;
+  // padding: 2px 14px;
   border-radius: 50px !important;
   align-self: flex-start !important;
 
@@ -581,5 +581,26 @@ mat-icon.suffix-icon {
       color: $primary-yellow-darker;
       font-weight: 600;
     }
+  }
+}
+
+
+.submit-btn {
+  width: 100%;
+  height: 2.8rem;
+  background-color: $primary-yellow;
+  color: $text-black;
+  font-size: 1rem;
+  font-weight: 600;
+  border: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  letter-spacing: 2px;
+
+  &:hover {
+    background-color: $primary-yellow-light;
+    color: $text-gray;
   }
 }

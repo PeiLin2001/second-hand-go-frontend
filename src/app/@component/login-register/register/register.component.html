@@ -119,14 +119,14 @@
 
                   <div class="input-group">
                     <div class="custom-outside-label">
-                      常出沒地區 <span class="required-star">*</span>
+                      主要活動地區 <span class="required-star">*</span>
                     </div>
                     <div class="input-box-wrapper">
 
                         <mat-form-field appearance="outline" subscriptSizing="dynamic" class="autocomplete-field">
                           <input
                             type="text"
-                            placeholder="選擇你常出沒的地區 (必填)"
+                            placeholder="選擇偏好的面交地區 (必填)"
                             matInput
                             formControlName="area"
                             [matAutocomplete]="autoArea"
@@ -145,7 +145,7 @@
 
                       @if (registerForm.get('area')?.touched) {
                           @if (registerForm.get('area')?.hasError('required')) {
-                            <p class="field-hint error-text">✘ 常出沒地區為必填欄位</p>
+                            <p class="field-hint error-text">✘ 主要活動地區為必填欄位</p>
                           } @else if (registerForm.get('area')?.hasError('notInList')) {
                             <p class="field-hint error-text">⚠ 請點選選單中出現的合法縣市地區！</p>
                           }
@@ -222,7 +222,7 @@
 
                   <div class="input-group">
                     <div class="custom-outside-label">
-                      手機號碼
+                      手機號碼 <span class="required-star">*</span>
                       <!-- <span class="optional-text">(選填 作為聯絡方式之一)</span> -->
                     </div>
                     <div class="phone-box">
