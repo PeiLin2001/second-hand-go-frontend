@@ -5,7 +5,7 @@ import { GetProductDataRes } from '../@Interface/product-vo';
 import { BasicResponse } from '../@Interface/user';
 import { OrderRes } from '../@Interface/order';
 import { CollectRes } from '../@Interface/collect-res';
-
+import { environment } from '../../environments/environment';
 
 // interface LoginReq {
 //   email: string;
@@ -16,22 +16,21 @@ export interface OrderVo {
   productId: number;
 }
 
-interface reportReq { }
+interface reportReq {}
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiTestService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // // 存使用者資料的 Signal
   // currentUser = signal<any>(null);
-  private productApiUrl = 'http://localhost:8080/product';
-  private reportApiUrl = 'http://localhost:8080/report';
-  private orderApiUrl = 'http://localhost:8080/order';
-  private collectApiUrl = 'http://localhost:8080/collect';
-  private chatApiUrl = 'http://localhost:8080/chat';
+  private productApiUrl = `${environment.apiUrl}/product`;
+  private reportApiUrl = `${environment.apiUrl}/report`;
+  private orderApiUrl = `${environment.apiUrl}/order`;
+  private collectApiUrl = `${environment.apiUrl}/collect`;
+  private chatApiUrl = `${environment.apiUrl}/chat`;
 
   // // 登入
   // login(data: LoginReq): Observable<any> {
@@ -51,53 +50,81 @@ export class ApiTestService {
   // }
 
   // 新增檢舉
-  addReport(data: reportReq) { return this.http.post(`${this.reportApiUrl}/addReport`, data, { withCredentials: true }); }
+  addReport(data: reportReq) {
+    return this.http.post(`${this.reportApiUrl}/addReport`, data, {
+      withCredentials: true,
+    });
+  }
 
   // === Order ===
   //取得使用者的所有訂單
-  getAllOrder(): Observable<any> { return this.http.get(`${this.orderApiUrl}/getUserOrder`, { withCredentials: true }); }
+  getAllOrder(): Observable<any> {
+    return this.http.get(`${this.orderApiUrl}/getUserOrder`, {
+      withCredentials: true,
+    });
+  }
 
   // 賣家同意請求
   acceptOrder(changeOrderStatusVo: any) {
-    return this.http.post(`${this.orderApiUrl}/acceptOrder`, changeOrderStatusVo, { withCredentials: true });
+    return this.http.post(
+      `${this.orderApiUrl}/acceptOrder`,
+      changeOrderStatusVo,
+      { withCredentials: true },
+    );
   }
 
   // 買家主動取消訂單
   canaelOrder(changeOrderStatusVo: any) {
-    return this.http.post(`${this.orderApiUrl}/canaelOrder`, changeOrderStatusVo, { withCredentials: true });
+    return this.http.post(
+      `${this.orderApiUrl}/canaelOrder`,
+      changeOrderStatusVo,
+      { withCredentials: true },
+    );
   }
 
   //雙方點擊確認完成交易
   checkDelivery(changeOrderStatusVo: any) {
-    return this.http.post(`${this.orderApiUrl}/delivery`, changeOrderStatusVo, { withCredentials: true });
+    return this.http.post(`${this.orderApiUrl}/delivery`, changeOrderStatusVo, {
+      withCredentials: true,
+    });
   }
 
   //交易雙方給予評價
   giveLevel(goodLevelReq: any) {
-    return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, { withCredentials: true });
+    return this.http.post(`${this.orderApiUrl}/giveLevel`, goodLevelReq, {
+      withCredentials: true,
+    });
   }
 
   // === collect ===
   //新增收藏
   addCollect(productId: number) {
-    return this.http.post<BasicResponse>(`${this.collectApiUrl}/addcollect`, productId, { withCredentials: true });
+    return this.http.post<BasicResponse>(
+      `${this.collectApiUrl}/addcollect`,
+      productId,
+      { withCredentials: true },
+    );
   }
 
   // 刪除收藏
   deleteCollect(collectIds: number[]) {
     let params = new HttpParams();
-    collectIds.forEach(id => {
+    collectIds.forEach((id) => {
       params = params.append('collectId', id.toString());
     });
-    return this.http.post<BasicResponse>(`${this.collectApiUrl}/delete`, {}, { params, withCredentials: true });
+    return this.http.post<BasicResponse>(
+      `${this.collectApiUrl}/delete`,
+      {},
+      { params, withCredentials: true },
+    );
   }
 
   // 取得目前登入者的所有收藏清單
   getUserCollect() {
-    return this.http.get<CollectRes>(`${this.collectApiUrl}/getUserCollect`, { withCredentials: true });
+    return this.http.get<CollectRes>(`${this.collectApiUrl}/getUserCollect`, {
+      withCredentials: true,
+    });
   }
-
-
 
   // === chat ===
   // 取得或創建房間
@@ -117,7 +144,10 @@ export class ApiTestService {
 
   // 已讀所有訊息
   readAllRoomMessages(roomId: number, userId: number) {
-    return this.http.post(`${this.chatApiUrl}/read-room?roomId=${roomId}&userId=${userId}`, {});
+    return this.http.post(
+      `${this.chatApiUrl}/read-room?roomId=${roomId}&userId=${userId}`,
+      {},
+    );
   }
 
   // 上傳圖片
@@ -127,32 +157,46 @@ export class ApiTestService {
 
   // 更改房間帶的商品ID
   updateProductId(productId: number, roomId: number) {
-    return this.http.post(`${this.chatApiUrl}/update-productId?productId=${productId}&roomId=${roomId}`, {});
+    return this.http.post(
+      `${this.chatApiUrl}/update-productId?productId=${productId}&roomId=${roomId}`,
+      {},
+    );
   }
 
   // 取得單一使用者的未讀訊息總數
   getTotalUnreadCount(userId: number) {
-    return this.http.get(`${this.chatApiUrl}/total-unread-count?userId=${userId}`);
+    return this.http.get(
+      `${this.chatApiUrl}/total-unread-count?userId=${userId}`,
+    );
   }
 
   // === product ===
   // 取得單一帳號內的商品資訊
   searchBySellerId(userId: number): Observable<any> {
-    return this.http.get(`${this.productApiUrl}/search/userId?userId=${userId}`);
+    return this.http.get(
+      `${this.productApiUrl}/search/userId?userId=${userId}`,
+    );
   }
 
   //商品頁:單一商品詳情
   searchByProductId(productId: number): Observable<GetProductDataRes> {
-    return this.http.get<GetProductDataRes>(`${this.productApiUrl}/search/productId?productId=${productId}`);
+    return this.http.get<GetProductDataRes>(
+      `${this.productApiUrl}/search/productId?productId=${productId}`,
+    );
   }
 
   //商品頁:向賣家發送商品請求
   addOrder(vo: OrderVo): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.orderApiUrl}/addOrder`, vo, { withCredentials: true });
+    return this.http.post<BasicResponse>(`${this.orderApiUrl}/addOrder`, vo, {
+      withCredentials: true,
+    });
   }
 
   // 查詢單一商品的所有訂單
   getProductAllOrder(productId: number): Observable<OrderRes> {
-    return this.http.get<OrderRes>(`${this.orderApiUrl}/getProductOrder?productId=${productId}`, { withCredentials: true });
+    return this.http.get<OrderRes>(
+      `${this.orderApiUrl}/getProductOrder?productId=${productId}`,
+      { withCredentials: true },
+    );
   }
 }
