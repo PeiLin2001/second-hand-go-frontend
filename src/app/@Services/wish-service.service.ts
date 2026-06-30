@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface Wish {
   id: number;
@@ -64,7 +65,7 @@ export type WishInsertRes = ApiResponse<WishInsertData>;
   providedIn: 'root',
 })
 export class WishServiceService {
-  private readonly BASE_URL = 'http://localhost:8080/wish';
+  private readonly BASE_URL = `${environment.apiUrl}/wish`;
 
   constructor(private http: HttpClient) {}
 

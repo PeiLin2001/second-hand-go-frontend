@@ -4,12 +4,12 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable, tap } from 'rxjs';
 import { BasicResponse, ChangePasswordVo, SetInfoVo, User, UserReq, UserRes } from '../@Interface/user';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+
 interface LoginReq {
   email: string;
   password: string;
 }
-
-
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -18,7 +18,7 @@ export class UserService {
   avatarUrl = signal<string>('https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png');
   private myProxyUrl = '/user';
 
-  private apiUrl = 'http://localhost:8080/user';
+  private apiUrl = `${environment.apiUrl}/user`;
   isLoggedIn = signal<boolean>(sessionStorage.getItem('isLoggedIn') === 'true'); // Demo 暫用
 
   // 存使用者資料的 Signal by.絲絨
