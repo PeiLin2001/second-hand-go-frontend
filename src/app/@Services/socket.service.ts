@@ -2,6 +2,8 @@ import { effect, Injectable, signal } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { Observable } from 'rxjs';
 import { UserService } from './user.service';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +26,7 @@ export class SocketService {
 
   private connectSocket() {
     if (!this.socket) {
-      this.socket = io('http://localhost:9092', {
+      this.socket = io(environment.socketUrl, {
         transports: ['websocket'],
         forceNew: true, // 強制每次都建立乾淨的 websocket 通道
       });
