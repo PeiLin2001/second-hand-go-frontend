@@ -38,6 +38,7 @@ import { ChangePasswordVo, SetInfoVo } from '../../@Interface/user';
 import { ApiTestService } from '../../@Services/api-test.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageCropDialogComponent } from '../../@Dialogs/image-crop-dialog/image-crop-dialog.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-profile-settings',
@@ -156,7 +157,7 @@ onDocumentClick(event: MouseEvent) {
           if (user.imgPath.startsWith('http')) {
             this.avatarUrl = user.imgPath; // 如果是 Cloudinary 網址，直接用！
           } else {
-            this.avatarUrl = 'http://localhost:8080/uploads/' + user.imgPath;
+            this.avatarUrl = `${environment.apiUrl}/uploads/` + user.imgPath;
           }
         } else {
           this.avatarUrl = 'https://res.cloudinary.com/df8kviidh/image/upload/v1780243053/default_avatar_lvgh1a.png';

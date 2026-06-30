@@ -12,6 +12,7 @@ import { PaginationService } from '../../@Services/pageination.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { AddannounceDaialogComponent } from '../addannounce-daialog/addannounce-daialog.component';
 import { HttpService } from '../../@Services/http.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-announcement',
@@ -66,7 +67,7 @@ export class AnnouncementComponent {
 
   loadFromAPI() {
     this.http
-      .getApi('http://localhost:8080/announce/getAll')
+      .getApi(`${environment.apiUrl}/announce/getAll`)
       .subscribe((res: any) => {
         if (res.statusCode == 200) {
           console.log(res.data);

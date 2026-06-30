@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'second-hand-go-backend-production.up.railway.app',
-  socketUrl: 'second-hand-go-backend-production.up.railway.app'
+  apiUrl: 'https://second-hand-go-backend-production.up.railway.app',
+  moeApiUrl: 'https://stats.moe.gov.tw',
+  socketUrl: 'https://second-hand-go-backend-production.up.railway.app'
 };

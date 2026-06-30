@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PaginationService } from '../../@Services/pageination.service';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
 import { HttpService } from '../../@Services/http.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-report',
@@ -60,7 +61,7 @@ export class ReportComponent {
   }
 
   ngOnInit() {
-    this.http.getApi('http://localhost:8080/report/getAllReport').
+    this.http.getApi(`${environment.apiUrl}/report/getAllReport`).
     subscribe((res:any)=>
     {if(res.statusCode==200){
       console.log(res);
@@ -114,7 +115,7 @@ export class ReportComponent {
   viewReason(dispute: Dispute) {
     console.log(dispute.reportId);
     this.http.getApi(
-      `http://localhost:8080/report/getReportById?reportId=${dispute.reportId}`).
+      `${environment.apiUrl}/report/getReportById?reportId=${dispute.reportId}`).
       subscribe((res:any)=>{
         console.log(res);
         if(res.statusCode==200){

@@ -11,6 +11,7 @@ import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialo
 import { HttpService } from '../../@Services/http.service';
 import { config } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-report-dialog',
@@ -46,7 +47,7 @@ export class ReportDialogComponent {
       }
 
       this.http
-        .postApi('http://localhost:8080/report/check', {
+        .postApi(`${environment.apiUrl}/report/check`, {
           reportId: this.data.reportId,
           active: action,
         })

@@ -13,6 +13,7 @@ import { UserDialogComponent } from '../user-dialog/user-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PaginationService } from '../../@Services/pageination.service';
 import { HttpService } from '../../@Services/http.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-back-user',
@@ -47,7 +48,7 @@ export class BackUserComponent {
 
   ngOnInit() {
     this.http
-      .getApi('http://localhost:8080/user/getUsers')
+      .getApi(`${environment.apiUrl}/user/getUsers`)
       .subscribe((res: any) => {
         if (res.statusCode == 200) {
           console.log(res);
@@ -143,7 +144,7 @@ export class BackUserComponent {
   }
 
   viewUser(user: User) {
-    this.http.getApi(`http://localhost:8080/user/getByUserId?userId=${user.id}`).
+    this.http.getApi(`${environment.apiUrl}/user/getByUserId?userId=${user.id}`).
     subscribe((res:any)=>{
       if(res.statusCode==200){
         console.log(res);
@@ -168,7 +169,7 @@ export class BackUserComponent {
   }
 
   unbanned(user: User) {
-    this.http.postApi(`http://localhost:8080/user/changeStatus`,user.id).subscribe((res:any)=>{
+    this.http.postApi(`${environment.apiUrl}/user/changeStatus`,user.id).subscribe((res:any)=>{
       if(res.statusCode==200){
         // 找到那筆資料並更新狀態
         const idx = this.allUsers.findIndex(u => u.id === user.id);

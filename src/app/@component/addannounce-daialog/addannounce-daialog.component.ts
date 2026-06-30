@@ -11,6 +11,7 @@ import { LucideAngularModule, CloudUpload, ChevronDown } from 'lucide-angular';
 import { AnnounDialogComponent } from '../announcement-dialog/announcement-dialog.component';
 import { from } from 'rxjs';
 import { HttpService } from '../../@Services/http.service';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-addannounce-daialog',
   imports: [CommonModule, FormsModule, MatDialogModule, LucideAngularModule],
@@ -158,8 +159,8 @@ export class AddannounceDaialogComponent {
     }
 
     const apiUrl = this.isEditMode
-      ? 'http://localhost:8080/announce/updataAnnounce'
-      : 'http://localhost:8080/announce/addAnnounce';
+      ? `${environment.apiUrl}/announce/updataAnnounce`
+      : `${environment.apiUrl}/announce/addAnnounce`;
 
     const callApi = () => {
       this.http.postApi(apiUrl, payload).subscribe((res: any) => {

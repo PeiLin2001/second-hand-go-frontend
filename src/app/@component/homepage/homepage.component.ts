@@ -19,6 +19,7 @@ import { CategoriesService } from '../../@Services/categories.service';
 import { HttpService } from '../../@Services/http.service';
 import { AnnoundialogComponent } from '../announdialog/announdialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-homepage',
@@ -44,7 +45,7 @@ export class HomepageComponent {
   ngOnInit(): void {
     //接上API取得發布中的公告
     this.http
-      .getApi('http://localhost:8080/announce/getActive')
+      .getApi(`${environment.apiUrl}/announce/getActive`)
       .subscribe((res: any) => {
         if (res.statusCode == 200) {
           this.announ = res.data;
@@ -60,7 +61,7 @@ export class HomepageComponent {
   openAnnou(item: any) {
     console.log(item);
     this.http
-      .getApi(`http://localhost:8080/announce/getId?announceId=${item.id}`)
+      .getApi(`${environment.apiUrl}/announce/getId?announceId=${item.id}`)
       .subscribe((res: any) => {
         if (res.statusCode == 200) {
           console.log(res);
