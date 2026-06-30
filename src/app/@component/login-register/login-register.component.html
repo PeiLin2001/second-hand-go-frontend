@@ -2,27 +2,24 @@
   <div class="auth-container">
 
     <div class="brand-top-section">
-      <h1 (click)="gotoHome()" title="回首頁">
-        <img src="/img/logo改版.png" alt="二手 Go logo" class="brand-logo" />
-      </h1>
+      <a (click)="gotoHome()" title="回首頁" class="brand-link">
+        <img src="img/logo改版.png" alt="二手 Go" class="brand-logo" />
+      </a>
       <p class="description">大學生專屬的二手交易平台</p>
     </div>
 
     <div class="form-section">
       <div class="tab-group">
-        <button type="button" class="tab-btn"
-          [class.active]="!isRegister"
-          (click)="isRegister = false">登入</button>
-        <button type="button" class="tab-btn"
-          [class.active]="isRegister"
-          (click)="isRegister = true">註冊</button>
+        <button type="button" class="tab-btn" [class.active]="!isRegister" (click)="isRegister = false">登入</button>
+        <button type="button" class="tab-btn" [class.active]="isRegister" (click)="isRegister = true">註冊</button>
       </div>
 
       <div class="auth-form">
         @if (!isRegister) {
-          <app-login (switchToRegister)="onSwitchToRegister($event)" />
+        <app-login (switchToRegister)="onSwitchToRegister($event)" />
         } @else {
-          <app-register  [initialStep]="registerInitialStep" [initialEmail]="registerInitialEmail" (switchToLogin)="isRegister = false"  />
+        <app-register [initialStep]="registerInitialStep" [initialEmail]="registerInitialEmail"
+          (switchToLogin)="isRegister = false" />
         }
       </div>
     </div>

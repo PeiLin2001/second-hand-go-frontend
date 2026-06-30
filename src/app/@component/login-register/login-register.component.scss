@@ -28,22 +28,19 @@
 
 .brand-top-section {
   text-align: center;
-  padding-top: 32px;
-
-  h1 {
-    margin: 0 0 8px 0;
-  }
+  padding-top: 2.5rem;
 
   .brand-logo {
-    max-width: 110px;
+    max-width: 7rem;
     height: auto;
+    margin: .5rem 0;
     cursor: pointer;
   }
 
   .description {
-    font-size: 13px;
-    color: #999; /* 淡化副標題 */
-    letter-spacing: 0.5px;
+    font-size: .8rem;
+    color: $neutral-700;
+    letter-spacing: 5%;
     margin: 0;
   }
 }
