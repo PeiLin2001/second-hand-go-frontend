@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ProductCard } from '../@Interface/product-card';
 import { map, Observable } from 'rxjs';
-
+import { environment } from '../../environments/environment';
 
 // 對應後端 SearchProductReq
 export interface SearchProductReq {
@@ -28,7 +28,7 @@ export interface GetProductDataRes {
 })
 export class ProductServiceService {
 
-  private readonly BASE = 'http://localhost:8080/product';
+  private readonly BASE = `${environment.apiUrl}/product`;
 
   constructor(private http:HttpClient) { }
 

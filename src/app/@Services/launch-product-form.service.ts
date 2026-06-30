@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 // 定義表單資料的介面結構
 export interface ProductState {
@@ -27,7 +28,7 @@ export interface DraftItem {
 export class LaunchProductFormService {
 
   //草稿
-  private productApiUrl = 'http://localhost:8080/product';
+  private productApiUrl = `${environment.apiUrl}/product`;
 
   state: ProductState = this.emptyState();
   isUpdate = signal<boolean>(false);
