@@ -1,3 +1,4 @@
+import { UserService } from './../../@Services/user.service';
 import { ManualComponent } from './../manual/manual.component';
 import {
   Component,
@@ -35,6 +36,7 @@ export class HomepageComponent {
     private ngZone: NgZone,
     private http: HttpService,
     private dialog: MatDialog,
+    private userService: UserService,
   ) {}
 
   get categories(): any[] {
@@ -43,7 +45,9 @@ export class HomepageComponent {
 
   announ: Announcement[] = [];
   ngOnInit(): void {
-    //接上API取得發布中的公告
+    console.log('目前使用者:', this.userService.currentUser);
+
+    //公告
     this.http
       .getApi(`${environment.apiUrl}/announce/getActive`)
       .subscribe((res: any) => {
@@ -51,6 +55,8 @@ export class HomepageComponent {
           this.announ = res.data;
         }
       });
+
+    // 商品
     this.loadProducts();
   }
 
