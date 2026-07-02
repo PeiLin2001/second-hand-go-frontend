@@ -16,15 +16,17 @@ The platform is designed around campus life rather than general public trading. 
 
 ## Tech Stack
 
-| Layer                    | Technology                                              |
-| ------------------------ | ------------------------------------------------------- |
-| Frontend                 | Angular, TypeScript, RxJS, SCSS                         |
-| Backend                  | Java, Spring Boot, RESTful API                          |
-| Real-time                | Socket.io (chat)                                        |
-| Database                 | MySQL                                                   |
-| Auth                     | JWT, School-email verification (`.edu.tw`)              |
-| Third-party UI libraries | ngx-slider, Lucide Icons, Google material fonts & icons |
-| Tools                    | Git, GitHub, Postman                                    |
+| Layer | Technology |
+| --- | --- |
+| Frontend | Angular, TypeScript, RxJS, SCSS |
+| Backend | Java, Spring Boot, RESTful API |
+| Real-time Communication | Socket.IO / Netty-SocketIO |
+| Database | MySQL |
+| Auth | JWT, School-email verification (`.edu.tw`) |
+| Image Storage | Cloudinary |
+| File Handling | Base64 image upload, Spring Resource Handler |
+| Third-party UI Libraries | ngx-slider, Lucide Icons, SweetAlert2, Google Material Fonts & Icons |
+| Tools | Git, GitHub, Postman |
 
 ### External Data & APIs
 
