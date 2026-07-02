@@ -45,7 +45,7 @@ export class HomepageComponent {
 
   announ: Announcement[] = [];
   ngOnInit(): void {
-    console.log('目前使用者:', this.userService.currentUser);
+    console.log('目前使用者:', this.userService.currentUser());
 
     //公告
     this.http

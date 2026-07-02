@@ -48,13 +48,17 @@ export class LoginComponent {
             // 登入成功後立刻撈自己的資料
             this.userService.getMyInfo().subscribe({
               next: (info) => {
+                console.log('getMyInfo 回傳:', info);
+
                 if (info && info.user) {
                   this.userService.currentUser.set(info.user);
                   this.userService.updateAvatar(info.user.imgPath);
                 }
+
+                this.router.navigate(['/home']);
               },
             });
-            this.router.navigate(['/home']);
+
           } else if (res.role === 'manager') {
             sessionStorage.setItem('isLoggedIn', 'true');
             this.router.navigate(['/report']);
