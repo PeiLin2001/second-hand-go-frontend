@@ -8,9 +8,9 @@
 
 ## Overview
 
-Campus Second-Hand Trading Matching Platform for University Students — Served as Project Lead of a five-member full-stack team, leading frontend architecture design and Angular development. Designed URL-driven filter state management, established an SCSS Design Token system, and integrated Spring Boot RESTful APIs.
+二手Go is a campus-focused second-hand marketplace for university students in Taiwan. It allows verified students to browse products, list second-hand items, post wishlist requests, chat with sellers, and manage transactions within their own school community.
 
-Unlike general second-hand marketplaces, 二手Go is designed specifically around campus life: transactions are matched by school-verified accounts, meetup locations default to campus areas, and each university has its own community space ("校版") with school-exclusive listings and posts.
+The platform is designed around campus life rather than general public trading. It uses `.edu.tw` school-email verification, school-specific community spaces ("校版"), campus-based meetup locations, and student credibility scores to make second-hand trading more relevant and trustworthy for university students.
 
 ---
 
