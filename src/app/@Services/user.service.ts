@@ -40,7 +40,7 @@ export class UserService {
   // 取得使用者資料 by.絲絨
   getUserData(userId: number): Observable<any> {
     // 目前 Demo 階段：把 ID 帶在網址後面傳給後端
-    return this.http.get(`${this.apiUrl}/getByUserId?userId=${userId}`);
+    return this.http.get(`${this.apiUrl}/getByUserId?userId=${userId}`, { withCredentials: true });
   }
 
   // 取得自己的資料（從 session）
@@ -80,12 +80,12 @@ export class UserService {
 
   //使用者輸入驗證碼後按下發送所需要街的資料回傳API(初次及後續驗證皆是這個)
   verifyEmail(payload: { email: string; code: string }): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.apiUrl}/verify`, payload);
+    return this.http.post<BasicResponse>(`${this.apiUrl}/verify`, payload, { withCredentials: true });
   }
 
   //重新發送驗證碼
   resendCode(email: string): Observable<BasicResponse> {
-    return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_id: email });
+    return this.http.post<BasicResponse>(`${this.apiUrl}/resend`, { user_id: email }, { withCredentials: true });
   }
 
 
@@ -103,17 +103,17 @@ export class UserService {
 
   // 取得各校成員
   getUserDataBySchool(school: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getClassmate?school=${school}`);
+    return this.http.get<any>(`${this.apiUrl}/getClassmate?school=${school}`, { withCredentials: true });
   }
 
   // 取得地區成員
   getUserDataByLocation(location : string):Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getTheNearBy?location=${location}`);
+    return this.http.get<any>(`${this.apiUrl}/getTheNearBy?location=${location}`, { withCredentials: true });
   }
 
   // 取得所有使用者
   getAllUser():Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/getUsers`);
+    return this.http.get<any>(`${this.apiUrl}/getUsers`, { withCredentials: true });
   }
 
 }

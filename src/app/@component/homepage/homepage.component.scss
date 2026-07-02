@@ -10,19 +10,15 @@ lucide-icon {
   align-items: center;
 }
 
-// 建議包裹一個父層容器，方便管理間距
 .Carousel-Notification {
-  margin-bottom: 2rem; // 跟下方商品列表拉開距離
+  margin-bottom: 2rem;
 
   #carouselExampleAutoplaying {
     width: 100%;
-    // 1. 拿掉固定的 height: 20rem;
-    // 2. 設定固定的寬高比 (例如 3:1 或 21:9，視你的 Banner 圖案而定)
     aspect-ratio: 21 / 9;
 
-    // 讓整個輪播範圍也有圓角
     overflow: hidden;
-    border-radius: 12px; // 也可以用你的變數 $border-radius-lg
+    border-radius: $border-radius-lg;
 
     .carousel-inner {
       height: 100%;
@@ -34,9 +30,7 @@ lucide-icon {
       img {
         width: 100%;
         height: 100%;
-        // 3. 關鍵：確保圖片填滿格子且不變形
         object-fit: cover;
-        // 如果圖片重要內容在中間，可以設定定位
         object-position: center;
       }
     }
@@ -70,9 +64,9 @@ lucide-icon {
   position: relative;
   display: flex;
   align-items: center;
-  width: 100%; // ← 加這個
-  min-width: 0; // ← flex 子元素必加，防止撐破父層
-  overflow: hidden; // ← 防止子元素溢出
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .nav-btn {
@@ -92,23 +86,22 @@ lucide-icon {
 
 .popular-categories {
   display: flex;
-  overflow-x: auto; // 開啟水平捲動
-  gap: 1.5rem; // 項目間距
+  overflow-x: auto;
+  gap: 1.5rem;
   padding: 1.5rem 0.5rem;
-  flex: 1; // ← 加這個，讓它填滿兩個按鈕之間的空間
-  min-width: 0; // ← 同上
+  flex: 1;
+  min-width: 0;
 
-  scrollbar-width: none; // 隱藏 Firefox 捲軸
+  scrollbar-width: none;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
 
   &::-webkit-scrollbar {
-    display: none; // 隱藏 Chrome/Safari 捲軸
+    display: none;
   }
 
-  // 每個分類項目的容器
   .category-item {
-    flex: 0 0 auto; // 防止項目被壓縮
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -120,9 +113,7 @@ lucide-icon {
       transform: translateY(-5px);
     }
 
-    // Lucide Icon 樣式設定
     lucide-icon {
-      // background-color:#f8f9fa; // 圓形底色，可依需求調整
       padding: 1.2rem;
       border-radius: 50%;
 
@@ -142,7 +133,7 @@ lucide-icon {
       font-weight: 500;
       color: $text-black;
       margin: 0;
-      white-space: nowrap; // 避免文字斷行
+      white-space: nowrap;
     }
   }
 }
@@ -183,19 +174,18 @@ lucide-icon {
 }
 
 .background-color-box {
-  width: 100vw; // 寬度設為螢幕寬度
+  width: 100vw;
   position: relative;
 
-  left: 50%; // 移至畫面中點
+  left: 50%;
   right: 50%;
-  margin-left: -50vw; // 往左拉回螢幕一半的寬度
+  margin-left: -50vw;
   margin-right: -50vw;
 
   height: 30vh;
   background-color: $background-yellow;
 }
 
-// --- RWD 響應式優化 ---
 @media (max-width: 768px) {
   .content-toolbar {
     flex-direction: column;
@@ -209,7 +199,7 @@ lucide-icon {
     }
 
     .sorting-dropdown select {
-      padding: 0.75rem 2.2rem 0.75rem 2.5rem; // 手機版稍微加高好點擊
+      padding: 0.75rem 2.2rem 0.75rem 2.5rem;
     }
   }
 }
