@@ -26,7 +26,7 @@ The platform is designed around campus life rather than general public trading. 
 | Image Storage | Cloudinary |
 | File Handling | Base64 image upload, Spring Resource Handler |
 | Third-party UI Libraries | ngx-slider, Lucide Icons, SweetAlert2, Google Material Fonts & Icons |
-| Tools | Git, GitHub, Postman |
+| Tools | Git, GitHub, Postman, Sourcetree |
 
 ### External Data & APIs
 
