@@ -7,7 +7,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class EduApiGovService {
-  private url = `${environment.moeApiUrl}/files/opendata/u1_new.json`;
+  // private url = `${environment.moeApiUrl}/files/opendata/u1_new.json`;
+  private url = `${environment.moeApiUrl}/edu/schools`;
   private schools$: Observable<any[]> | null = null;
 
   constructor(private http: HttpClient) {}
