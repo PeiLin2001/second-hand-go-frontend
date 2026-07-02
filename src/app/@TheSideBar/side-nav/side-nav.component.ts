@@ -114,6 +114,7 @@ export class SideNavComponent {
       },
       error: (err) => {
         console.error('無法載入學校資料：', err);
+
       }
     });
   }
