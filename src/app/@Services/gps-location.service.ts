@@ -20,7 +20,7 @@ export class GPSLocationService {
   }
 
   getCityName(lat: number, lng: number): Observable<string> {
-    return this.http.get<any>('assets/twCounty2010.geo.json').pipe(
+    return this.http.get<any>('twCounty2010.geo.json').pipe(
       map(geoJson => {
         const point = turf.point([lng, lat]); // turf 座標順序是 [lng, lat]
 
