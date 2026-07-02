@@ -149,6 +149,14 @@ As Project Lead, I owned the frontend architecture and led the following end-to-
 
 ---
 
-## Team
+## Team & Responsibilities
 
-5-member full-stack team, built as part of a full-stack training program capstone project.
+This project was developed as a capstone project in a full-stack training program by a 5-member team.
+
+| Area | Responsibilities |
+|---|---|
+| Project Lead / Frontend Architecture / UI/UX | Overall planning, visual direction, frontend architecture, homepage and sidebar modules, favorites page, chat room UI, debugging, and API integration |
+| Backend / Admin / Database | Admin backend, database design, backend APIs, and backend environment setup |
+| Core Features / Integration | Version control, frontend-backend integration, debugging, authentication, reports, chat, product listing, and order-related features |
+| Frontend Features | Registration, account settings, and product detail page |
+| Listing / Presentation Support | Product listing page layout support and presentation materials |
