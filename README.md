@@ -8,9 +8,9 @@
 
 ## Overview
 
-二手Go is a campus-focused second-hand marketplace for university students in Taiwan. It allows verified students to browse products, list second-hand items, post wishlist requests, chat with sellers, and manage transactions within their own school community.
+二手Go is a campus-focused second-hand marketplace for university students in Taiwan. It allows verified students to browse products, list second-hand items, post wishlist requests, chat with sellers, and coordinate transactions through purchase requests, order status tracking, and private chat.
 
-The platform is designed around campus life rather than general public trading. It uses `.edu.tw` school-email verification, school-specific community spaces ("校版"), campus-based meetup locations, and student credibility scores to make second-hand trading more relevant and trustworthy for university students.
+The platform is designed around campus life rather than general public trading. It uses `.edu.tw` school-email verification, school-specific community spaces ("校版"), campus-based meetup locations, and student credibility scores to help students discover relevant listings and connect with trusted buyers or sellers from the same school.
 
 ---
 
