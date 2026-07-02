@@ -19,7 +19,6 @@ import { GPSLocationService } from '../../@Services/gps-location.service';
 import { User } from '../../@Interface/user';
 import { UserCardPlusComponent } from '../user-card-plus/user-card-plus.component';
 
-
 type SortOption = 'newest' | 'credit-score' | 'same-location' | 'recommended';
 
 @Component({
@@ -89,7 +88,7 @@ export class SellerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUsers();
-    this.getCurrentPosition();
+    // this.getCurrentPosition();
     this.initSearchListener();
   }
 
@@ -400,9 +399,18 @@ export class SellerComponent implements OnInit, OnDestroy {
   }
 
   private calculateTheCity(lat: number, lng: number): void {
-    this.gpsApi.getCityName(lat, lng).subscribe((city) => {
-      this.cityName = city || '無法辨識城市';
-      this.applyFilters();
+    this.gpsApi.getCityName(lat, lng).subscribe({
+      next: (city) => {
+        this.cityName = city || '無法辨識城市';
+        this.applyFilters();
+      },
+      error: (err) => {
+        console.error('無法取得城市資料：', err);
+
+        this.cityName = '無法辨識城市';
+        this.showNearbyOnly = false;
+        this.applyFilters();
+      },
     });
   }
 
