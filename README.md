@@ -17,15 +17,14 @@ The platform is designed around campus life rather than general public trading. 
 ## Demo
 
 You can browse the website without logging in.  
-To try member-only features, please use the following demo accounts:
+To try member-only features, please use one of the following demo accounts:
 
-- **Username:** 王小阿明
-- **Email:** U10337005@o365.mcut.edu.tw
-- **Password:** asd123456
+| Username | Email | Password |
+|---|---|---|
+| 王小阿明 | U10337005@o365.mcut.edu.tw | asd123456 |
+| 李吉娃娃 | 123456@nthu.gapp.edu.tw | MitochondrionIsThePowerPlantOfBody1234 |
 
-- **Username:** 李吉娃娃
-- **Email:** 123456@nthu.gapp.edu.tw
-- **Password:** MitochondrionIsThePowerPlantOfBody1234
+These accounts are provided for testing purposes only.
 
 ---
 
